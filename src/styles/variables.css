@@ -1,0 +1,13 @@
+:root {
+  --primary: #6B5CAE;
+  --primary-deep: #5A4B97;
+  --primary-light: #D4CCF0;
+  --primary-faint: #F0EEFA;
+  --paper: #F9F8FC;
+  --charcoal: #1E1E1E;
+  --muted: #696969;
+  --border: #E4E2EB;
+  --border-subtle: rgba(30, 30, 30, 0.06);
+  --green: #4A7560;
+  --green-faint: #E8F0EB;
+}

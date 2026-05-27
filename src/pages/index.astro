@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="LemmaScript — Formal Verification for TypeScript" description="LemmaScript lets you annotate ordinary TypeScript with formal specifications and transpile them into Lean 4 or Dafny. Works on greenfield and existing codebases.">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1><strong>Agent toolchain for bug-free TypeScript</strong></h1>
+      <p class="hero-sub">Ship TypeScript you can guarantee is correct. LemmaScript gives your team — and your AI agents — a toolchain that builds code <strong>without bugs</strong> from the ground up.</p>
+      <div class="hero-buttons">
+        <!-- TODO: link to tutorial -->
+        <a href="https://docs.lemmascript.com/tutorials/quorum/00-introduction/" target="_blank" rel="noopener" class="btn-primary">Start here</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section section-bordered">
+    <div class="section-label">How It Works</div>
+    <h2>Give your agent the LemmaScript. Tell it to code.</h2>
+    <p class="section-desc">Your agent will go through a formal verification process. It will:</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <div>
+          <strong>Annotate your TypeScript.</strong> Add <code>//@</code> annotations to the functions you want to verify. The implementation stays exactly as it is.
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <div>
+          <strong>Generate a model.</strong> Your code will be compiled to a language that carries mathematical guarantees that the code is correct.
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <div>
+          <strong>Verify.</strong> Your AI will use this system to prove that the TypeScript code is correct, or find bugs in the implementation and iterate until it is correct.
+        </div>
+      </div>
+    </div>
+    <div class="hero-buttons" style="margin-top:32px;">
+      <a href="https://docs.lemmascript.com/tutorials/quorum/00-introduction/" target="_blank" rel="noopener" class="btn-secondary">Tutorial &rarr;</a>
+    </div>
+  </section>
+
+  <!-- Annotations -->
+  <section class="section section-bordered">
+    <div class="section-label">Annotations</div>
+    <h2>Specs live in comments. Types come from TypeScript.</h2>
+    <p class="section-desc">LemmaScript borrows the annotation style of JML and Dafny's specification language, expressed as TypeScript comments so your editor, linter, and CI remain unaffected.</p>
+    <div class="feature-grid">
+      <div>
+        <h3><code>//@ requires</code></h3>
+        <p>Preconditions that must hold when the function is called.</p>
+      </div>
+      <div>
+        <h3><code>//@ ensures</code></h3>
+        <p>Postconditions the function guarantees on return. <code>\result</code> refers to the return value.</p>
+      </div>
+      <div>
+        <h3><code>//@ invariant</code></h3>
+        <p>Loop invariants that must hold at every iteration.</p>
+      </div>
+      <div>
+        <h3><code>//@ decreases</code></h3>
+        <p>Termination measures — expressions that strictly decrease on each iteration.</p>
+      </div>
+    </div>
+    <div class="hero-buttons" style="margin-top:32px;">
+      <a href="https://docs.lemmascript.com/spec/#2-the---annotation-language" target="_blank" rel="noopener" class="btn-secondary">See all annotations &rarr;</a>
+    </div>
+  </section>
+
+  <!-- Case studies -->
+  <section class="section section-bordered">
+    <div class="section-label">Case Studies</div>
+    <h2>Verified in both Lean 4 and Dafny from the same TypeScript source.</h2>
+    <p class="section-desc">Each case study uses the same annotated TypeScript as input and generates proofs for both backends.</p>
+    <div class="cards-grid">
+      <a href="https://github.com/midspiral/quota-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>quota-lemmascript</h3>
+        <p>Booking app with formally verified core logic ensuring no overbooking. Deployable locally or on Cloudflare.</p>
+      </a>
+      <a href="https://github.com/midspiral/quorum-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>quorum-lemmascript</h3>
+        <p>Login-free group scheduler with formally verified scheduling logic using Dafny proofs.</p>
+      </a>
+      <a href="https://github.com/midspiral/hono-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>hono-lemmascript</h3>
+        <p>Fork of Hono with formally verified security-critical middleware against four CVEs — IP restrictions, cookies, and path traversal.</p>
+      </a>
+      <a href="https://github.com/midspiral/opencode-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>opencode-lemmascript</h3>
+        <p>Fork of opencode with formal verification applied to its permission system. Eleven functions verified.</p>
+      </a>
+    </div>
+    <div class="hero-buttons" style="margin-top:32px;">
+      <a href="/case-studies" class="btn-secondary">See all case studies &rarr;</a>
+    </div>
+  </section>
+
+
+  <!-- Midspiral attribution -->
+  <p class="midspiral-note">
+    LemmaScript is built by <a href="https://midspiral.com" target="_blank" rel="noopener">Midspiral</a> — the correctness layer for AI-generated software.
+  </p>
+
+</BaseLayout>

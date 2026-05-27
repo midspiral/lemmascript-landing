@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Case Studies — LemmaScript" description="Greenfield and brownfield projects formally verified with LemmaScript. From booking apps to production frameworks.">
+
+  <section class="section">
+    <div class="section-label">Case Studies</div>
+    <h2>Greenfield &amp; brownfield projects, formally verified.</h2>
+    <p class="section-desc">Each project uses annotated TypeScript as input and generates proofs via LemmaScript.</p>
+
+    <h3 class="case-studies-heading">Greenfield</h3>
+    <div class="cards-grid">
+      <a href="https://github.com/midspiral/quota-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>quota-lemmascript</h3>
+        <p>Booking app with formally verified core logic ensuring no overbooking. Deployable locally or on Cloudflare.</p>
+      </a>
+      <a href="https://github.com/midspiral/quorum-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>quorum-lemmascript</h3>
+        <p>Login-free group scheduler with formally verified scheduling logic using Dafny proofs.</p>
+      </a>
+      <a href="https://github.com/midspiral/henri-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>henri-lemmascript</h3>
+        <p>Coding-agent CLI with verified permissions, transcript handling, and hook merging logic across 48 verification conditions.</p>
+      </a>
+      <a href="https://github.com/midspiral/guardians-lemmascript" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>guardians-lemmascript</h3>
+        <p>AI-agent workflow safety guardrails. Proves tainted data from sources never reaches sink parameters before execution.</p>
+      </a>
+      <a href="https://github.com/midspiral/collab-todo-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>collab-todo-lemmascript</h3>
+        <p>Collaborative task management app (React + Supabase) with a formally verified domain model in Dafny.</p>
+      </a>
+      <a href="https://github.com/midspiral/colorwheel-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>colorwheel-lemmascript</h3>
+        <p>Verified color palette generator with mood and harmony constraints. 31 Lean proofs, 115 Dafny lemmas.</p>
+      </a>
+      <a href="https://github.com/midspiral/clear-split-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>clear-split-lemmascript</h3>
+        <p>Verified expense-splitting web app. Conservation theorem, invariant preservation, and delta laws proven in both Lean and Dafny.</p>
+      </a>
+      <a href="https://github.com/midspiral/equality-game-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>equality-game-lemmascript</h3>
+        <p>Two-player arithmetic card game with verified core proving soundness and completeness of equality expression matching.</p>
+      </a>
+      <a href="https://github.com/midspiral/talktimer-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>talktimer-lemmascript</h3>
+        <p>React talk-timer app with verified domain logic — state invariants across 17 user actions, undo/redo history integrity.</p>
+      </a>
+      <a href="https://github.com/midspiral/github-star-checker-lemmascript/" target="_blank" rel="noopener" class="card">
+        <div class="card-label greenfield">Greenfield</div>
+        <h3>github-star-checker-lemmascript</h3>
+        <p>CLI tracking GitHub star counts with formally verified diff logic in Dafny via LemmaScript.</p>
+      </a>
+    </div>
+
+    <h3 class="case-studies-heading">Brownfield</h3>
+    <div class="cards-grid">
+      <a href="https://github.com/midspiral/hono-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>hono-lemmascript</h3>
+        <p>Fork of Hono with formally verified security-critical middleware against four CVEs — IP restrictions, cookies, and path traversal.</p>
+      </a>
+      <a href="https://github.com/midspiral/opencode-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>opencode-lemmascript</h3>
+        <p>Fork of opencode with formal verification applied to its permission system and patch parser. Eleven functions verified.</p>
+      </a>
+      <a href="https://github.com/CHARM-BDF/charmchat/blob/lemma/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>charmchat</h3>
+        <p>AI agent orchestration backend — topological sort and provenance pipeline verified. 736 verification conditions, zero errors.</p>
+      </a>
+      <a href="https://github.com/midspiral/xyflow-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>xyflow-lemmascript</h3>
+        <p>Fork of xyflow with formally verified core edge and geometry utility functions.</p>
+      </a>
+      <a href="https://github.com/midspiral/rallly-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>rallly-lemmascript</h3>
+        <p>Fork of Rallly meeting-poll app. Redirect-URL safety check and poll-scoring logic verified with zero errors.</p>
+      </a>
+      <a href="https://github.com/midspiral/pi-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>pi-lemmascript</h3>
+        <p>Agent harness context-compaction verified — proves tool results are never orphaned and tool-use runs stay intact.</p>
+      </a>
+      <a href="https://github.com/midspiral/balanced-match-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>balanced-match-lemmascript</h3>
+        <p>Verified balanced-bracket finder (~70 lines, 1B+ npm downloads/month). Termination, endpoint bounds, and Dyck-balance proven.</p>
+      </a>
+      <a href="https://github.com/midspiral/node-casbin-lemmascript/blob/lemmascript/README_LemmaScript.md" target="_blank" rel="noopener" class="card">
+        <div class="card-label brownfield">Brownfield</div>
+        <h3>node-casbin-lemmascript</h3>
+        <p>Verification of node-casbin access control library. 5 functions verified, 217 existing tests still pass.</p>
+      </a>
+    </div>
+  </section>
+
+  <p class="midspiral-note">
+    LemmaScript is built by <a href="https://midspiral.com" target="_blank" rel="noopener">Midspiral</a> — the correctness layer for AI-generated software.
+  </p>
+
+</BaseLayout>

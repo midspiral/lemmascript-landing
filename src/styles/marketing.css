@@ -365,6 +365,9 @@
   text-decoration: none;
   color: var(--charcoal);
   transition: border-color 0.15s;
+  /* the whole card is a link; still let users select & copy its text */
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .card:hover { border-color: var(--primary-light); }
@@ -389,6 +392,34 @@
 .card-label.brownfield {
   color: #7A6A5A;
   background: #F5F0EB;
+}
+
+/* Verifier-backend bubbles, pinned to the bottom of each card */
+.card-backends {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.backend-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.backend-badge.dafny {
+  color: #8A6A12;
+  background: #FBF1CE;
+}
+
+.backend-badge.lean {
+  color: #3A7150;
+  background: #DEEFE3;
 }
 
 .card h3 {

@@ -41,12 +41,9 @@ const backendLabel = { dafny: 'Dafny', lean: 'Lean' }
     <div class="cards-grid">
       {greenfield.map((cs) => (
         <a href={cs.href} target="_blank" rel="noopener" draggable={false} class="card">
-          <div class="card-label greenfield">Greenfield</div>
+          <div class="card-label greenfield">Greenfield{cs.backends.map((b) => <span class={`bk bk-${b}`}>{backendLabel[b]}</span>)}</div>
           <h3>{cs.name}</h3>
           <p>{cs.desc}</p>
-          <div class="card-backends">
-            {cs.backends.map((b) => <span class={`backend-badge ${b}`}>{backendLabel[b]}</span>)}
-          </div>
         </a>
       ))}
     </div>
@@ -55,12 +52,9 @@ const backendLabel = { dafny: 'Dafny', lean: 'Lean' }
     <div class="cards-grid">
       {brownfield.map((cs) => (
         <a href={cs.href} target="_blank" rel="noopener" draggable={false} class="card">
-          <div class="card-label brownfield">Brownfield</div>
+          <div class="card-label brownfield">Brownfield{cs.backends.map((b) => <span class={`bk bk-${b}`}>{backendLabel[b]}</span>)}</div>
           <h3>{cs.name}</h3>
           <p>{cs.desc}</p>
-          <div class="card-backends">
-            {cs.backends.map((b) => <span class={`backend-badge ${b}`}>{backendLabel[b]}</span>)}
-          </div>
         </a>
       ))}
     </div>

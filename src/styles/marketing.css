@@ -394,32 +394,26 @@
   background: #F5F0EB;
 }
 
-/* Verifier-backend bubbles, pinned to the bottom of each card */
-.card-backends {
-  display: flex;
-  gap: 6px;
-  margin-top: 16px;
-}
-
-.backend-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 999px;
+/* Verifier-backend chips, color-coded for scannability, inside the category pill */
+.card-label .bk {
   display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
 }
 
-.backend-badge.dafny {
-  color: #8A6A12;
-  background: #FBF1CE;
+.card-label .bk-dafny {
+  background: #FCE588;
+  color: #6B5200;
 }
 
-.backend-badge.lean {
-  color: #3A7150;
-  background: #DEEFE3;
+.card-label .bk-lean {
+  background: #FBCFE8;
+  color: #9D174D;
 }
 
 .card h3 {

@@ -23,9 +23,11 @@
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
-  padding: 4px 10px; border-radius: var(--r-full); border: 1px solid;
+  letter-spacing: 0.02em;
+  padding: 3px 8px; border-radius: var(--r-sm); border: 1px solid;
 }
-.badge .bdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+/* squared tag, no circle dot — color carries the proof-state meaning */
+.badge .bdot { display: none; }
 .badge-verified { color: var(--state-verified); background: var(--state-verified-bg); border-color: var(--accent-dim); }
 .badge-pending  { color: var(--state-pending);  background: var(--state-pending-bg);  border-color: rgba(245,196,81,0.3); }
 .badge-counter  { color: var(--state-counter);  background: var(--state-counter-bg);  border-color: rgba(244,85,78,0.3); }
@@ -49,9 +51,8 @@
 
 /* ---------- code block ---------- */
 .codeblock { background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--elev-2); }
-.code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: 10px var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: var(--bg-overlay); }
-.code-bar .dots { display: flex; gap: 6px; }
-.code-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); }
+.code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: transparent; }
+.code-bar .dots { display: none; }
 .code-file { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
 .code-body { padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.8; overflow-x: auto; color: var(--text-primary); white-space: pre; }
 .code-body .ln { color: var(--text-faint); user-select: none; display: inline-block; width: 2ch; margin-right: var(--sp-3); text-align: right; }

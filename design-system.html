@@ -4,653 +4,328 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LemmaScript — Design System</title>
+
+<!-- Fonts (match the live site: DM Sans + JetBrains Mono) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- LIVE design system — this doc consumes the same stylesheets the site does,
+     so it can never drift from the source of truth. -->
+<link rel="stylesheet" href="src/styles/tokens.css" />
+<link rel="stylesheet" href="src/styles/base.css" />
+<link rel="stylesheet" href="src/styles/components.css" />
+
 <style>
-/* ============================================================
-   LEMMASCRIPT — DESIGN TOKENS
-   The single source of truth. Everything below consumes these.
-   ============================================================ */
-:root {
-  /* — Canvas (deep ink, faint blue — never pure black) — */
-  --bg-base:       #0A0E14;
-  --bg-surface:    #11161F;
-  --bg-overlay:    #161C27;
-  --bg-inset:      #0D1219;
+/* ── doc-only layout (ds- prefixed). Everything visual that documents a
+   component reuses the LIVE classes (.btn, .badge, .card, .callout, .codeblock). ── */
+.ds-shell { display: grid; grid-template-columns: 248px 1fr; max-width: 1400px; margin: 0 auto; }
+.ds-sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--border-subtle);
+  padding: var(--sp-8) var(--sp-6); background: rgba(10,14,20,0.6); backdrop-filter: blur(8px); }
+.ds-brand { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-8); }
+.ds-brand-mark { width: 34px; height: 34px; border-radius: var(--r-md); display: grid; place-items: center;
+  background: var(--state-verified-bg); border: 1px solid var(--accent-dim); color: var(--accent);
+  font-family: var(--font-mono); font-weight: 700; font-size: 13px; }
+.ds-brand-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+.ds-brand-name span { color: var(--accent); }
+.ds-navgroup { margin-bottom: var(--sp-6); }
+.ds-navlabel { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: var(--sp-3); padding-left: var(--sp-2); }
+.ds-nav a { display: block; padding: 6px var(--sp-2); border-radius: var(--r-sm); color: var(--text-secondary);
+  text-decoration: none; font-size: var(--fs-small); }
+.ds-nav a:hover { color: var(--text-primary); background: var(--bg-surface); }
 
-  /* — Borders — */
-  --border-subtle: #1C242F;
-  --border:        #2A3441;
-  --border-strong: #3A4655;
+.ds-main { padding: var(--sp-12) var(--sp-16); min-width: 0; }
+@media (max-width: 980px) { .ds-shell { grid-template-columns: 1fr; } .ds-sidebar { display: none; } .ds-main { padding: var(--sp-8) var(--sp-6); } }
 
-  /* — Text — */
-  --text-primary:   #E6EDF3;
-  --text-secondary: #9BA8B7;
-  --text-muted:     #6B7888;
-  --text-faint:     #4A5563;
+.ds-hero { margin-bottom: var(--sp-24); }
+.ds-hero h1 { font-size: var(--fs-display-l); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: var(--sp-4) 0; }
+.ds-hero h1 em { font-style: normal; color: var(--accent); }
+.ds-hero p { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 62ch; }
 
-  /* — Brand accent: the green spiral = "verified" — */
-  --accent:        #2DD4A7;
-  --accent-bright: #5BF0C5;
-  --accent-dim:    #1B8A6E;
-  --accent-glow:   rgba(45, 212, 167, 0.18);
-
-  /* — Proof-state semantics — */
-  --state-verified: #2DD4A7;
-  --state-pending:  #F5C451;
-  --state-counter:  #F4554E;
-  --state-info:     #5BA8FF;
-  --state-verified-bg: rgba(45, 212, 167, 0.10);
-  --state-pending-bg:  rgba(245, 196, 81, 0.10);
-  --state-counter-bg:  rgba(244, 85, 78, 0.10);
-  --state-info-bg:     rgba(91, 168, 255, 0.10);
-
-  /* — Typography — */
-  --font-display: 'Sora', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
-
-  --fs-display-xl: 4.5rem;   /* 72 */
-  --fs-display-l:  3.5rem;   /* 56 */
-  --fs-h1:         2.5rem;   /* 40 */
-  --fs-h2:         1.875rem; /* 30 */
-  --fs-h3:         1.375rem; /* 22 */
-  --fs-body-lg:    1.125rem; /* 18 */
-  --fs-body:       1rem;     /* 16 */
-  --fs-small:      0.875rem; /* 14 */
-  --fs-caption:    0.75rem;  /* 12 */
-
-  /* — Spacing (4px base) — */
-  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
-  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
-  --sp-24: 96px; --sp-32: 128px;
-
-  /* — Radii — */
-  --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-full: 999px;
-
-  /* — Elevation (border + faint glow, not heavy shadow) — */
-  --elev-1: 0 0 0 1px var(--border-subtle), 0 1px 2px rgba(0,0,0,0.4);
-  --elev-2: 0 0 0 1px var(--border), 0 8px 24px rgba(0,0,0,0.5);
-  --elev-glow: 0 0 0 1px var(--accent-dim), 0 0 32px var(--accent-glow);
-
-  /* — Motion — */
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-1: 120ms; --dur-2: 200ms; --dur-3: 320ms;
-}
-
-/* ============================================================ RESET ===== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font-body);
-  background: var(--bg-base);
-  color: var(--text-primary);
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  /* atmospheric: radial glow (grain + vignette layered as fixed overlays below) */
-  background-image: radial-gradient(ellipse 80% 50% at 50% -5%, var(--accent-glow), transparent 60%);
-  background-attachment: fixed;
-}
-/* soft film grain — grain 2 */
-body::before {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  opacity: 0.32; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-/* vignette depth — grain 2 */
-body::after {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(ellipse 75% 75% at 50% 42%, transparent 45%, rgba(0,0,0,0.55) 100%);
-}
-::selection { background: var(--accent-glow); color: var(--accent-bright); }
-
-/* ============================================================ LAYOUT ===== */
-.shell { display: grid; grid-template-columns: 248px 1fr; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
-
-/* — Sidebar — */
-.sidebar {
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  border-right: 1px solid var(--border-subtle);
-  padding: var(--sp-8) var(--sp-6);
-  background: rgba(10, 14, 20, 0.6);
-  backdrop-filter: blur(8px);
-}
-.brand { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-8); }
-.brand-mark {
-  width: 34px; height: 34px; border-radius: var(--r-md);
-  display: grid; place-items: center;
-  background: var(--state-verified-bg);
-  border: 1px solid var(--accent-dim);
-  color: var(--accent); font-family: var(--font-mono); font-weight: 700; font-size: 13px;
-  box-shadow: 0 0 16px var(--accent-glow);
-}
-.brand-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
-.brand-name span { color: var(--accent); }
-.nav-group { margin-bottom: var(--sp-6); }
-.nav-label {
-  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--sp-3);
-  padding-left: var(--sp-2);
-}
-.nav-link {
-  display: block; padding: 6px var(--sp-2); border-radius: var(--r-sm);
-  color: var(--text-secondary); text-decoration: none; font-size: var(--fs-small);
-  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
-}
-.nav-link:hover { color: var(--text-primary); background: var(--bg-surface); }
-
-/* — Main — */
-.main { padding: var(--sp-12) var(--sp-16); min-width: 0; }
-@media (max-width: 980px) {
-  .shell { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .main { padding: var(--sp-8) var(--sp-6); }
-}
-
-/* ============================================================ HERO ======= */
-.hero { margin-bottom: var(--sp-24); }
-.eyebrow {
-  display: inline-flex; align-items: center; gap: var(--sp-2);
-  font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--accent);
-  padding: 5px var(--sp-3); border-radius: var(--r-full);
-  background: var(--state-verified-bg); border: 1px solid var(--accent-dim);
-  margin-bottom: var(--sp-6);
-}
-.hero h1 {
-  font-family: var(--font-display); font-size: var(--fs-display-l); font-weight: 800;
-  letter-spacing: -0.03em; line-height: 1.05; margin-bottom: var(--sp-4);
-  max-width: 16ch;
-}
-.hero h1 em { font-style: normal; color: var(--accent); }
-.hero .lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 56ch; }
-
-/* ============================================================ SECTIONS === */
-.section { margin-bottom: var(--sp-24); scroll-margin-top: var(--sp-8); }
-.section-head { display: flex; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-8);
+.ds-section { margin-bottom: var(--sp-24); scroll-margin-top: var(--sp-8); }
+.ds-headrow { display: flex; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-8);
   padding-bottom: var(--sp-4); border-bottom: 1px solid var(--border-subtle); }
-.section-num { font-family: var(--font-mono); color: var(--accent); font-size: var(--fs-small); }
-.section-head h2 { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; }
-.section-head .desc { margin-left: auto; color: var(--text-muted); font-size: var(--fs-small); max-width: 38ch; text-align: right; }
-.subhead { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-muted); margin: var(--sp-8) 0 var(--sp-4); }
+.ds-num { font-family: var(--font-mono); color: var(--accent); font-size: var(--fs-small); }
+.ds-headrow h2 { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; }
+.ds-headrow .ds-desc { margin-left: auto; color: var(--text-muted); font-size: var(--fs-small); max-width: 40ch; text-align: right; }
+.ds-sub { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin: var(--sp-8) 0 var(--sp-4); }
 
-/* ============================================================ COLOR ====== */
-.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-3); }
-.swatch {
-  border: 1px solid var(--border-subtle); border-radius: var(--r-md); overflow: hidden;
-  background: var(--bg-surface); transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
-}
-.swatch:hover { transform: translateY(-2px); box-shadow: var(--elev-2); }
-.swatch-color { height: 72px; border-bottom: 1px solid var(--border-subtle); }
-.swatch-meta { padding: var(--sp-3); }
-.swatch-name { font-size: var(--fs-small); font-weight: 500; }
-.swatch-hex { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: 2px; }
+.ds-swgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-3); }
+.ds-sw { border: 1px solid var(--border-subtle); border-radius: var(--r-md); overflow: hidden; background: var(--bg-surface); }
+.ds-sw-chip { height: 72px; border-bottom: 1px solid var(--border-subtle); }
+.ds-sw-meta { padding: var(--sp-3); }
+.ds-sw-name { font-size: var(--fs-small); font-weight: 500; display: block; }
+.ds-sw-hex { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
 
-/* ============================================================ TYPE ======= */
-.type-row { display: flex; align-items: baseline; gap: var(--sp-6); padding: var(--sp-4) 0;
-  border-bottom: 1px solid var(--border-subtle); }
-.type-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
-  width: 130px; flex-shrink: 0; }
-.type-tag b { color: var(--accent); display: block; font-weight: 500; }
-.type-specimen { font-family: var(--font-display); color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; }
-.font-card { background: var(--bg-surface); border: 1px solid var(--border-subtle);
-  border-radius: var(--r-md); padding: var(--sp-6); }
-.font-card .glyphs { font-size: 2rem; margin-bottom: var(--sp-3); }
-.font-card .role { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent);
-  text-transform: uppercase; letter-spacing: 0.1em; }
-.font-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
-@media (max-width: 720px) { .font-trio { grid-template-columns: 1fr; } }
+.ds-fonts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+.ds-fontcard { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: var(--sp-6); }
+.ds-fontcard .glyphs { font-size: 2rem; margin-bottom: var(--sp-3); }
+.ds-fontcard .role { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+.ds-fontcard p { color: var(--text-muted); font-size: var(--fs-small); margin-top: var(--sp-2); }
+@media (max-width: 720px) { .ds-fonts { grid-template-columns: 1fr; } }
 
-/* ============================================================ SPACING ==== */
-.scale-row { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-2); }
-.scale-bar { height: 16px; background: linear-gradient(90deg, var(--accent), var(--accent-dim));
-  border-radius: var(--r-sm); }
-.scale-label { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); width: 90px; }
-.radii-grid { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
-.radii-box { width: 92px; height: 92px; background: var(--bg-surface); border: 1px solid var(--border);
-  display: grid; place-items: end center; padding: var(--sp-2);
-  font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+.ds-typerow { display: flex; align-items: baseline; gap: var(--sp-6); padding: var(--sp-4) 0; border-bottom: 1px solid var(--border-subtle); }
+.ds-typetag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); width: 160px; flex-shrink: 0; }
+.ds-typetag b { color: var(--accent); display: block; font-weight: 500; }
+.ds-type-size { color: var(--text-faint); }
+.ds-type-eg { font-family: var(--font-display); color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; }
 
-/* ============================================================ BUTTONS ==== */
-.btn {
-  display: inline-flex; align-items: center; gap: var(--sp-2);
-  font-family: var(--font-body); font-size: var(--fs-small); font-weight: 600;
-  padding: 10px var(--sp-4); border-radius: var(--r-md); border: 1px solid transparent;
-  cursor: pointer; text-decoration: none; transition: all var(--dur-2) var(--ease);
-}
-.btn-primary { background: var(--accent); color: #04140E; }
-.btn-primary:hover { background: var(--accent-bright); box-shadow: 0 0 24px var(--accent-glow); transform: translateY(-1px); }
-.btn-secondary { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border); }
-.btn-secondary:hover { border-color: var(--accent-dim); color: var(--accent-bright); }
-.btn-ghost { background: transparent; color: var(--text-secondary); }
-.btn-ghost:hover { color: var(--accent); background: var(--state-verified-bg); }
-.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
+.ds-scalerow { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-2); }
+.ds-scale-bar { height: 16px; background: linear-gradient(90deg, var(--accent), var(--accent-dim)); border-radius: var(--r-sm); }
+.ds-scale-label { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); width: 150px; }
+.ds-scale-px { color: var(--text-faint); }
+.ds-radii { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
+.ds-radiibox { width: 92px; height: 92px; background: var(--bg-surface); border: 1px solid var(--border);
+  display: grid; place-items: end center; padding: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
 
-/* ============================================================ BADGES ===== */
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
-  padding: 4px 10px; border-radius: var(--r-full); border: 1px solid;
-}
-.badge .dot { width: 6px; height: 6px; border-radius: var(--r-full); background: currentColor; }
-.badge-verified { color: var(--state-verified); background: var(--state-verified-bg); border-color: var(--accent-dim); }
-.badge-pending  { color: var(--state-pending);  background: var(--state-pending-bg);  border-color: rgba(245,196,81,0.3); }
-.badge-counter  { color: var(--state-counter);  background: var(--state-counter-bg);  border-color: rgba(244,85,78,0.3); }
-.badge-info     { color: var(--state-info);     background: var(--state-info-bg);     border-color: rgba(91,168,255,0.3); }
-.badge-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
-
-/* ============================================================ CARDS ====== */
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-4); }
-.card {
-  background: var(--bg-surface); border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg); padding: var(--sp-6);
-  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-  position: relative; overflow: hidden;
-}
-.card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0;
-  transition: opacity var(--dur-3) var(--ease); }
-.card:hover { border-color: var(--border); transform: translateY(-3px); }
-.card:hover::before { opacity: 1; }
-.card-icon { width: 40px; height: 40px; border-radius: var(--r-md); display: grid; place-items: center;
-  background: var(--bg-overlay); border: 1px solid var(--border); color: var(--accent);
-  font-family: var(--font-mono); margin-bottom: var(--sp-4); }
-.card h3 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-2); }
-.card p { color: var(--text-secondary); font-size: var(--fs-small); }
-.card-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--sp-3); display: block; }
-
-/* ============================================================ CODE BLOCK = */
-.codeblock {
-  background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg);
-  overflow: hidden; font-family: var(--font-mono); font-size: var(--fs-small);
-  box-shadow: var(--elev-2);
-}
-.code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: 10px var(--sp-4);
-  border-bottom: 1px solid var(--border-subtle); background: var(--bg-overlay); }
-.code-dots { display: flex; gap: 6px; }
-.code-dots i { width: 10px; height: 10px; border-radius: var(--r-full); background: var(--border-strong); display: block; }
-.code-file { font-size: var(--fs-caption); color: var(--text-muted); }
-.code-body { padding: var(--sp-4); line-height: 1.7; overflow-x: auto; }
-.code-body .ln { color: var(--text-faint); user-select: none; display: inline-block; width: 2ch; margin-right: var(--sp-3); text-align: right; }
-.tok-cmt   { color: var(--text-muted); }
-.tok-anno  { color: var(--accent); }              /* //@ */
-.tok-anno-kw { color: var(--accent-bright); font-weight: 600; }
-.tok-kw    { color: var(--state-info); }
-.tok-fn    { color: var(--state-pending); }
-.tok-str   { color: var(--accent-bright); }
-.tok-num   { color: #C8A6FF; }
-.tok-punc  { color: var(--text-secondary); }
-
-/* ============================================================ PROOF PANEL  */
-.proof-panel { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--sp-4); align-items: stretch; }
-@media (max-width: 860px) { .proof-panel { grid-template-columns: 1fr; } }
-.proof-arrow { display: grid; place-items: center; color: var(--accent); font-family: var(--font-mono); font-size: 1.4rem; }
-@media (max-width: 860px) { .proof-arrow { transform: rotate(90deg); } }
-.proof-out { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
-  padding: var(--sp-4); }
-.proof-out-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-3); }
-.proof-out-head .label { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.1em; }
-.proof-out pre { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-secondary);
-  line-height: 1.6; white-space: pre-wrap; }
-.proof-out pre b { color: var(--accent); }
-
-/* ============================================================ BACKEND TGL  */
-.toggle { display: inline-flex; padding: 4px; background: var(--bg-inset); border: 1px solid var(--border);
-  border-radius: var(--r-md); gap: 2px; }
-.toggle button { font-family: var(--font-mono); font-size: var(--fs-small); padding: 7px var(--sp-4);
-  border: none; background: transparent; color: var(--text-muted); border-radius: var(--r-sm);
-  cursor: pointer; transition: all var(--dur-2) var(--ease); }
-.toggle button.active { background: var(--state-verified-bg); color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent-dim); }
-.toggle button:hover:not(.active) { color: var(--text-secondary); }
-
-/* ============================================================ TERMINAL === */
-.terminal { background: #060A0F; border: 1px solid var(--border); border-radius: var(--r-lg);
-  padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.8; }
-.terminal .prompt { color: var(--accent); }
-.terminal .out { color: var(--text-secondary); }
-.terminal .ok { color: var(--state-verified); }
-.terminal .cursor { display: inline-block; width: 8px; height: 1.1em; background: var(--accent);
-  vertical-align: text-bottom; animation: blink 1s steps(2) infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ============================================================ STATS ====== */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--sp-4); }
-.stat { border-left: 2px solid var(--accent-dim); padding-left: var(--sp-4); }
-.stat .num { font-family: var(--font-display); font-size: var(--fs-h1); font-weight: 700; color: var(--text-primary);
-  letter-spacing: -0.02em; }
-.stat .num span { color: var(--accent); }
-.stat .lbl { font-size: var(--fs-small); color: var(--text-muted); margin-top: 2px; }
-
-/* ============================================================ CALLOUT ==== */
-.callout { display: flex; gap: var(--sp-3); padding: var(--sp-4); border-radius: var(--r-md);
-  border: 1px solid; font-size: var(--fs-small); }
-.callout .mark { font-family: var(--font-mono); font-weight: 700; flex-shrink: 0; }
-.callout-info { background: var(--state-info-bg); border-color: rgba(91,168,255,0.25); }
-.callout-info .mark, .callout-info b { color: var(--state-info); }
-.callout-warn { background: var(--state-pending-bg); border-color: rgba(245,196,81,0.25); }
-.callout-warn .mark, .callout-warn b { color: var(--state-pending); }
-
-/* — footer — */
-.foot { margin-top: var(--sp-24); padding-top: var(--sp-8); border-top: 1px solid var(--border-subtle);
-  color: var(--text-muted); font-size: var(--fs-small); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-4); }
-.foot .mono { font-family: var(--font-mono); font-size: var(--fs-caption); }
-
-/* — load animation — */
-.reveal { opacity: 0; transform: translateY(12px); animation: rise var(--dur-3) var(--ease) forwards; }
-@keyframes rise { to { opacity: 1; transform: none; } }
-.section:nth-child(1) { animation-delay: 0ms; }
+.ds-row { display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center; }
+.ds-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+@media (max-width: 720px) { .ds-grid3 { grid-template-columns: 1fr; } }
+.ds-note { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-4); }
+.ds-card-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: var(--sp-3); }
+.ds-stack { display: grid; gap: var(--sp-3); }
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="atmosphere" aria-hidden="true"></div>
 
-  <!-- ============================= SIDEBAR ============================= -->
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">LS</div>
-      <div class="brand-name">Lemma<span>Script</span></div>
+<div class="ds-shell">
+  <!-- sidebar -->
+  <aside class="ds-sidebar">
+    <div class="ds-brand">
+      <div class="ds-brand-mark">LS</div>
+      <div class="ds-brand-name">Lemma<span>Script</span></div>
     </div>
-    <div class="nav-group">
-      <div class="nav-label">// foundations</div>
-      <a class="nav-link" href="#color">Color</a>
-      <a class="nav-link" href="#type">Typography</a>
-      <a class="nav-link" href="#space">Spacing &amp; Radii</a>
-      <a class="nav-link" href="#motion">Motion &amp; Elevation</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-label">// primitives</div>
-      <a class="nav-link" href="#buttons">Buttons</a>
-      <a class="nav-link" href="#badges">Proof-state badges</a>
-      <a class="nav-link" href="#cards">Cards</a>
-      <a class="nav-link" href="#callouts">Callouts &amp; stats</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-label">// signature</div>
-      <a class="nav-link" href="#code">Annotated code</a>
-      <a class="nav-link" href="#proof">Proof panel</a>
-      <a class="nav-link" href="#backend">Backend toggle</a>
-      <a class="nav-link" href="#terminal">Terminal</a>
-    </div>
+    <nav class="ds-nav">
+      <div class="ds-navgroup">
+        <div class="ds-navlabel">// foundations</div>
+        <a href="#color">Color</a>
+        <a href="#type">Typography</a>
+        <a href="#space">Spacing &amp; Radii</a>
+        <a href="#depth">Elevation &amp; Motion</a>
+        <a href="#atmosphere">Atmosphere</a>
+      </div>
+      <div class="ds-navgroup">
+        <div class="ds-navlabel">// components</div>
+        <a href="#buttons">Buttons</a>
+        <a href="#badges">Proof-state chips</a>
+        <a href="#cards">Cards</a>
+        <a href="#callouts">Callouts</a>
+        <a href="#code">Code block</a>
+      </div>
+    </nav>
   </aside>
 
-  <!-- ============================= MAIN ============================= -->
-  <main class="main">
-
-    <header class="hero reveal">
-      <span class="eyebrow"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)"></span> Design System v0.1 — Tech Preview</span>
-      <h1>The look of code you can <em>prove</em> is correct.</h1>
-      <p class="lede">A dark, terminal-forward system for LemmaScript — where green doesn't mean "go," it means <em style="color:var(--accent);font-style:normal">verified</em>. Every token, type, and component below is live and consuming the same variables your site will.</p>
+  <!-- main -->
+  <main class="ds-main">
+    <header class="ds-hero">
+      <span class="kicker">// design system · v0.2 · living reference</span>
+      <h1>The look of code you can <em>guarantee</em>.</h1>
+      <p>
+        This page links the live <code class="t-anno">tokens.css</code>, <code class="t-anno">base.css</code>,
+        and <code class="t-anno">components.css</code> and renders the real component classes — so it stays in
+        sync with the site automatically. Color and size values below are read at runtime from the live tokens.
+      </p>
     </header>
 
-    <!-- ===================== COLOR ===================== -->
-    <section class="section reveal" id="color">
-      <div class="section-head">
-        <span class="section-num">01</span>
-        <h2>Color</h2>
-        <span class="desc">A deep ink canvas, one disciplined accent, and a palette that encodes correctness.</span>
+    <!-- ───────── COLOR ───────── -->
+    <section class="ds-section" id="color">
+      <div class="ds-headrow"><span class="ds-num">01</span><h2>Color</h2>
+        <span class="ds-desc">A deep ink canvas, one disciplined accent, and a palette that encodes correctness.</span></div>
+
+      <div class="ds-sub">// canvas &amp; structure</div>
+      <div class="ds-swgrid">
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--bg-base)"></div><div class="ds-sw-meta"><span class="ds-sw-name">bg-base</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--bg-surface)"></div><div class="ds-sw-meta"><span class="ds-sw-name">bg-surface</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--bg-overlay)"></div><div class="ds-sw-meta"><span class="ds-sw-name">bg-overlay</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--bg-inset)"></div><div class="ds-sw-meta"><span class="ds-sw-name">bg-inset</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--border)"></div><div class="ds-sw-meta"><span class="ds-sw-name">border</span><span class="ds-sw-hex"></span></div></div>
       </div>
 
-      <div class="subhead">// canvas &amp; structure</div>
-      <div class="swatch-grid">
-        <div class="swatch"><div class="swatch-color" style="background:#0A0E14"></div><div class="swatch-meta"><div class="swatch-name">bg-base</div><div class="swatch-hex">#0A0E14</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#11161F"></div><div class="swatch-meta"><div class="swatch-name">bg-surface</div><div class="swatch-hex">#11161F</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#161C27"></div><div class="swatch-meta"><div class="swatch-name">bg-overlay</div><div class="swatch-hex">#161C27</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#2A3441"></div><div class="swatch-meta"><div class="swatch-name">border</div><div class="swatch-hex">#2A3441</div></div></div>
+      <div class="ds-sub">// text</div>
+      <div class="ds-swgrid">
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--text-primary)"></div><div class="ds-sw-meta"><span class="ds-sw-name">text-primary</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--text-secondary)"></div><div class="ds-sw-meta"><span class="ds-sw-name">text-secondary</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--text-muted)"></div><div class="ds-sw-meta"><span class="ds-sw-name">text-muted</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--text-faint)"></div><div class="ds-sw-meta"><span class="ds-sw-name">text-faint</span><span class="ds-sw-hex"></span></div></div>
       </div>
 
-      <div class="subhead">// text</div>
-      <div class="swatch-grid">
-        <div class="swatch"><div class="swatch-color" style="background:#E6EDF3"></div><div class="swatch-meta"><div class="swatch-name">text-primary</div><div class="swatch-hex">#E6EDF3</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#9BA8B7"></div><div class="swatch-meta"><div class="swatch-name">text-secondary</div><div class="swatch-hex">#9BA8B7</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#6B7888"></div><div class="swatch-meta"><div class="swatch-name">text-muted</div><div class="swatch-hex">#6B7888</div></div></div>
+      <div class="ds-sub">// brand accent — the green spiral</div>
+      <div class="ds-swgrid">
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--accent)"></div><div class="ds-sw-meta"><span class="ds-sw-name">accent</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--accent-bright)"></div><div class="ds-sw-meta"><span class="ds-sw-name">accent-bright</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--accent-dim)"></div><div class="ds-sw-meta"><span class="ds-sw-name">accent-dim</span><span class="ds-sw-hex"></span></div></div>
       </div>
 
-      <div class="subhead">// brand accent — the green spiral</div>
-      <div class="swatch-grid">
-        <div class="swatch"><div class="swatch-color" style="background:#2DD4A7"></div><div class="swatch-meta"><div class="swatch-name">accent</div><div class="swatch-hex">#2DD4A7</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#5BF0C5"></div><div class="swatch-meta"><div class="swatch-name">accent-bright</div><div class="swatch-hex">#5BF0C5</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#1B8A6E"></div><div class="swatch-meta"><div class="swatch-name">accent-dim</div><div class="swatch-hex">#1B8A6E</div></div></div>
-      </div>
-
-      <div class="subhead">// proof-state semantics</div>
-      <div class="swatch-grid">
-        <div class="swatch"><div class="swatch-color" style="background:#2DD4A7"></div><div class="swatch-meta"><div class="swatch-name">verified ✓</div><div class="swatch-hex">#2DD4A7</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#F5C451"></div><div class="swatch-meta"><div class="swatch-name">pending ⋯</div><div class="swatch-hex">#F5C451</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#F4554E"></div><div class="swatch-meta"><div class="swatch-name">counterexample ✗</div><div class="swatch-hex">#F4554E</div></div></div>
-        <div class="swatch"><div class="swatch-color" style="background:#5BA8FF"></div><div class="swatch-meta"><div class="swatch-name">info</div><div class="swatch-hex">#5BA8FF</div></div></div>
+      <div class="ds-sub">// proof-state semantics</div>
+      <div class="ds-swgrid">
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--state-verified)"></div><div class="ds-sw-meta"><span class="ds-sw-name">verified</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--state-pending)"></div><div class="ds-sw-meta"><span class="ds-sw-name">pending</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--state-counter)"></div><div class="ds-sw-meta"><span class="ds-sw-name">counter</span><span class="ds-sw-hex"></span></div></div>
+        <div class="ds-sw"><div class="ds-sw-chip" style="background:var(--state-info)"></div><div class="ds-sw-meta"><span class="ds-sw-name">info</span><span class="ds-sw-hex"></span></div></div>
       </div>
     </section>
 
-    <!-- ===================== TYPE ===================== -->
-    <section class="section reveal" id="type">
-      <div class="section-head">
-        <span class="section-num">02</span>
-        <h2>Typography</h2>
-        <span class="desc">Geometric display, humanist body, and a monospace that carries the proofs.</span>
+    <!-- ───────── TYPOGRAPHY ───────── -->
+    <section class="ds-section" id="type">
+      <div class="ds-headrow"><span class="ds-num">02</span><h2>Typography</h2>
+        <span class="ds-desc">One humanist family for everything, one monospace for code &amp; contracts.</span></div>
+
+      <div class="ds-fonts">
+        <div class="ds-fontcard"><div class="glyphs" style="font-family:var(--font-display)">Aa Bb Cc 123</div><div class="role">DM Sans — display &amp; body</div><p>Headlines, UI, and prose all use DM Sans. Weights 300–800.</p></div>
+        <div class="ds-fontcard"><div class="glyphs" style="font-family:var(--font-mono)">Aa Bb Cc 123</div><div class="role">JetBrains Mono — code</div><p>Code, contracts, //@ annotations, labels, and kickers.</p></div>
       </div>
 
-      <div class="font-trio">
-        <div class="font-card"><div class="glyphs" style="font-family:var(--font-display)">Aa Bb Cc</div><div class="role">Sora — Display</div><p style="color:var(--text-muted);font-size:var(--fs-small);margin-top:8px">Headlines, hero, numerics.</p></div>
-        <div class="font-card"><div class="glyphs" style="font-family:var(--font-body)">Aa Bb Cc</div><div class="role">DM Sans — Body</div><p style="color:var(--text-muted);font-size:var(--fs-small);margin-top:8px">UI, prose, labels.</p></div>
-        <div class="font-card"><div class="glyphs" style="font-family:var(--font-mono)">Aa Bb Cc</div><div class="role">JetBrains Mono — Code</div><p style="color:var(--text-muted);font-size:var(--fs-small);margin-top:8px">Code, proofs, //@ annotations.</p></div>
-      </div>
-
-      <div class="subhead">// scale</div>
-      <div class="type-row"><div class="type-tag"><b>display-l</b>56 / Sora 800</div><div class="type-specimen" style="font-size:var(--fs-display-l);font-weight:800">Prove it.</div></div>
-      <div class="type-row"><div class="type-tag"><b>h1</b>40 / Sora 700</div><div class="type-specimen" style="font-size:var(--fs-h1);font-weight:700">Formal verification</div></div>
-      <div class="type-row"><div class="type-tag"><b>h2</b>30 / Sora 700</div><div class="type-specimen" style="font-size:var(--fs-h2);font-weight:700">From TypeScript to theorem</div></div>
-      <div class="type-row"><div class="type-tag"><b>h3</b>22 / Sora 600</div><div class="type-specimen" style="font-size:var(--fs-h3);font-weight:600">Specs live in comments</div></div>
-      <div class="type-row"><div class="type-tag"><b>body</b>16 / DM Sans</div><div class="type-specimen" style="font-size:var(--fs-body);font-family:var(--font-body);color:var(--text-secondary);letter-spacing:0">Your agent annotates the code, compiles to a verified model, and proves it correct — or finds the bug.</div></div>
-      <div class="type-row"><div class="type-tag"><b>mono</b>14 / JetBrains</div><div class="type-specimen" style="font-size:var(--fs-small);font-family:var(--font-mono);color:var(--accent);letter-spacing:0">//@ ensures \result &gt;= n</div></div>
+      <div class="ds-sub">// scale (values read live from tokens)</div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>display-l</b><span class="ds-type-size"></span> · DM Sans 800</div><div class="ds-type-eg" style="font-size:var(--fs-display-l);font-weight:800">Guarantee it.</div></div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>h1</b><span class="ds-type-size"></span> · 800</div><div class="ds-type-eg" style="font-size:var(--fs-h1);font-weight:800">Correct by construction</div></div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>h2</b><span class="ds-type-size"></span> · 700</div><div class="ds-type-eg" style="font-size:var(--fs-h2);font-weight:700">From intent to guarantee</div></div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>h3</b><span class="ds-type-size"></span> · 600</div><div class="ds-type-eg" style="font-size:var(--fs-h3);font-weight:600">Contracts live in comments</div></div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>body</b><span class="ds-type-size"></span> · DM Sans</div><div class="ds-type-eg" style="font-size:var(--fs-body);font-family:var(--font-body);color:var(--text-secondary);letter-spacing:0">Your agent writes the contracts; you review plain TypeScript.</div></div>
+      <div class="ds-typerow"><div class="ds-typetag"><b>mono</b><span class="ds-type-size"></span> · JetBrains</div><div class="ds-type-eg" style="font-size:var(--fs-small);font-family:var(--font-mono);color:var(--accent);letter-spacing:0">//@ ensures \result &gt;= 0</div></div>
     </section>
 
-    <!-- ===================== SPACING ===================== -->
-    <section class="section reveal" id="space">
-      <div class="section-head">
-        <span class="section-num">03</span>
-        <h2>Spacing &amp; Radii</h2>
-        <span class="desc">A 4px base scale. Radii stay tight — precise, not bubbly.</span>
-      </div>
-      <div class="subhead">// spacing scale (4px base)</div>
-      <div class="scale-row"><span class="scale-label">sp-1 · 4</span><div class="scale-bar" style="width:4px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-2 · 8</span><div class="scale-bar" style="width:8px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-4 · 16</span><div class="scale-bar" style="width:16px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-6 · 24</span><div class="scale-bar" style="width:24px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-8 · 32</span><div class="scale-bar" style="width:32px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-12 · 48</span><div class="scale-bar" style="width:48px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-16 · 64</span><div class="scale-bar" style="width:64px"></div></div>
-      <div class="scale-row"><span class="scale-label">sp-24 · 96</span><div class="scale-bar" style="width:96px"></div></div>
+    <!-- ───────── SPACING & RADII ───────── -->
+    <section class="ds-section" id="space">
+      <div class="ds-headrow"><span class="ds-num">03</span><h2>Spacing &amp; Radii</h2>
+        <span class="ds-desc">A 4px base scale. Radii stay tight — precise, not bubbly.</span></div>
 
-      <div class="subhead">// radii</div>
-      <div class="radii-grid">
-        <div class="radii-box" style="border-radius:4px">sm · 4</div>
-        <div class="radii-box" style="border-radius:8px">md · 8</div>
-        <div class="radii-box" style="border-radius:12px">lg · 12</div>
-        <div class="radii-box" style="border-radius:16px">xl · 16</div>
-        <div class="radii-box" style="border-radius:999px">full</div>
+      <div class="ds-sub">// spacing scale (4px base)</div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-1 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-1)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-2 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-2)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-4 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-4)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-6 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-6)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-8 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-8)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-12 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-12)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-16 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-16)"></div></div>
+      <div class="ds-scalerow"><span class="ds-scale-label">sp-24 · <span class="ds-scale-px"></span></span><div class="ds-scale-bar" style="width:var(--sp-24)"></div></div>
+
+      <div class="ds-sub">// radii</div>
+      <div class="ds-radii">
+        <div class="ds-radiibox" style="border-radius:var(--r-sm)">sm</div>
+        <div class="ds-radiibox" style="border-radius:var(--r-md)">md</div>
+        <div class="ds-radiibox" style="border-radius:var(--r-lg)">lg</div>
+        <div class="ds-radiibox" style="border-radius:var(--r-xl)">xl</div>
+        <div class="ds-radiibox" style="border-radius:var(--r-full)">full</div>
       </div>
     </section>
 
-    <!-- ===================== MOTION / ELEVATION ===================== -->
-    <section class="section reveal" id="motion">
-      <div class="section-head">
-        <span class="section-num">04</span>
-        <h2>Elevation &amp; Motion</h2>
-        <span class="desc">On dark, depth comes from borders and faint accent glow — not heavy shadow.</span>
+    <!-- ───────── ELEVATION & MOTION ───────── -->
+    <section class="ds-section" id="depth">
+      <div class="ds-headrow"><span class="ds-num">04</span><h2>Elevation &amp; Motion</h2>
+        <span class="ds-desc">On dark, depth comes from borders and faint accent glow — not heavy shadow.</span></div>
+      <div class="ds-grid3">
+        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-1)"><span class="ds-card-tag">elev-1</span><p style="color:var(--text-secondary);font-size:var(--fs-small)">Resting cards, subtle hairline.</p></div>
+        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-2)"><span class="ds-card-tag">elev-2</span><p style="color:var(--text-secondary);font-size:var(--fs-small)">Popovers, lifted panels.</p></div>
+        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-glow)"><span class="ds-card-tag" style="color:var(--accent)">elev-glow</span><p style="color:var(--text-secondary);font-size:var(--fs-small)">Guaranteed / focused state.</p></div>
       </div>
-      <div class="card-grid">
-        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-1)"><div class="card-tag">elev-1</div><p style="color:var(--text-secondary);font-size:var(--fs-small)">Resting cards, subtle hairline.</p></div>
-        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-2)"><div class="card-tag">elev-2</div><p style="color:var(--text-secondary);font-size:var(--fs-small)">Popovers, lifted panels.</p></div>
-        <div style="background:var(--bg-surface);border-radius:var(--r-lg);padding:var(--sp-6);box-shadow:var(--elev-glow)"><div class="card-tag" style="color:var(--accent)">elev-glow</div><p style="color:var(--text-secondary);font-size:var(--fs-small)">Verified / focused state.</p></div>
-      </div>
-      <div class="callout callout-info" style="margin-top:var(--sp-6)"><span class="mark">i</span><div><b>Motion tokens.</b> Durations 120 / 200 / 320ms on <code style="font-family:var(--font-mono);color:var(--accent)">cubic-bezier(0.4, 0, 0.2, 1)</code>. Hover any card or button on this page to feel it.</div></div>
+      <div class="callout callout-info" style="margin-top:var(--sp-6)"><span class="mark">i</span><div><b>Motion.</b> Durations 120 / 200 / 320ms on <code class="t-anno">cubic-bezier(0.4, 0, 0.2, 1)</code>. Hover any button or card to feel it.</div></div>
     </section>
 
-    <!-- ===================== BUTTONS ===================== -->
-    <section class="section reveal" id="buttons">
-      <div class="section-head">
-        <span class="section-num">05</span>
-        <h2>Buttons</h2>
-        <span class="desc">One loud primary, a quiet secondary, a near-invisible ghost.</span>
-      </div>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="#">Start verifying →</a>
+    <!-- ───────── ATMOSPHERE ───────── -->
+    <section class="ds-section" id="atmosphere">
+      <div class="ds-headrow"><span class="ds-num">05</span><h2>Atmosphere</h2>
+        <span class="ds-desc">The background you’re looking at right now.</span></div>
+      <p style="color:var(--text-secondary);font-size:var(--fs-body-lg);max-width:60ch">
+        A fixed <code class="t-anno">.atmosphere</code> layer (in <code class="t-anno">base.css</code>) composites three things:
+        a top accent <b style="color:var(--accent)">glow</b>, a soft film <b>grain</b> (overlay blend, lifts the canvas to a lighter tone),
+        and an edge <b>vignette</b> that pulls focus to center. It lives on its own element so blend modes composite correctly.
+      </p>
+      <p class="ds-note">// glow + grain (overlay 0.32) + vignette · fixed behind all content</p>
+    </section>
+
+    <!-- ───────── BUTTONS ───────── -->
+    <section class="ds-section" id="buttons">
+      <div class="ds-headrow"><span class="ds-num">06</span><h2>Buttons</h2>
+        <span class="ds-desc">One loud primary, a quiet secondary, a near-invisible ghost.</span></div>
+      <div class="ds-row">
+        <a class="btn btn-primary" href="#">Get started →</a>
         <a class="btn btn-secondary" href="#">Read the docs</a>
         <a class="btn btn-ghost" href="#">View on GitHub</a>
       </div>
     </section>
 
-    <!-- ===================== BADGES ===================== -->
-    <section class="section reveal" id="badges">
-      <div class="section-head">
-        <span class="section-num">06</span>
-        <h2>Proof-state badges</h2>
-        <span class="desc">The system's core idiom: status as color, color as meaning.</span>
+    <!-- ───────── BADGES ───────── -->
+    <section class="ds-section" id="badges">
+      <div class="ds-headrow"><span class="ds-num">07</span><h2>Proof-state chips</h2>
+        <span class="ds-desc">Squared tags — no circle. Color carries the meaning.</span></div>
+      <div class="ds-row">
+        <span class="badge badge-verified">Guaranteed</span>
+        <span class="badge badge-pending">Unchecked</span>
+        <span class="badge badge-counter">Not correct yet</span>
+        <span class="badge badge-info">Info</span>
       </div>
-      <div class="badge-row">
-        <span class="badge badge-verified"><span class="dot"></span>Verified</span>
-        <span class="badge badge-pending"><span class="dot"></span>Pending</span>
-        <span class="badge badge-counter"><span class="dot"></span>Counterexample</span>
-        <span class="badge badge-info"><span class="dot"></span>Lean 4</span>
-        <span class="badge badge-info"><span class="dot"></span>Dafny</span>
+      <p class="ds-note">// .badge + .badge-verified / -pending / -counter / -info</p>
+    </section>
+
+    <!-- ───────── CARDS ───────── -->
+    <section class="ds-section" id="cards">
+      <div class="ds-headrow"><span class="ds-num">08</span><h2>Cards</h2>
+        <span class="ds-desc">Surface containers. Hover for the accent hairline.</span></div>
+      <div class="ds-grid3">
+        <div class="card"><span class="ds-card-tag">contract</span><h3 style="font-size:var(--fs-h3);margin-bottom:var(--sp-2)">Annotate</h3><p style="color:var(--text-secondary);font-size:var(--fs-small)">Add <code class="t-anno">//@ requires</code> / <code class="t-anno">//@ ensures</code> to a function.</p></div>
+        <div class="card"><span class="ds-card-tag">guarantee</span><h3 style="font-size:var(--fs-h3);margin-bottom:var(--sp-2)">Correct by construction</h3><p style="color:var(--text-secondary);font-size:var(--fs-small)">The agent iterates until every contract holds.</p></div>
+        <div class="card"><span class="ds-card-tag">review</span><h3 style="font-size:var(--fs-h3);margin-bottom:var(--sp-2)">Read at a glance</h3><p style="color:var(--text-secondary);font-size:var(--fs-small)">You review the spec, not the implementation.</p></div>
       </div>
     </section>
 
-    <!-- ===================== CARDS ===================== -->
-    <section class="section reveal" id="cards">
-      <div class="section-head">
-        <span class="section-num">07</span>
-        <h2>Cards</h2>
-        <span class="desc">Feature and case-study cards. Hover for the accent hairline.</span>
-      </div>
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-icon">//@</div>
-          <h3>Annotate</h3>
-          <p>Add <code style="font-family:var(--font-mono);color:var(--accent)">//@ requires</code> and <code style="font-family:var(--font-mono);color:var(--accent)">//@ ensures</code> to the functions you care about. Implementation untouched.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">λ</div>
-          <h3>Compile to a model</h3>
-          <p>Your code lowers to a language that carries mathematical guarantees — Lean 4 or Dafny, same source.</p>
-        </div>
-        <div class="card">
-          <span class="card-tag">Brownfield case study</span>
-          <h3>hono-lemmascript</h3>
-          <p>A fork of Hono with security-critical middleware formally verified against four CVEs.</p>
-          <div style="margin-top:var(--sp-4)"><span class="badge badge-verified"><span class="dot"></span>4 CVEs verified</span></div>
-        </div>
+    <!-- ───────── CALLOUTS ───────── -->
+    <section class="ds-section" id="callouts">
+      <div class="ds-headrow"><span class="ds-num">09</span><h2>Callouts</h2>
+        <span class="ds-desc">For documentation emphasis.</span></div>
+      <div class="ds-stack">
+        <div class="callout callout-info"><span class="mark">i</span><div><b>Note.</b> Contracts are plain comments — your editor, linter, and CI never see a thing.</div></div>
+        <div class="callout callout-warn"><span class="mark">!</span><div><b>Tech preview.</b> The contract surface is stabilizing; expect changes before 1.0.</div></div>
       </div>
     </section>
 
-    <!-- ===================== CALLOUTS / STATS ===================== -->
-    <section class="section reveal" id="callouts">
-      <div class="section-head">
-        <span class="section-num">08</span>
-        <h2>Callouts &amp; Stats</h2>
-        <span class="desc">For documentation emphasis and proof-point numerics.</span>
-      </div>
-      <div class="stat-grid" style="margin-bottom:var(--sp-8)">
-        <div class="stat"><div class="num"><span>11</span></div><div class="lbl">functions verified in opencode</div></div>
-        <div class="stat"><div class="num"><span>2</span></div><div class="lbl">backends from one source</div></div>
-        <div class="stat"><div class="num"><span>0</span></div><div class="lbl">runtime overhead</div></div>
-        <div class="stat"><div class="num"><span>100</span>%</div><div class="lbl">TypeScript-compatible</div></div>
-      </div>
-      <div style="display:grid;gap:var(--sp-3)">
-        <div class="callout callout-info"><span class="mark">i</span><div><b>Note.</b> Annotations are plain comments — your editor, linter, and CI never see a thing.</div></div>
-        <div class="callout callout-warn"><span class="mark">!</span><div><b>Tech preview.</b> The annotation surface is stabilizing; expect changes before 1.0.</div></div>
-      </div>
-    </section>
-
-    <!-- ===================== ANNOTATED CODE ===================== -->
-    <section class="section reveal" id="code">
-      <div class="section-head">
-        <span class="section-num">09</span>
-        <h2>Annotated code</h2>
-        <span class="desc">The signature surface. Annotations glow green; TS stays calm.</span>
-      </div>
+    <!-- ───────── CODE BLOCK ───────── -->
+    <section class="ds-section" id="code">
+      <div class="ds-headrow"><span class="ds-num">10</span><h2>Code block</h2>
+        <span class="ds-desc">Flat bar (no window chrome). Annotations glow green; TS stays calm.</span></div>
       <div class="codeblock">
-        <div class="code-bar"><div class="code-dots"><i></i><i></i><i></i></div><span class="code-file">quota.ts</span><span class="badge badge-verified" style="margin-left:auto"><span class="dot"></span>Verified</span></div>
-        <div class="code-body">
-<span class="ln">1</span><span class="tok-anno">//@ requires</span> <span class="tok-anno-kw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span><br/>
-<span class="ln">2</span><span class="tok-anno">//@ ensures</span>  <span class="tok-anno-kw">\result &lt;= remaining</span><br/>
-<span class="ln">3</span><span class="tok-anno">//@ ensures</span>  <span class="tok-anno-kw">\result &gt;= 0</span><br/>
-<span class="ln">4</span><span class="tok-kw">function</span> <span class="tok-fn">charge</span><span class="tok-punc">(</span>remaining<span class="tok-punc">:</span> <span class="tok-kw">number</span><span class="tok-punc">,</span> cost<span class="tok-punc">:</span> <span class="tok-kw">number</span><span class="tok-punc">)</span><span class="tok-punc">:</span> <span class="tok-kw">number</span> <span class="tok-punc">{</span><br/>
-<span class="ln">5</span>&nbsp;&nbsp;<span class="tok-kw">if</span> <span class="tok-punc">(</span>cost <span class="tok-punc">&gt;</span> remaining<span class="tok-punc">)</span> <span class="tok-kw">return</span> <span class="tok-num">0</span><span class="tok-punc">;</span> <span class="tok-cmt">// no overbooking</span><br/>
-<span class="ln">6</span>&nbsp;&nbsp;<span class="tok-kw">return</span> remaining <span class="tok-punc">-</span> cost<span class="tok-punc">;</span><br/>
-<span class="ln">7</span><span class="tok-punc">}</span>
-        </div>
+        <div class="code-bar"><span class="code-file">account.ts</span><span class="badge badge-verified" style="margin-left:auto">Guaranteed</span></div>
+        <pre class="code-body"><span class="ln">1</span><span class="t-cmt">// a charge can never overdraw the account</span>
+<span class="ln">2</span><span class="t-anno">//@ requires</span> <span class="t-annokw">amount &gt;= 0</span>
+<span class="ln">3</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= balance</span>
+<span class="ln">4</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">5</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
+<span class="ln">6</span>&#125;</pre>
       </div>
+      <p class="ds-note">// token spans: .t-cmt .t-anno .t-annokw .t-kw .t-fn .t-num .t-str</p>
     </section>
 
-    <!-- ===================== PROOF PANEL ===================== -->
-    <section class="section reveal" id="proof">
-      <div class="section-head">
-        <span class="section-num">10</span>
-        <h2>Proof panel</h2>
-        <span class="desc">One annotated source → two verified models. The story in one component.</span>
-      </div>
-      <div class="proof-panel">
-        <div class="proof-out">
-          <div class="proof-out-head"><span class="label">TypeScript + //@</span></div>
-          <pre><b>//@ ensures</b> \result &gt;= n
-function inc(n) {
-  return n + 1;
-}</pre>
-        </div>
-        <div class="proof-arrow">→</div>
-        <div class="proof-out" style="box-shadow:var(--elev-glow)">
-          <div class="proof-out-head"><span class="label">Lean 4 proof</span><span class="badge badge-verified"><span class="dot"></span>QED</span></div>
-          <pre>theorem inc_spec (n : Int) :
-  inc n ≥ n := by
-  <b>simp [inc]; omega</b>
--- ✓ no goals remaining</pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== BACKEND TOGGLE ===================== -->
-    <section class="section reveal" id="backend">
-      <div class="section-head">
-        <span class="section-num">11</span>
-        <h2>Backend toggle</h2>
-        <span class="desc">Switch the proof backend without touching your source.</span>
-      </div>
-      <div class="toggle">
-        <button class="active">Lean 4</button>
-        <button>Dafny</button>
-      </div>
-    </section>
-
-    <!-- ===================== TERMINAL ===================== -->
-    <section class="section reveal" id="terminal">
-      <div class="section-head">
-        <span class="section-num">12</span>
-        <h2>Terminal</h2>
-        <span class="desc">The CLI surface — proofs run green.</span>
-      </div>
-      <div class="terminal">
-        <div><span class="prompt">$</span> lemmascript verify quota.ts</div>
-        <div class="out">→ lowering 3 annotated functions…</div>
-        <div class="out">→ backend: lean4</div>
-        <div class="ok">✓ charge   verified  (2 obligations discharged)</div>
-        <div class="ok">✓ refund   verified  (1 obligation discharged)</div>
-        <div class="ok">✓ balance  verified  (4 obligations discharged)</div>
-        <div class="out" style="margin-top:8px">3 / 3 verified in 1.84s <span class="cursor"></span></div>
-      </div>
-    </section>
-
-    <footer class="foot">
+    <footer style="border-top:1px solid var(--border-subtle);padding-top:var(--sp-8);color:var(--text-muted);font-size:var(--fs-small);display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4)">
       <div>LemmaScript Design System — built by <b style="color:var(--text-secondary)">Midspiral</b></div>
-      <div class="mono">v0.1 · dark / terminal-forward · 2026</div>
+      <div style="font-family:var(--font-mono);font-size:var(--fs-caption)">v0.2 · living reference · linked to src/styles/*</div>
     </footer>
-
   </main>
 </div>
+
+<script>
+  // Read live token values at runtime so labels never drift.
+  const toHex = (rgb) => {
+    const m = (rgb || '').match(/[\d.]+/g);
+    if (!m) return rgb;
+    return '#' + m.slice(0, 3).map((n) => Math.round(+n).toString(16).padStart(2, '0')).join('').toUpperCase();
+  };
+  document.querySelectorAll('.ds-sw').forEach((sw) => {
+    const chip = sw.querySelector('.ds-sw-chip');
+    const out = sw.querySelector('.ds-sw-hex');
+    if (chip && out) out.textContent = toHex(getComputedStyle(chip).backgroundColor);
+  });
+  document.querySelectorAll('.ds-typerow').forEach((r) => {
+    const eg = r.querySelector('.ds-type-eg');
+    const out = r.querySelector('.ds-type-size');
+    if (eg && out) out.textContent = Math.round(parseFloat(getComputedStyle(eg).fontSize)) + 'px';
+  });
+  document.querySelectorAll('.ds-scalerow').forEach((r) => {
+    const bar = r.querySelector('.ds-scale-bar');
+    const out = r.querySelector('.ds-scale-px');
+    if (bar && out) out.textContent = Math.round(parseFloat(getComputedStyle(bar).width)) + 'px';
+  });
+</script>
 </body>
 </html>

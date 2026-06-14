@@ -9,9 +9,11 @@ Rules for any user-facing words on the LemmaScript site. When you write or edit 
 
 ## Positioning (the north star)
 
-LemmaScript **is TypeScript with syntax for contracts** (mirrors "TypeScript is JavaScript with syntax for types"). The audience leads with **working TypeScript engineers**; **AI agents** are a strong, explicit second pillar — say "built for engineers and AI agents" somewhere prominent.
+LemmaScript **is TypeScript with syntax for contracts** (mirrors "TypeScript is JavaScript with syntax for types").
 
-Copy sells the **WHAT** and the **IMPACT**, never the HOW. Talk about: correctness, contracts, catching bugs before they ship, guarantees, trust, zero runtime cost, works on existing code, built for agents.
+**Agent-first.** LemmaScript is built for AI agents to use: the agent writes the contracts and iterates until the code is correct by construction. Engineers do **not** have to write LemmaScript themselves — but it's friendly enough to **review at a glance**, and to write by hand when they want to. Lead with the agent workflow; cast the engineer as the reviewer (who can also author). Don't imply engineers must learn or write it.
+
+Copy sells the **WHAT** and the **IMPACT**, never the HOW. Talk about: correctness, contracts, guarantees, trust, code that's correct by construction, zero runtime cost, works on existing code, agent-written, human-reviewable.
 
 ---
 
@@ -64,10 +66,22 @@ Note: **"contract"** and the `//@ requires` / `//@ ensures` syntax ARE allowed e
 
 ---
 
+## Rule 4 — Correct by construction, not bug-finding
+
+LemmaScript is **not** a bug scanner, linter, or bug-finder. The story is: code is **built correct from the ground up**. With a contract in place, the agent (or developer) iterates until the code is correct — and what surfaces is **correct code**. Never frame the product as "finding" or "catching" bugs in finished code.
+
+- ❌ "Catch the bugs that slip past tests." · "LemmaScript finds the bug." · "Bug found." · "Watch it catch the bug."
+- ✅ "Code that's correct by construction." · "The agent iterates until it's correct — and only correct code ships." · "What surfaces is correct code."
+
+The in-progress / failing state is **"not correct yet"** — a step in the loop toward correct — never "a bug we found." The end state is correct code, not a bug report.
+
+---
+
 ## Quick checklist before shipping copy
 
 1. No "and hope" (or hope-cliché) anywhere.
 2. Testing is treated with respect — contrasted on role, never strawmanned.
 3. No HOW terms unless this is the `/how-it-works` page.
-4. Leads with engineers; agents are present and explicit.
-5. Reads as WHAT + IMPACT (trust, correctness, bugs caught), not mechanism.
+4. Framed as correct-by-construction, not bug-finding ("not correct yet", never "bug found").
+5. Agent-first: the agent writes contracts; engineers review (and may author). Never imply engineers must write LemmaScript.
+6. Reads as WHAT + IMPACT (trust, correctness, code you can rely on), not mechanism.

@@ -1,7 +1,7 @@
 ---
 // Interactive in-browser checker. The visitor edits a function and its contract;
 // the engine samples inputs that satisfy //@ requires and checks //@ ensures,
-// surfacing the exact input that breaks it, or confirming none can.
+// flagging any input that doesn’t yet satisfy the contract, or confirming all do.
 const scenarios = [
   {
     id: 'charge',
@@ -45,8 +45,8 @@ function clamp(x: number, lo: number, hi: number): number {
   <div class="container">
     <div class="section-head pg-head">
       <span class="kicker">// watch it work</span>
-      <h2>Edit the code. Break it. Watch LemmaScript catch the bug.</h2>
-      <p class="section-desc">This runs entirely in your browser. Change the code or its <code class="pg-inline">//@</code> contract, hit Check, and LemmaScript hunts for an input that breaks it.</p>
+      <h2>Edit the code. LemmaScript holds it to its contract.</h2>
+      <p class="section-desc">This runs entirely in your browser. Change the code or its <code class="pg-inline">//@</code> contract, hit Check, and LemmaScript holds the code to its contract — for every input.</p>
     </div>
 
     <div class="pg-shell">
@@ -218,20 +218,20 @@ function clamp(x: number, lo: number, hi: number): number {
         const args = res.meta.params.map((p, i) => `${p.name} = ${res.cx.vals[i]}`).join(', ')
         const got = res.cx.threw ? res.cx.text : `\\result = ${fmt(res.cx.result)}`
         outEl.innerHTML = `<div class="pg-result pg-counter">
-          <div class="pg-r-head"><span class="badge badge-counter"><span class="bdot"></span>Bug found</span><span class="pg-r-count">after ${res.checked.toLocaleString()} inputs</span></div>
+          <div class="pg-r-head"><span class="badge badge-counter"><span class="bdot"></span>Not correct yet</span><span class="pg-r-count">after ${res.checked.toLocaleString()} inputs</span></div>
           <div class="pg-cx">
             <div class="pg-cx-row"><span class="pg-cx-k">input</span><code>${esc(args)}</code></div>
             <div class="pg-cx-row"><span class="pg-cx-k">got</span><code>${esc(got)}</code></div>
-            <div class="pg-cx-row"><span class="pg-cx-k">breaks</span><code class="pg-violate">//@ ensures ${esc(res.cx.text)}</code></div>
+            <div class="pg-cx-row"><span class="pg-cx-k">unmet</span><code class="pg-violate">//@ ensures ${esc(res.cx.text)}</code></div>
           </div>
-          <p class="pg-r-foot">A real input breaks this. Fix the code or tighten the contract, then check again.</p>
+          <p class="pg-r-foot">This input doesn’t satisfy the contract yet. In the real loop, your agent revises the code and checks again — until it’s correct.</p>
         </div>`
         return
       }
       // guaranteed
       outEl.innerHTML = `<div class="pg-result pg-ok">
-        <div class="pg-r-head"><span class="badge badge-verified"><span class="bdot"></span>Guaranteed</span><span class="pg-r-count">${res.checked.toLocaleString()} inputs · 0 bugs</span></div>
-        <div class="pg-guarantee">No input can break this function. It honors its contract — always.</div>
+        <div class="pg-r-head"><span class="badge badge-verified"><span class="bdot"></span>Guaranteed</span><span class="pg-r-count">${res.checked.toLocaleString()} inputs · all correct</span></div>
+        <div class="pg-guarantee">This code is correct by construction — it honors its contract for every input.</div>
         <p class="pg-r-foot">Every input checked honors the contract. The full LemmaScript engine guarantees it for all of them.</p>
       </div>`
     }
@@ -246,7 +246,7 @@ function clamp(x: number, lo: number, hi: number): number {
     function run() {
       verifyBtn.disabled = true
       verifyBtn.textContent = '⋯ Checking'
-      outEl.innerHTML = '<div class="pg-running"><span class="pg-spin"></span> searching for a bug…</div>'
+      outEl.innerHTML = '<div class="pg-running"><span class="pg-spin"></span> checking against the contract…</div>'
       setTimeout(() => {
         let res
         try {

@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+
+// The four core ideas of the guard plugin, as alternating rows.
+const stages = [
+  {
+    n: '01',
+    title: 'One import. Every guard, gone.',
+    body: 'guard turns a contract-checked module into a drop-in with the same exports and the same signatures. You swap a single import and delete every hand-written guard you used to re-state by hand. Each function now checks its own //@ requires before it runs — the core defends its own contract, and the caller never re-states it.',
+    code: `<span class="t-cmt">// one-line swap — every call below now enforces its own //@ requires</span>
+<span class="t-kw">import</span> &#123; bill, balances, settleRounded &#125; <span class="t-kw">from</span> <span class="t-str">"./allocate.guarded"</span>;
+
+<span class="t-cmt">// the hand-guards you used to write here? deleted.</span>`,
+  },
+  {
+    n: '02',
+    title: 'Called out-of-contract? A loud, debuggable error.',
+    body: 'Calling a function outside its contract is a bug — so guard refuses to fabricate an answer. It throws a PreconditionError that carries the full structured cause: which function, which clause, the raw inputs to reproduce it, and the exact values that broke it. You see why it failed, not just that it did — and the safe summary stays out of your logs.',
+    code: `<span class="t-err">PreconditionError</span>: precondition failed in settleRounded
+  fn:     <span class="t-str">"settleRounded"</span>
+  clause: <span class="t-str">"sumTo(paid) == sumTo(owed)"</span>
+  args:   [ … ]   <span class="t-cmt">// the raw inputs, to reproduce</span>
+  detail: &#123; <span class="t-str">"sumTo(paid)"</span>: <span class="t-num">4224</span>, <span class="t-str">"sumTo(owed)"</span>: <span class="t-num">4220</span> &#125;
+          <span class="t-cmt">// ← exactly what broke it</span>`,
+  },
+  {
+    n: '03',
+    title: 'Render-time gating, without re-deriving the contract.',
+    body: 'A UI needs to tell an expected not-yet-valid state — a tab that isn’t fully paid yet, so you show a prompt — apart from an actual bug. So guard also emits a can.* boolean for every function, beside the pristine drop-in. Call it only to decide what to render. Your top-level exports stay the exact names of your core; the predicates live next to them.',
+    code: `<span class="t-cmt">// decide what to render — never to re-derive the contract</span>
+<span class="t-kw">import</span> &#123; balances, can &#125; <span class="t-kw">from</span> <span class="t-str">"./allocate.guarded"</span>;
+
+<span class="t-kw">if</span> (can.balances(paid, totals)) &#123;
+  bal = balances(paid, totals);   <span class="t-cmt">// safe: in-contract</span>
+&#125; <span class="t-kw">else</span> &#123;
+  <span class="t-kw">return</span> &lt;NotYetSettled /&gt;;        <span class="t-cmt">// an expected state, not a bug</span>
+&#125;`,
+  },
+  {
+    n: '04',
+    title: 'Committed, regenerated, never drifts.',
+    body: 'The drop-in is committed source, so anything that imports it builds with no extra step. Mark a file //@ guarded and guard regenerates it; your CI regenerates, then fails on any difference — the same drift gate you already run on the rest of the toolchain. The guard can never silently fall out of step with the contract it mirrors.',
+    code: `<span class="t-cmt">$ lsc guard src/allocate.ts</span>
+<span class="t-verified">✓ allocate.guarded.ts</span>   13 functions · drop-in · typechecks
+
+<span class="t-cmt"># CI drift gate — like every other generated file</span>
+<span class="t-cmt">$ git diff --exit-code -- '*.guarded.ts'</span>`,
+  },
+]
+---
+
+<BaseLayout
+  title="guard — LemmaScript plugin"
+  description="guard turns your contract-checked functions into a drop-in module that enforces its own //@ requires at runtime — so your UI and server code can't call them out-of-contract without a loud, debuggable error. Delete your hand-written guards; the core defends itself."
+>
+  <header class="page-head">
+    <div class="container">
+      <span class="kicker">// plugin · guard</span>
+      <h1>A core that <em>defends its own contract</em>.</h1>
+      <p class="lede">
+        <code class="inline">guard</code> turns your contract-checked functions into a drop-in module that
+        enforces its own <code class="inline">//@ requires</code> at runtime. Your UI and server code can't
+        call them out-of-contract without a loud, debuggable error — so you delete your hand-written
+        guards and let the core defend itself. Built for engineers and the agents writing alongside them.
+      </p>
+      <div class="head-actions">
+        <a href="#install" class="btn btn-primary">Install guard →</a>
+        <a href="https://github.com/midspiral/LemmaScript-guard" target="_blank" rel="noopener" class="btn btn-ghost">View on GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- the problem -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// the problem</span>
+        <h2>Hand-written guards drift.</h2>
+        <p class="section-desc">
+          Every app pairs a guaranteed-correct core with ordinary UI and server code that may only call it
+          in-contract. Today that surrounding code re-states each <code class="inline">//@ requires</code> by hand —
+          with nothing tying the guard to the clause it mirrors. Edit one and the other silently falls behind,
+          and a stale guard computes a wrong number instead of stopping.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- how it behaves -->
+  <section class="section section-alt">
+    <div class="container stages">
+      {stages.map((s) => (
+        <div class="stage">
+          <div class="stage-copy">
+            <span class="stage-n">{s.n}</span>
+            <h2>{s.title}</h2>
+            <p>{s.body}</p>
+          </div>
+          <div class="stage-code">
+            <div class="codeblock">
+              <pre class="code-body" set:html={s.code}></pre>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- shipped proof point + cost -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// in production</span>
+        <h2>Already shipping.</h2>
+      </div>
+      <div class="fact-grid">
+        <div class="why"><h3>13 functions, one drop-in</h3><p>eventab’s allocation core ships a complete guarded module — every <code class="inline">//@ requires</code> enforced, every hand-guard deleted. The pilot for the studies that follow.</p></div>
+        <div class="why"><h3>Catches the glue, too</h3><p>The guard also checks the cross-function conditions no single function owns — the composition seams where a real bug actually hides.</p></div>
+        <div class="why"><h3>Effectively free</h3><p>guard checks the contract once per call — a constant factor of roughly 1.0–1.5×, tens to hundreds of nanoseconds at UI sizes, trending to zero as the body dominates.</p></div>
+        <div class="why"><h3>Runs in your CI, offline</h3><p>The generated file is plain committed source. Nothing phones home, nothing meters your runs — it works exactly like the rest of the toolchain.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- install / pricing -->
+  <section id="install" class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// install</span>
+        <h2>Snap it into the workflow you already run.</h2>
+        <p class="section-desc">
+          <code class="inline">guard</code> is a LemmaScript plugin — it installs into the same
+          <code class="inline">lsc</code> workflow and runs in your own CI, exactly like the rest of the toolchain.
+        </p>
+      </div>
+      <div class="codeblock install-block">
+        <pre class="code-body" set:html={`<span class="t-cmt"># add the plugin</span>
+<span class="t-kw">lsc</span> plugin add guard
+
+<span class="t-cmt"># use it — same shape as the rest of the toolchain</span>
+<span class="t-kw">lsc</span> guard src/core.ts          <span class="t-cmt"># → src/core.guarded.ts</span>
+<span class="t-kw">lsc</span> check                       <span class="t-cmt"># the drift gate now covers guarded files too</span>`}></pre>
+      </div>
+      <div class="callout callout-info" style="margin-top:var(--sp-8)">
+        <span class="mark">i</span>
+        <div><b>Full source, in your repo.</b> The generated <code class="inline">.guarded.ts</code> is plain committed source you can read and audit — guard touches the trusted part of your stack, so nothing is hidden and nothing phones home.</div>
+      </div>
+      <div class="center" style="margin-top:var(--sp-12)">
+        <a href="/integrations" class="btn btn-primary">See the whole workflow →</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .head-actions { display: flex; gap: var(--sp-4); margin-top: var(--sp-8); flex-wrap: wrap; }
+
+  .stages { display: grid; gap: var(--sp-16); }
+  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); align-items: center; }
+  .stage:nth-child(even) .stage-copy { order: 2; }
+  .stage-n { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--accent); }
+  .stage-copy h2 { font-size: var(--fs-h2); margin: var(--sp-3) 0; }
+  .stage-copy p { font-size: var(--fs-body); }
+  .stage-copy p em { font-style: normal; color: var(--accent-bright); }
+
+  .t-err { color: var(--state-counter); font-weight: 600; }
+  .t-verified { color: var(--state-verified); }
+
+  .fact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+  .why { padding: var(--sp-6); border-left: 2px solid var(--accent-dim); }
+  .why h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
+  .why p { font-size: var(--fs-small); }
+
+  .inline {
+    font-family: var(--font-mono); font-size: 0.9em;
+    color: var(--accent-bright);
+    background: var(--state-verified-bg);
+    padding: 1px 5px; border-radius: var(--r-sm);
+  }
+  .install-block { max-width: 640px; }
+
+  @media (max-width: 860px) {
+    .stage { grid-template-columns: 1fr; gap: var(--sp-6); }
+    .stage:nth-child(even) .stage-copy { order: 0; }
+    .fact-grid { grid-template-columns: 1fr; }
+  }
+</style>

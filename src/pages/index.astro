@@ -1,12 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import Playground from '../components/Playground.astro'
-
-const compare = [
-  { name: 'Types', sub: 'tsc', covers: 'Shape of data', misses: 'What the code actually does with it', tone: 'info' },
-  { name: 'Tests', sub: 'vitest, jest', covers: 'Real behavior on the paths you run', misses: 'Inputs you didn’t run', tone: 'pending' },
-  { name: 'LemmaScript', sub: 'contracts', covers: 'All inputs, behavior and all', misses: 'Nothing — that’s the point', tone: 'verified' },
-]
 
 const evidence = [
   { kind: 'Brownfield', metric: '4 CVEs', name: 'hono-lemmascript', desc: 'Security-critical middleware in a fork of Hono, hardened against four real CVEs — IP restriction, cookies, path traversal.', href: 'https://github.com/midspiral/hono-lemmascript' },
@@ -16,110 +9,48 @@ const evidence = [
 ---
 
 <BaseLayout
-  title="LemmaScript — TypeScript with contracts, for engineers and AI agents"
-  description="LemmaScript adds contracts to TypeScript so your code is guaranteed correct — catching critical bugs before they reach production. Built for engineers and AI agents. No new language, no runtime cost."
+  title="LemmaScript — agent-first contracts for TypeScript"
+  description="LemmaScript adds contracts to TypeScript so your agents build code that's correct by construction — and you can review it at a glance. No new language, no runtime cost."
 >
   <!-- ===================== HERO ===================== -->
   <section class="hero">
     <div class="container hero-full">
-        <span class="hero-eyebrow"><span class="dot"></span> Built for engineers &amp; AI agents</span>
+        <span class="hero-eyebrow">// built for agents</span>
         <h1 class="hero-title">LemmaScript is TypeScript with syntax for <span class="pos-contracts">contracts</span>.</h1>
+        <div class="hero-code">
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">core.verified.ts</span><a class="code-src" href="https://github.com/midspiral/hono-rate-limiter-with-lemmascript/blob/main/src/core.verified.ts#L38-L57" target="_blank" rel="noopener">// real code ↗</a><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
+            <pre class="code-body"><span class="ln">43</span><span class="t-cmt">// keep only the requests still inside the time window</span>
+<span class="ln">44</span><span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">pruneWindow</span>(log: <span class="t-kw">number</span>[], now: <span class="t-kw">number</span>, W: <span class="t-kw">number</span>): <span class="t-kw">number</span>[] &#123;
+<span class="ln">45</span>  <span class="t-anno">//@ requires</span> <span class="t-annokw">forall(k, 0 &lt;= k &amp;&amp; k &lt; log.length ==&gt; log[k] &lt;= now)</span>
+<span class="ln">46</span>  <span class="t-anno">//@ decreases</span> <span class="t-annokw">log.length</span>
+<span class="ln">47</span>  <span class="t-anno">//@ ensures</span> <span class="t-annokw">\result.length &lt;= log.length</span>
+<span class="ln">48</span>  <span class="t-anno">//@ ensures</span> <span class="t-annokw">forall(k, 0 &lt;= k &amp;&amp; k &lt; \result.length ==&gt; now - W &lt; \result[k] &amp;&amp; \result[k] &lt;= now)</span>
+<span class="ln">49</span>  <span class="t-kw">if</span> (log.length === <span class="t-num">0</span>) &#123;
+<span class="ln">50</span>    <span class="t-kw">return</span> [];
+<span class="ln">51</span>  &#125;
+<span class="ln">52</span>  <span class="t-kw">const</span> rest = <span class="t-fn">pruneWindow</span>(log.slice(<span class="t-num">1</span>), now, W);
+<span class="ln">53</span>  <span class="t-kw">if</span> (log[<span class="t-num">0</span>] &gt; now - W) &#123;
+<span class="ln">54</span>    <span class="t-kw">return</span> [log[<span class="t-num">0</span>], ...rest];
+<span class="ln">55</span>  &#125;
+<span class="ln">56</span>  <span class="t-kw">return</span> rest;
+<span class="ln">57</span>&#125;</pre>
+          </div>
+        </div>
         <p class="hero-lede">
-          Add a contract to any function and LemmaScript makes sure your code always honors it —
-          catching critical bugs before they reach production. <strong>No new language. No runtime cost.</strong>
-          Just code you can trust, for your team and your agents alike.
+          Your agent writes the contracts and iterates until the code is correct by construction.
+          You don’t have to write LemmaScript — but it’s plain enough to <strong>review in seconds</strong>,
+          or write yourself when you want to. No new language. No runtime cost.
         </p>
         <div class="hero-actions">
-          <a href="#playground" class="btn btn-primary">Try it live ↓</a>
+          <a href="/try" class="btn btn-primary">Try it live →</a>
           <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
         </div>
         <div class="hero-trust">
-          <span class="badge badge-info"><span class="bdot"></span>Zero runtime cost</span>
-          <span class="badge badge-info"><span class="bdot"></span>Works on existing code</span>
-          <span class="trust-note">// drop it into any TypeScript project</span>
+          <span class="badge badge-info"><span class="bdot"></span>Agents write it</span>
+          <span class="badge badge-info"><span class="bdot"></span>You review it</span>
+          <span class="trust-note">// plain TypeScript — nothing new to learn</span>
         </div>
-    </div>
-  </section>
-
-  <!-- ===================== EXAMPLE ===================== -->
-  <section class="section example">
-    <div class="container">
-      <div class="section-head center" style="margin-inline:auto">
-        <span class="kicker">// a function that can’t be wrong</span>
-        <h2>This compiles, type-checks, and is <em>guaranteed correct</em>.</h2>
-      </div>
-      <div class="example-art">
-        <div class="codeblock">
-          <div class="code-bar">
-            <span class="dots"><i></i><i></i><i></i></span>
-            <span class="code-file">quota.ts</span>
-            <span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span>
-          </div>
-          <pre class="code-body"><span class="ln">1</span><span class="t-anno">//@ requires</span> <span class="t-annokw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span>
-<span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= remaining</span>
-<span class="ln">3</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
-<span class="ln">4</span>  <span class="t-kw">if</span> (cost &gt; remaining) <span class="t-kw">return</span> <span class="t-num">0</span>; <span class="t-cmt">// no overbooking</span>
-<span class="ln">5</span>  <span class="t-kw">return</span> remaining - cost;
-<span class="ln">6</span>&#125;</pre>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== THE PROBLEM ===================== -->
-  <section class="section problem">
-    <div class="container narrow">
-      <span class="kicker">// the problem</span>
-      <h2 class="problem-h">Generation got cheap. <span class="dim">Correctness didn’t.</span></h2>
-      <p class="problem-p">
-        Your team — and increasingly your agents — ship more code, faster, than ever. Your types line up.
-        Your tests pass. For most code, that’s exactly enough.
-      </p>
-      <p class="problem-p">
-        But some logic simply has to be right — billing, permissions, scheduling, access control. For that code,
-        “the tests pass” isn’t the same as “this is correct, for <em>every</em> input” — and that gap is where the
-        expensive bugs live.
-      </p>
-    </div>
-  </section>
-
-  <!-- ===================== THE SHIFT ===================== -->
-  <section class="section section-alt shift">
-    <div class="container narrow center">
-      <span class="kicker">// the shift</span>
-      <h2 class="shift-h">What if correctness were something you could <em>guarantee</em> — for every input, every time?</h2>
-      <p class="shift-p">LemmaScript makes correctness a property of your code. Here, green doesn’t mean “it probably works.” It means <strong>guaranteed — for every input</strong>.</p>
-      <div class="state-row">
-        <span class="badge badge-verified"><span class="bdot"></span>Guaranteed</span>
-        <span class="badge badge-pending"><span class="bdot"></span>Unchecked</span>
-        <span class="badge badge-counter"><span class="bdot"></span>Bug found</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== PLAYGROUND ===================== -->
-  <div id="playground"></div>
-  <Playground />
-
-  <!-- ===================== THE DIFFERENCE ===================== -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center" style="margin-inline:auto">
-        <span class="kicker">// the difference</span>
-        <h2>Types check shape. Tests check behavior. LemmaScript guarantees the logic.</h2>
-      </div>
-      <div class="cmp-grid">
-        {compare.map((c) => (
-          <div class:list={['cmp', `cmp-${c.tone}`]}>
-            <div class="cmp-top">
-              <h3>{c.name}</h3>
-              <span class="cmp-sub">{c.sub}</span>
-            </div>
-            <div class="cmp-row"><span class="cmp-k">✓ covers</span><p>{c.covers}</p></div>
-            <div class="cmp-row"><span class="cmp-k miss">✗ leaves open</span><p>{c.misses}</p></div>
-          </div>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -128,25 +59,85 @@ const evidence = [
     <div class="container two-col">
       <div>
         <span class="kicker">// built for AI agents</span>
-        <h2>Your agents write code fast. LemmaScript makes sure it’s right.</h2>
+        <h2>Your agents write code fast. LemmaScript makes sure it’s correct.</h2>
         <p class="section-desc">
-          AI agents generate plausible code in seconds — but “looks right” isn’t a guarantee.
-          LemmaScript gives every function a contract it must honor and pinpoints the
-          <strong>exact input that breaks it</strong>, so your agents ship code that’s correct —
-          not just convincing — and fix it the moment it isn’t.
+          Most code is written, then <em>debugged</em> into correctness — test, patch, repeat, on every change.
+          LemmaScript cuts that loop: your agent declares what each function must do, then writes code that’s
+          <strong>correct by construction</strong> — right the first time. 
         </p>
         <a href="/how-it-works" class="link-arrow">See how it works →</a>
       </div>
-      <div class="loop">
-        <div class="loop-step"><span class="loop-n">1</span> agent writes a function &amp; its contract</div>
-        <div class="loop-arrow">↓</div>
-        <div class="loop-step"><span class="loop-n">2</span> LemmaScript checks it</div>
-        <div class="loop-arrow">↓</div>
-        <div class="loop-step counter"><span class="loop-n">3</span> ✗ bug found: <code>cost = -3</code></div>
-        <div class="loop-arrow">↓</div>
-        <div class="loop-step"><span class="loop-n">4</span> agent fixes it and re-runs</div>
-        <div class="loop-arrow">↓</div>
-        <div class="loop-step ok"><span class="loop-n">5</span> ✓ guaranteed correct</div>
+      <div class="contrast">
+        <div class="ct-card ct-before">
+          <div class="ct-label">the old way</div>
+          <div class="ct-step">write the code</div>
+          <div class="ct-step">test it</div>
+          <div class="ct-step bad">✗ a bug still slips through</div>
+          <div class="ct-step">track it down, patch it</div>
+          <div class="ct-step repeat">↻ repeat, on every change</div>
+        </div>
+        <div class="ct-card ct-after">
+          <div class="ct-label">with LemmaScript</div>
+          <div class="ct-step">write the code + its contract</div>
+          <div class="ct-step ok">✓ correct — the first time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REVIEW SPECS, NOT IMPLEMENTATION ===================== -->
+  <section class="section review">
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// review intent, not implementation</span>
+        <h2>You review the spec. The agent writes the rest.</h2>
+        <p class="section-desc">A few declarative contracts say exactly what the code must do. The implementation that satisfies them is the agent’s job — you don’t have to read it.</p>
+      </div>
+      <div class="review-grid">
+        <div class="review-col review-spec">
+          <div class="review-label"><span class="badge badge-verified"><span class="bdot"></span>What you review</span><span class="review-meta">the spec · 4 lines</span></div>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">binarySearch.ts</span><a class="code-src" href="https://github.com/midspiral/LemmaScript/blob/main/examples/binarySearch.ts" target="_blank" rel="noopener">// real code ↗</a></div>
+            <pre class="code-body"><span class="t-cmt">// find target in a sorted array, or -1</span>
+<span class="t-anno">//@ requires</span> <span class="t-annokw">sorted(arr)</span>
+<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 ==&gt; arr[\result] === target</span>
+<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result === -1 ==&gt; forall(k, arr[k] !== target)</span></pre>
+          </div>
+          <p class="review-note">Read it in seconds. This is the whole guarantee.</p>
+        </div>
+
+        <div class="review-col review-impl">
+          <div class="review-label"><span class="review-meta">what the agent writes · a while-loop with 6 invariants</span></div>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">binarySearch.ts</span></div>
+            <pre class="code-body impl-dim">export function binarySearch(arr: number[], target: number): number &#123;
+  let lo = 0;
+  let hi = arr.length - 1;
+  let result = -1;
+
+  while (lo &lt;= hi) &#123;
+    //@ invariant 0 &lt;= lo &amp;&amp; lo &lt;= arr.length
+    //@ invariant -1 &lt;= hi &amp;&amp; hi &lt; arr.length
+    //@ invariant forall(k, 0 &lt;= k &amp;&amp; k &lt; lo ==&gt; arr[k] !== target)
+    //@ invariant forall(k, hi &lt; k &amp;&amp; k &lt; arr.length ==&gt; arr[k] !== target)
+    //@ invariant result === -1 || (result &gt;= 0 &amp;&amp; arr[result] === target)
+    //@ decreases (hi - lo + 1)
+
+    const mid = Math.floor((lo + hi) / 2);
+    if (arr[mid] === target) &#123;
+      result = mid;
+      break;
+    &#125; else if (arr[mid] &lt; target) &#123;
+      lo = mid + 1;
+    &#125; else &#123;
+      hi = mid - 1;
+    &#125;
+  &#125;
+  return result;
+&#125;</pre>
+          </div>
+          <p class="review-note">Famously easy to get subtly wrong — and a pain to test. You don’t read it; the spec already says what it does.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -206,12 +197,14 @@ const evidence = [
   /* ---------- hero ---------- */
   .hero { padding-block: var(--sp-24) var(--sp-16); }
   .hero-full { text-align: center; max-width: 1040px; margin-inline: auto; }
-  .hero-eyebrow { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-mono);
-    font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
-    padding: 5px var(--sp-3); border-radius: var(--r-full); background: var(--state-verified-bg); border: 1px solid var(--accent-dim); margin-bottom: var(--sp-6); }
-  .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-  .hero-title { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: var(--sp-6); text-wrap: balance; }
+  .hero-eyebrow { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-small);
+    letter-spacing: 0.02em; color: var(--accent); margin-bottom: var(--sp-6); }
+  .hero-title { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: var(--sp-6); text-wrap: balance; }
   .hero-title .pos-contracts { color: var(--accent); }
+  .hero-code { max-width: 960px; margin: 0 auto var(--sp-8); text-align: left; }
+  .hero-code .code-body { line-height: 1.85; }
+  .code-src { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); transition: color var(--dur-1) var(--ease); }
+  .code-src:hover { color: var(--accent); }
   .hero-lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 60ch; margin: 0 auto var(--sp-8); }
   .hero-lede strong { color: var(--text-primary); font-weight: 600; }
   .hero-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; justify-content: center; }
@@ -224,48 +217,22 @@ const evidence = [
   .center { text-align: center; }
   .center.narrow, .narrow.center { margin-inline: auto; }
 
-  /* ---------- problem ---------- */
-  .problem-h { font-size: var(--fs-h1); margin: var(--sp-3) 0 var(--sp-6); }
-  .problem-h .dim { color: var(--text-muted); }
-  .problem-p { font-size: var(--fs-body-lg); color: var(--text-secondary); margin-bottom: var(--sp-4); }
-  .problem-p em { font-style: normal; color: var(--text-primary); }
-
-  /* ---------- shift ---------- */
-  .shift-h { font-size: var(--fs-h1); margin: var(--sp-3) auto var(--sp-4); max-width: 22ch; }
-  .shift-h em { font-style: normal; color: var(--accent); }
-  .shift-p { font-size: var(--fs-body-lg); color: var(--text-secondary); margin-inline: auto; max-width: 52ch; }
-  .shift-p strong { color: var(--accent-bright); font-weight: 600; }
-  .state-row { display: flex; gap: var(--sp-3); justify-content: center; margin-top: var(--sp-8); flex-wrap: wrap; }
-
-  /* ---------- compare ---------- */
-  .cmp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
-  .cmp { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: var(--sp-6); }
-  .cmp-verified { border-color: var(--accent-dim); box-shadow: var(--elev-glow); }
-  .cmp-top { display: flex; align-items: baseline; gap: var(--sp-3); margin-bottom: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 1px solid var(--border-subtle); }
-  .cmp-top h3 { font-size: var(--fs-h3); }
-  .cmp-info .cmp-top h3 { color: var(--state-info); }
-  .cmp-pending .cmp-top h3 { color: var(--state-pending); }
-  .cmp-verified .cmp-top h3 { color: var(--accent); }
-  .cmp-sub { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); }
-  .cmp-row { display: flex; gap: var(--sp-3); margin-bottom: var(--sp-3); }
-  .cmp-k { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); width: 72px; flex-shrink: 0; }
-  .cmp-k.miss { color: var(--text-muted); }
-  .cmp-row p { font-size: var(--fs-small); }
 
   /* ---------- two-col (agents, get started) ---------- */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-16); align-items: center; }
   .two-col h2 { margin: var(--sp-3) 0; }
   .two-col .section-desc strong { color: var(--accent-bright); font-weight: 600; }
+  .two-col .link-arrow { display: inline-block; margin-top: var(--sp-6); }
+  .two-col .hero-actions { justify-content: flex-start; }
 
-  .loop { display: grid; gap: var(--sp-2); }
-  .loop-step { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-md);
-    padding: var(--sp-3) var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-secondary); display: flex; align-items: center; gap: var(--sp-3); }
-  .loop-step.counter { border-color: rgba(244,85,78,0.3); color: var(--state-counter); }
-  .loop-step.counter code { color: var(--state-counter); }
-  .loop-step.ok { border-color: var(--accent-dim); color: var(--accent); box-shadow: var(--elev-glow); }
-  .loop-n { width: 20px; height: 20px; border-radius: 50%; background: var(--bg-overlay); color: var(--text-muted);
-    display: grid; place-items: center; font-size: var(--fs-caption); flex-shrink: 0; }
-  .loop-arrow { text-align: center; color: var(--text-faint); font-size: var(--fs-small); }
+  .contrast { display: grid; gap: var(--sp-4); }
+  .ct-card { border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: var(--sp-3) var(--sp-6) var(--sp-4); background: var(--bg-surface); }
+  .ct-label { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); padding: var(--sp-3) 0; }
+  .ct-step { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-secondary); padding: 9px 0; border-top: 1px solid var(--border-subtle); }
+  .ct-before .ct-step.bad { color: var(--state-counter); }
+  .ct-before .ct-step.repeat { color: var(--text-muted); }
+  .ct-after { border-color: var(--accent-dim); box-shadow: var(--elev-glow); }
+  .ct-after .ct-step.ok { color: var(--accent); }
 
   /* ---------- evidence ---------- */
   .ev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
@@ -278,9 +245,23 @@ const evidence = [
   .ev-link { margin-top: auto; font-size: var(--fs-small); color: var(--text-muted); }
   .ev-card:hover .ev-link { color: var(--accent); }
 
+  /* ---------- review specs vs implementation ---------- */
+  .review-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: var(--sp-6); align-items: start; }
+  .review-col { min-width: 0; }
+  .review-col .codeblock { min-width: 0; }
+  .review-label { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); min-height: 26px; }
+  .review-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .review-spec .codeblock { box-shadow: var(--elev-glow); }
+  .review-grid .code-body { overflow: hidden; }
+  .review-spec .code-body { line-height: 2; }
+  .review-impl .code-body { font-size: 0.75rem; line-height: 1.7; }
+  .impl-dim { color: var(--text-muted); opacity: 0.7; white-space: pre; }
+  .review-note { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
+
+  @media (max-width: 860px) { .review-grid { grid-template-columns: 1fr; } }
+
   @media (max-width: 900px) {
     .two-col { grid-template-columns: 1fr; gap: var(--sp-12); }
-    .cmp-grid, .ev-grid { grid-template-columns: 1fr; }
-    .problem-h, .shift-h { font-size: 2rem; }
+    .ev-grid { grid-template-columns: 1fr; }
   }
 </style>

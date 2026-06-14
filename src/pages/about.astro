@@ -2,28 +2,28 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 const principles = [
-  { t: 'Proof over hope', d: 'Software should be able to make guarantees, not just pass the tests someone happened to write. We build tools that turn "probably correct" into "provably correct."' },
-  { t: 'Meet developers where they are', d: 'Formal methods have lived in a separate world for decades. We bring them into TypeScript — no new language, no rewrite, no PhD required.' },
-  { t: 'Built for the agent era', d: 'AI writes more code every day. Verification is the missing feedback loop that lets agents converge on correct code instead of confident guesses.' },
+  { t: 'Guarantees, not guesswork', d: 'Software should be able to make guarantees about its own behavior. We build the tools that turn “it should be correct” into “it is — for every input.”' },
+  { t: 'Meet developers where they are', d: 'Guaranteed correctness has lived in a separate, specialist world for decades. We bring it into plain TypeScript — no new language, no rewrite, no PhD required.' },
+  { t: 'Built for the agent era', d: 'AI writes more code every day. A guarantee is the missing feedback loop that lets agents converge on correct code instead of confident guesses.' },
 ]
 
 const timeline = [
-  { when: 'The problem', what: 'AI-generated code ships faster than anyone can review it. Tests catch a sample of bugs; the rest reach production.' },
-  { when: 'The insight', what: 'Formal verification can prove code correct for every input — if only it didn’t require abandoning the language teams already use.' },
-  { when: 'LemmaScript', what: 'A toolchain that verifies ordinary TypeScript via Lean 4 and Dafny, designed from the ground up for humans and agents working together.' },
+  { when: 'The problem', what: 'AI-generated code ships faster than anyone can review it. For the logic that has to be right, even a strong test suite can’t promise it’s correct for every input.' },
+  { when: 'The insight', what: 'There’s a way to guarantee code is correct for every input — but until now it meant leaving the language teams already use.' },
+  { when: 'LemmaScript', what: 'A toolchain that guarantees ordinary TypeScript is correct — built from the ground up for engineers and AI agents working together.' },
 ]
 ---
 
 <BaseLayout
   title="About — Midspiral"
-  description="Midspiral builds the correctness layer for AI-generated software. LemmaScript is our toolchain for formally verifying TypeScript in Lean 4 and Dafny."
+  description="Midspiral builds the correctness layer for AI-generated software. LemmaScript guarantees ordinary TypeScript is correct — built for engineers and AI agents."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// about midspiral</span>
       <h1>The correctness layer for <em>AI-generated software</em>.</h1>
       <p class="lede">
-        Midspiral is building the infrastructure that lets teams and autonomous agents prove their
+        Midspiral is building the infrastructure that lets teams and autonomous agents guarantee their
         code is correct — not assume it. LemmaScript is our first product.
       </p>
     </div>
@@ -35,7 +35,7 @@ const timeline = [
       <span class="kicker">// the mission</span>
       <p class="big-statement">
         As more software is written by machines, the bottleneck shifts from <em>writing</em> code to
-        <em>trusting</em> it. We think the answer isn’t more review — it’s mathematical proof, made
+        <em>trusting</em> it. We think the answer isn’t more review — it’s guaranteed correctness, made
         accessible to every engineer and every agent.
       </p>
     </div>
@@ -46,7 +46,7 @@ const timeline = [
     <div class="container">
       <div class="section-head">
         <span class="kicker">// why now</span>
-        <h2>From a problem to a proof</h2>
+        <h2>From a problem to a guarantee</h2>
       </div>
       <div class="timeline">
         {timeline.map((t, i) => (

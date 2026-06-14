@@ -34,7 +34,7 @@ const stages = [
   {
     n: '04',
     title: 'Iterate inside the agent loop',
-    body: 'A counterexample is a precise, actionable signal — far better than a failing test. Your agent reads it, fixes the implementation or sharpens the spec, and re-runs verification until everything is green. Correctness becomes a loop, not a hope.',
+    body: 'A counterexample is a precise, actionable signal — it pinpoints the exact input that breaks the contract. Your agent reads it, fixes the implementation or sharpens the spec, and re-runs verification until everything is green. Correctness becomes a repeatable loop.',
     code: `<span class="t-counter">✗ charge</span>  counterexample found
    remaining = <span class="t-num">5</span>, cost = <span class="t-num">-3</span>
    → \\result = <span class="t-num">8</span> violates (\\result <= remaining)
@@ -106,10 +106,10 @@ const stages = [
     <div class="container">
       <div class="section-head">
         <span class="kicker">// why it matters</span>
-        <h2>Tests sample. Proofs cover.</h2>
+        <h2>What a proof adds to your test suite.</h2>
       </div>
       <div class="why-grid">
-        <div class="why"><h3>Every input, not some</h3><p>A passing test tells you the cases you thought to write work. A proof tells you <em>all</em> inputs satisfy the contract — including the ones nobody imagined.</p></div>
+        <div class="why"><h3>Every input, not just the ones you run</h3><p>Your tests exercise real behavior on the paths you choose. A proof adds what tests can’t: certainty the contract holds for <em>every</em> possible input — including the ones no one thought to try.</p></div>
         <div class="why"><h3>Built for agents</h3><p>LLMs generate plausible code fast. A counterexample is the ground-truth signal an agent needs to converge on correct code instead of confident-but-wrong code.</p></div>
         <div class="why"><h3>Zero runtime cost</h3><p>Verification happens at build time. The shipped artifact is your original TypeScript — no wrappers, no checks, no overhead.</p></div>
         <div class="why"><h3>Drop-in, incremental</h3><p>Annotate one critical function or a whole module. Greenfield or a fork of an existing project — adopt it exactly as far as you want.</p></div>

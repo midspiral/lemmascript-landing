@@ -18,26 +18,30 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* atmospheric: radial accent glow up top */
-  background-image: radial-gradient(ellipse 80% 50% at 50% -5%, var(--accent-glow), transparent 60%);
-  background-attachment: fixed;
 }
 
-/* soft film grain (grain 2) — normal blend so it actually reads on the dark canvas */
-body::before {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  opacity: 0.09;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* ---------- atmosphere ----------
+   A dedicated fixed layer (NOT body pseudo-elements) so mix-blend-mode
+   composites correctly. This is the exact "grain 2 + vignette" recipe. */
+.atmosphere {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  /* top accent glow */
+  background: radial-gradient(ellipse 80% 50% at 50% -5%, var(--accent-glow), transparent 60%);
+}
+/* soft film grain — overlay blend lifts the canvas to the lighter tone */
+.atmosphere::after {
+  content: ''; position: absolute; inset: 0;
+  opacity: 0.32; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* vignette depth */
+.atmosphere::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 45%, transparent 40%, rgba(0,0,0,0.55) 100%);
 }
 
-/* vignette depth (grain 2) */
-body::after {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(ellipse 75% 75% at 50% 42%, transparent 45%, rgba(0,0,0,0.55) 100%);
-}
-
-/* lift all real content above the fixed atmosphere layers */
-body > * { position: relative; z-index: 1; }
+/* lift all real content above the fixed atmosphere layer */
+body > *:not(.atmosphere) { position: relative; z-index: 1; }
 body > main { flex: 1; }
 
 /* ---------- typography ---------- */

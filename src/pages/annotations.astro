@@ -2,12 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 const annotations = [
-  { tag: '//@ requires', sig: 'requires <expr>', desc: 'A precondition that must hold whenever the function is called. The caller is responsible for satisfying it; the proof may assume it.', ex: 'remaining >= 0 && cost >= 0' },
+  { tag: '//@ requires', sig: 'requires <expr>', desc: 'A precondition that must hold whenever the function is called. The caller is responsible for satisfying it; the function may rely on it.', ex: 'remaining >= 0 && cost >= 0' },
   { tag: '//@ ensures', sig: 'ensures <expr>', desc: 'A postcondition the function guarantees on return. Use \\result to refer to the returned value.', ex: '\\result <= remaining' },
   { tag: '//@ invariant', sig: 'invariant <expr>', desc: 'A loop invariant — a property that holds before the loop and after every iteration. The engine uses it to reason about unbounded loops.', ex: 'i >= 0 && sum == partial(i)' },
   { tag: '//@ decreases', sig: 'decreases <expr>', desc: 'A termination measure: an expression that strictly decreases each iteration (or recursive call) and is bounded below — proving the code terminates.', ex: 'n - i' },
-  { tag: '//@ assert', sig: 'assert <expr>', desc: 'A checkpoint the prover must establish at this exact program point. Useful for guiding the proof or documenting intermediate facts.', ex: 'balance == credits - debits' },
-  { tag: '//@ assume', sig: 'assume <expr>', desc: 'A fact the prover may take as given from this point forward. Use sparingly — assumptions are trust, not proof.', ex: 'isValidated(input)' },
+  { tag: '//@ assert', sig: 'assert <expr>', desc: 'A condition that must hold at this exact program point. Useful for guiding LemmaScript or documenting intermediate facts.', ex: 'balance == credits - debits' },
+  { tag: '//@ assume', sig: 'assume <expr>', desc: 'A fact LemmaScript may take as given from this point forward. Use sparingly — assumptions are trust, not a guarantee.', ex: 'isValidated(input)' },
   { tag: '//@ pure', sig: 'pure', desc: 'Marks a function as side-effect free so it may be referenced inside other specifications.', ex: '' },
   { tag: '//@ ghost', sig: 'ghost <decl>', desc: 'Declares specification-only state used purely for reasoning. Ghost code is erased before runtime and never ships.', ex: 'ghost let seen: Set<number>' },
 ]
@@ -24,16 +24,16 @@ const keywords = [
 
 <BaseLayout
   title="Annotations reference — LemmaScript"
-  description="The complete LemmaScript annotation reference: requires, ensures, invariant, decreases, assert, assume, pure, ghost, and the specification expression language."
+  description="The complete LemmaScript contract reference: requires, ensures, invariant, decreases, assert, assume, pure, ghost, and the contract expression language."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// annotations</span>
-      <h1>Specs live in <em>comments</em>.</h1>
+      <h1>Contracts live in <em>comments</em>.</h1>
       <p class="lede">
-        LemmaScript borrows the specification style of JML and Dafny, expressed entirely as TypeScript
-        comments prefixed with <code class="inline">//@</code>. Your toolchain treats them as ordinary
-        comments; LemmaScript treats them as a contract.
+        LemmaScript contracts are written entirely as TypeScript comments prefixed with
+        <code class="inline">//@</code>. Your toolchain treats them as ordinary comments;
+        LemmaScript treats them as a binding contract.
       </p>
     </div>
   </header>
@@ -43,7 +43,7 @@ const keywords = [
     <div class="container two-col">
       <div>
         <span class="kicker">// a worked example</span>
-        <h2>One annotated function</h2>
+        <h2>One function under contract</h2>
         <p class="section-desc">Every clause below is checked against the implementation. Nothing about the running code changes.</p>
         <ul class="legend">
           <li><span class="dot pre"></span><b>requires</b> — what the caller must guarantee</li>
@@ -52,7 +52,7 @@ const keywords = [
         </ul>
       </div>
       <div class="codeblock">
-        <div class="code-bar"><span class="dots"><i></i><i></i><i></i></span><span class="code-file">charge.ts</span><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Verified</span></div>
+        <div class="code-bar"><span class="dots"><i></i><i></i><i></i></span><span class="code-file">charge.ts</span><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
         <pre class="code-body"><span class="ln">1</span><span class="t-anno">//@ requires</span> <span class="t-annokw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span>
 <span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= remaining</span>
 <span class="ln">3</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
@@ -68,7 +68,7 @@ const keywords = [
     <div class="container">
       <div class="section-head">
         <span class="kicker">// reference</span>
-        <h2>The annotation clauses</h2>
+        <h2>The contract clauses</h2>
       </div>
       <div class="anno-table">
         {annotations.map((a) => (
@@ -87,8 +87,8 @@ const keywords = [
     <div class="container">
       <div class="section-head">
         <span class="kicker">// expression language</span>
-        <h2>Inside a specification</h2>
-        <p class="section-desc">Specification expressions extend ordinary TypeScript with a few proof-oriented constructs.</p>
+        <h2>Inside a contract</h2>
+        <p class="section-desc">Contract expressions extend ordinary TypeScript with a few correctness-oriented constructs.</p>
       </div>
       <div class="kw-grid">
         {keywords.map((k) => (
@@ -100,7 +100,7 @@ const keywords = [
       </div>
       <div class="callout callout-info" style="margin-top:var(--sp-8)">
         <span class="mark">i</span>
-        <div><b>Editor-safe by design.</b> Because every annotation is a comment, removing LemmaScript from a project leaves behind valid, unchanged TypeScript. There is no lock-in at the source level.</div>
+        <div><b>Editor-safe by design.</b> Because every contract is a comment, removing LemmaScript from a project leaves behind valid, unchanged TypeScript. There is no lock-in at the source level.</div>
       </div>
       <div class="center" style="margin-top:var(--sp-12)">
         <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Full documentation →</a>

@@ -1,179 +1,202 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import Playground from '../components/Playground.astro'
 
-const steps = [
-  {
-    n: '01',
-    title: 'Annotate',
-    body: 'Add //@ requires and //@ ensures to the functions you care about. The implementation stays exactly as it is — annotations are plain comments your editor, linter, and CI never see.',
-  },
-  {
-    n: '02',
-    title: 'Compile to a model',
-    body: 'Your annotated TypeScript lowers to a language that carries mathematical guarantees — Lean 4 or Dafny — generated from the same source.',
-  },
-  {
-    n: '03',
-    title: 'Verify',
-    body: 'The prover discharges each obligation, proving your code meets its spec — or returns a concrete counterexample so your agent can iterate until it does.',
-  },
+const compare = [
+  { name: 'Types', sub: 'tsc', covers: 'Shape of data', misses: 'What the code actually does with it', tone: 'info' },
+  { name: 'Tests', sub: 'vitest, jest', covers: 'Real behavior on the paths you run', misses: 'Inputs you didn’t run', tone: 'pending' },
+  { name: 'LemmaScript', sub: 'contracts', covers: 'All inputs, behavior and all', misses: 'Nothing — that’s the point', tone: 'verified' },
 ]
 
-const caseStudies = [
-  { kind: 'Greenfield', name: 'quota-lemmascript', desc: 'Booking app with formally verified core logic — provably no overbooking. Deployable locally or on Cloudflare.', href: 'https://github.com/midspiral/quota-lemmascript' },
-  { kind: 'Greenfield', name: 'quorum-lemmascript', desc: 'Login-free group scheduler with formally verified scheduling logic proved in Dafny.', href: 'https://github.com/midspiral/quorum-lemmascript' },
-  { kind: 'Brownfield', name: 'hono-lemmascript', desc: 'A fork of Hono with security-critical middleware verified against four CVEs — IP restriction, cookies, path traversal.', href: 'https://github.com/midspiral/hono-lemmascript' },
-  { kind: 'Brownfield', name: 'opencode-lemmascript', desc: 'A fork of opencode with formal verification applied to its permission system. Eleven functions verified.', href: 'https://github.com/midspiral/opencode-lemmascript' },
+const evidence = [
+  { kind: 'Brownfield', metric: '4 CVEs', name: 'hono-lemmascript', desc: 'Security-critical middleware in a fork of Hono, hardened against four real CVEs — IP restriction, cookies, path traversal.', href: 'https://github.com/midspiral/hono-lemmascript' },
+  { kind: 'Brownfield', metric: '11 functions', name: 'opencode-lemmascript', desc: 'A fork of opencode with its permission system locked down — eleven access-control functions guaranteed to honor their contracts.', href: 'https://github.com/midspiral/opencode-lemmascript' },
+  { kind: 'Greenfield', metric: 'No overbooking', name: 'quota-lemmascript', desc: 'A booking app whose allocation logic is guaranteed incapable of overbooking — no matter the inputs.', href: 'https://github.com/midspiral/quota-lemmascript' },
 ]
 ---
 
 <BaseLayout
-  title="LemmaScript — Formal Verification for TypeScript"
-  description="LemmaScript lets your team and your AI agents annotate ordinary TypeScript with formal specifications and prove it correct in Lean 4 or Dafny — without leaving TypeScript."
+  title="LemmaScript — TypeScript with contracts, for engineers and AI agents"
+  description="LemmaScript adds contracts to TypeScript so your code is guaranteed correct — catching critical bugs before they reach production. Built for engineers and AI agents. No new language, no runtime cost."
 >
   <!-- ===================== HERO ===================== -->
   <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <span class="hero-eyebrow"><span class="dot"></span> Tech Preview · built by Midspiral</span>
-        <h1 class="hero-title">Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <div class="container hero-full">
+        <span class="hero-eyebrow"><span class="dot"></span> Built for engineers &amp; AI agents</span>
+        <h1 class="hero-title">LemmaScript is TypeScript with syntax for <span class="pos-contracts">contracts</span>.</h1>
         <p class="hero-lede">
-          LemmaScript gives your team — and your AI agents — a toolchain that builds code
-          <strong>without bugs</strong> from the ground up. Annotate ordinary TypeScript, compile it
-          to a verified model, and prove it meets its spec in Lean&nbsp;4 or Dafny.
+          Add a contract to any function and LemmaScript makes sure your code always honors it —
+          catching critical bugs before they reach production. <strong>No new language. No runtime cost.</strong>
+          Just code you can trust, for your team and your agents alike.
         </p>
         <div class="hero-actions">
-          <a href="/how-it-works" class="btn btn-primary">Start verifying →</a>
+          <a href="#playground" class="btn btn-primary">Try it live ↓</a>
           <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
         </div>
         <div class="hero-trust">
-          <span class="badge badge-info"><span class="bdot"></span>Lean 4</span>
-          <span class="badge badge-info"><span class="bdot"></span>Dafny</span>
-          <span class="trust-note">// one annotated source, two proof backends</span>
+          <span class="badge badge-info"><span class="bdot"></span>Zero runtime cost</span>
+          <span class="badge badge-info"><span class="bdot"></span>Works on existing code</span>
+          <span class="trust-note">// drop it into any TypeScript project</span>
         </div>
-      </div>
+    </div>
+  </section>
 
-      <!-- hero proof artifact -->
-      <div class="hero-art">
+  <!-- ===================== EXAMPLE ===================== -->
+  <section class="section example">
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// a function that can’t be wrong</span>
+        <h2>This compiles, type-checks, and is <em>guaranteed correct</em>.</h2>
+      </div>
+      <div class="example-art">
         <div class="codeblock">
           <div class="code-bar">
             <span class="dots"><i></i><i></i><i></i></span>
             <span class="code-file">quota.ts</span>
-            <span class="badge badge-verified bar-badge"><span class="bdot"></span>Verified</span>
+            <span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span>
           </div>
           <pre class="code-body"><span class="ln">1</span><span class="t-anno">//@ requires</span> <span class="t-annokw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span>
-<span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &lt;= remaining</span>
-<span class="ln">3</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0</span>
-<span class="ln">4</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
-<span class="ln">5</span>  <span class="t-kw">if</span> (cost &gt; remaining) <span class="t-kw">return</span> <span class="t-num">0</span>; <span class="t-cmt">// no overbooking</span>
-<span class="ln">6</span>  <span class="t-kw">return</span> remaining - cost;
-<span class="ln">7</span>&#125;</pre>
+<span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= remaining</span>
+<span class="ln">3</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">4</span>  <span class="t-kw">if</span> (cost &gt; remaining) <span class="t-kw">return</span> <span class="t-num">0</span>; <span class="t-cmt">// no overbooking</span>
+<span class="ln">5</span>  <span class="t-kw">return</span> remaining - cost;
+<span class="ln">6</span>&#125;</pre>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== STATS STRIP ===================== -->
-  <section class="strip">
-    <div class="container strip-grid">
-      <div class="stat"><div class="stat-num"><span>2</span></div><div class="stat-lbl">proof backends from one source</div></div>
-      <div class="stat"><div class="stat-num"><span>0</span></div><div class="stat-lbl">runtime overhead</div></div>
-      <div class="stat"><div class="stat-num"><span>100</span>%</div><div class="stat-lbl">TypeScript-compatible</div></div>
-      <div class="stat"><div class="stat-num"><span>4</span></div><div class="stat-lbl">real-world case studies</div></div>
+  <!-- ===================== THE PROBLEM ===================== -->
+  <section class="section problem">
+    <div class="container narrow">
+      <span class="kicker">// the problem</span>
+      <h2 class="problem-h">Generation got cheap. <span class="dim">Correctness didn’t.</span></h2>
+      <p class="problem-p">
+        Your team — and increasingly your agents — ship more code, faster, than ever. Your types line up.
+        Your tests pass. For most code, that’s exactly enough.
+      </p>
+      <p class="problem-p">
+        But some logic simply has to be right — billing, permissions, scheduling, access control. For that code,
+        “the tests pass” isn’t the same as “this is correct, for <em>every</em> input” — and that gap is where the
+        expensive bugs live.
+      </p>
     </div>
   </section>
 
-  <!-- ===================== HOW IT WORKS ===================== -->
+  <!-- ===================== THE SHIFT ===================== -->
+  <section class="section section-alt shift">
+    <div class="container narrow center">
+      <span class="kicker">// the shift</span>
+      <h2 class="shift-h">What if correctness were something you could <em>guarantee</em> — for every input, every time?</h2>
+      <p class="shift-p">LemmaScript makes correctness a property of your code. Here, green doesn’t mean “it probably works.” It means <strong>guaranteed — for every input</strong>.</p>
+      <div class="state-row">
+        <span class="badge badge-verified"><span class="bdot"></span>Guaranteed</span>
+        <span class="badge badge-pending"><span class="bdot"></span>Unchecked</span>
+        <span class="badge badge-counter"><span class="bdot"></span>Bug found</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLAYGROUND ===================== -->
+  <div id="playground"></div>
+  <Playground />
+
+  <!-- ===================== THE DIFFERENCE ===================== -->
   <section class="section">
     <div class="container">
-      <div class="section-head">
-        <span class="kicker">// how it works</span>
-        <h2>Give your agent the LemmaScript. Tell it to code.</h2>
-        <p class="section-desc">Your agent runs a formal verification loop — annotate, model, prove — and iterates until the code is provably correct.</p>
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// the difference</span>
+        <h2>Types check shape. Tests check behavior. LemmaScript guarantees the logic.</h2>
       </div>
-      <div class="steps">
-        {steps.map((s) => (
-          <div class="step">
-            <span class="step-n">{s.n}</span>
-            <h3>{s.title}</h3>
-            <p>{s.body}</p>
+      <div class="cmp-grid">
+        {compare.map((c) => (
+          <div class:list={['cmp', `cmp-${c.tone}`]}>
+            <div class="cmp-top">
+              <h3>{c.name}</h3>
+              <span class="cmp-sub">{c.sub}</span>
+            </div>
+            <div class="cmp-row"><span class="cmp-k">✓ covers</span><p>{c.covers}</p></div>
+            <div class="cmp-row"><span class="cmp-k miss">✗ leaves open</span><p>{c.misses}</p></div>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ===================== ANNOTATIONS ===================== -->
+  <!-- ===================== BUILT FOR AGENTS ===================== -->
   <section class="section section-alt">
     <div class="container two-col">
       <div>
-        <span class="kicker">// annotations</span>
-        <h2>Specs live in comments.<br />Types come from TypeScript.</h2>
+        <span class="kicker">// built for AI agents</span>
+        <h2>Your agents write code fast. LemmaScript makes sure it’s right.</h2>
         <p class="section-desc">
-          LemmaScript borrows the annotation style of JML and Dafny, expressed as TypeScript comments
-          so your toolchain stays untouched.
+          AI agents generate plausible code in seconds — but “looks right” isn’t a guarantee.
+          LemmaScript gives every function a contract it must honor and pinpoints the
+          <strong>exact input that breaks it</strong>, so your agents ship code that’s correct —
+          not just convincing — and fix it the moment it isn’t.
         </p>
-        <dl class="anno-list">
-          <div><dt>//@ requires</dt><dd>Preconditions that must hold when the function is called.</dd></div>
-          <div><dt>//@ ensures</dt><dd>Postconditions guaranteed on return. <code>\result</code> is the return value.</dd></div>
-          <div><dt>//@ invariant</dt><dd>Loop invariants that must hold at every iteration.</dd></div>
-          <div><dt>//@ decreases</dt><dd>Termination measures — expressions that strictly decrease each iteration.</dd></div>
-        </dl>
-        <a href="/annotations" class="link-arrow">See all annotations →</a>
+        <a href="/how-it-works" class="link-arrow">See how it works →</a>
       </div>
-
-      <div class="proof-panel">
-        <div class="proof-out">
-          <div class="proof-head"><span class="proof-lbl">TypeScript + //@</span></div>
-          <pre>{`//@ ensures \\result >= n
-function inc(n: number) {
-  return n + 1;
-}`}</pre>
-        </div>
-        <div class="proof-arrow">→</div>
-        <div class="proof-out proof-glow">
-          <div class="proof-head"><span class="proof-lbl">Lean 4 proof</span><span class="badge badge-verified"><span class="bdot"></span>QED</span></div>
-          <pre>{`theorem inc_spec (n : Int) :
-  inc n ≥ n := by
-  simp [inc]; omega
--- ✓ no goals remaining`}</pre>
-        </div>
+      <div class="loop">
+        <div class="loop-step"><span class="loop-n">1</span> agent writes a function &amp; its contract</div>
+        <div class="loop-arrow">↓</div>
+        <div class="loop-step"><span class="loop-n">2</span> LemmaScript checks it</div>
+        <div class="loop-arrow">↓</div>
+        <div class="loop-step counter"><span class="loop-n">3</span> ✗ bug found: <code>cost = -3</code></div>
+        <div class="loop-arrow">↓</div>
+        <div class="loop-step"><span class="loop-n">4</span> agent fixes it and re-runs</div>
+        <div class="loop-arrow">↓</div>
+        <div class="loop-step ok"><span class="loop-n">5</span> ✓ guaranteed correct</div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== CASE STUDIES ===================== -->
+  <!-- ===================== EVIDENCE ===================== -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="kicker">// case studies</span>
-        <h2>Verified in both Lean 4 and Dafny — from the same source.</h2>
-        <p class="section-desc">Greenfield builds and brownfield forks of real projects, each proved correct with LemmaScript.</p>
+        <span class="kicker">// in the wild</span>
+        <h2>Not a toy. Real code, guaranteed correct.</h2>
+        <p class="section-desc">LemmaScript has been put to work on production-grade software and greenfield builds — each one guaranteed correct, from the TypeScript you already write.</p>
       </div>
-      <div class="case-grid">
-        {caseStudies.map((c) => (
-          <a href={c.href} target="_blank" rel="noopener" class="case-card">
-            <span class={`case-kind ${c.kind === 'Brownfield' ? 'brown' : ''}`}>{c.kind}</span>
-            <h3>{c.name}</h3>
-            <p>{c.desc}</p>
-            <span class="case-link">View repository →</span>
+      <div class="ev-grid">
+        {evidence.map((e) => (
+          <a href={e.href} target="_blank" rel="noopener" class="card ev-card">
+            <span class:list={['ev-kind', { brown: e.kind === 'Brownfield' }]}>{e.kind}</span>
+            <div class="ev-metric">{e.metric}</div>
+            <h3>{e.name}</h3>
+            <p>{e.desc}</p>
+            <span class="ev-link">View repository →</span>
           </a>
         ))}
       </div>
-      <div class="center"><a href="/case-studies" class="link-arrow">See all case studies →</a></div>
+      <div class="center" style="margin-top:var(--sp-8)"><a href="/case-studies" class="link-arrow">See all case studies →</a></div>
     </div>
   </section>
 
-  <!-- ===================== CTA ===================== -->
-  <section class="section">
-    <div class="container">
-      <div class="cta">
-        <span class="kicker">// the correctness layer for AI-generated software</span>
-        <h2>Stop hoping your agent's code is right. Prove it.</h2>
-        <div class="hero-actions center-actions">
-          <a href="/how-it-works" class="btn btn-primary">Start verifying →</a>
+  <!-- ===================== GET STARTED ===================== -->
+  <section class="section section-alt">
+    <div class="container two-col">
+      <div>
+        <span class="kicker">// get started</span>
+        <h2>Add your first contract in minutes.</h2>
+        <p class="section-desc">Add LemmaScript to a project, write a contract on a function, and you’re done. Greenfield or an existing codebase — adopt it exactly as far as you want.</p>
+        <div class="hero-actions">
+          <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Read the quickstart →</a>
           <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener" class="btn btn-secondary">View on GitHub</a>
         </div>
+      </div>
+      <div class="codeblock">
+        <div class="code-bar"><span class="dots"><i></i><i></i><i></i></span><span class="code-file">terminal</span></div>
+        <pre class="code-body"><span class="t-cmt"># add LemmaScript to your project</span>
+<span class="t-anno">$</span> npm install -D lemmascript
+
+<span class="t-cmt"># check your code against its contracts</span>
+<span class="t-anno">$</span> npx lemmascript check src/
+
+<span class="t-kw">✓</span> charge   correct
+<span class="t-kw">✓</span> refund   correct
+<span class="t-cmt">2 / 2 correct · 1.2s</span></pre>
       </div>
     </div>
   </section>
@@ -182,128 +205,82 @@ function inc(n: number) {
 <style>
   /* ---------- hero ---------- */
   .hero { padding-block: var(--sp-24) var(--sp-16); }
-  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: var(--sp-16); align-items: center; }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: var(--sp-2);
-    font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--accent);
-    padding: 5px var(--sp-3); border-radius: var(--r-full);
-    background: var(--state-verified-bg); border: 1px solid var(--accent-dim);
-    margin-bottom: var(--sp-6);
-  }
+  .hero-full { text-align: center; max-width: 1040px; margin-inline: auto; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-mono);
+    font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+    padding: 5px var(--sp-3); border-radius: var(--r-full); background: var(--state-verified-bg); border: 1px solid var(--accent-dim); margin-bottom: var(--sp-6); }
   .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-  .hero-title { font-size: var(--fs-display-l); font-weight: 800; letter-spacing: -0.03em; line-height: var(--lh-tight); margin-bottom: var(--sp-6); }
-  .hero-title em { font-style: normal; color: var(--accent); }
-  .hero-lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 54ch; margin-bottom: var(--sp-8); }
+  .hero-title { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: var(--sp-6); text-wrap: balance; }
+  .hero-title .pos-contracts { color: var(--accent); }
+  .hero-lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 60ch; margin: 0 auto var(--sp-8); }
   .hero-lede strong { color: var(--text-primary); font-weight: 600; }
-  .hero-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
-  .hero-trust { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-8); flex-wrap: wrap; }
+  .hero-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; justify-content: center; }
+  .hero-trust { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-8); flex-wrap: wrap; justify-content: center; }
   .trust-note { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .example-art { max-width: 760px; margin-inline: auto; }
 
-  /* ---------- buttons ---------- */
-  .btn { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-small); font-weight: 600;
-    padding: 11px var(--sp-4); border-radius: var(--r-md); border: 1px solid transparent; transition: all var(--dur-2) var(--ease); }
-  .btn-primary { background: var(--accent); color: var(--accent-ink); }
-  .btn-primary:hover { background: var(--accent-bright); box-shadow: 0 0 24px var(--accent-glow); transform: translateY(-1px); }
-  .btn-secondary { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border); }
-  .btn-secondary:hover { border-color: var(--accent-dim); color: var(--accent-bright); }
+  /* ---------- shared narrow ---------- */
+  .narrow { max-width: 64ch; }
+  .center { text-align: center; }
+  .center.narrow, .narrow.center { margin-inline: auto; }
 
-  /* ---------- badges ---------- */
-  .badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: var(--fs-caption);
-    font-weight: 500; padding: 4px 10px; border-radius: var(--r-full); border: 1px solid; }
-  .badge .bdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .badge-verified { color: var(--state-verified); background: var(--state-verified-bg); border-color: var(--accent-dim); }
-  .badge-info { color: var(--state-info); background: var(--state-info-bg); border-color: rgba(91,168,255,0.3); }
+  /* ---------- problem ---------- */
+  .problem-h { font-size: var(--fs-h1); margin: var(--sp-3) 0 var(--sp-6); }
+  .problem-h .dim { color: var(--text-muted); }
+  .problem-p { font-size: var(--fs-body-lg); color: var(--text-secondary); margin-bottom: var(--sp-4); }
+  .problem-p em { font-style: normal; color: var(--text-primary); }
 
-  /* ---------- hero code artifact ---------- */
-  .hero-art { min-width: 0; }
-  .codeblock { background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg);
-    overflow: hidden; box-shadow: var(--elev-2); }
-  .code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: 10px var(--sp-4);
-    border-bottom: 1px solid var(--border-subtle); background: var(--bg-overlay); }
-  .dots { display: flex; gap: 6px; } .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); }
-  .code-file { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
-  .bar-badge { margin-left: auto; }
-  .code-body { padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.8;
-    overflow-x: auto; color: var(--text-primary); }
-  .ln { color: var(--text-faint); user-select: none; display: inline-block; width: 2ch; margin-right: var(--sp-3); text-align: right; }
-  .t-anno { color: var(--accent); } .t-annokw { color: var(--accent-bright); font-weight: 600; }
-  .t-kw { color: var(--state-info); } .t-fn { color: var(--state-pending); }
-  .t-num { color: #C8A6FF; } .t-cmt { color: var(--text-muted); }
+  /* ---------- shift ---------- */
+  .shift-h { font-size: var(--fs-h1); margin: var(--sp-3) auto var(--sp-4); max-width: 22ch; }
+  .shift-h em { font-style: normal; color: var(--accent); }
+  .shift-p { font-size: var(--fs-body-lg); color: var(--text-secondary); margin-inline: auto; max-width: 52ch; }
+  .shift-p strong { color: var(--accent-bright); font-weight: 600; }
+  .state-row { display: flex; gap: var(--sp-3); justify-content: center; margin-top: var(--sp-8); flex-wrap: wrap; }
 
-  /* ---------- stats strip ---------- */
-  .strip { border-block: 1px solid var(--border-subtle); background: rgba(17,22,31,0.4); }
-  .strip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-8); padding-block: var(--sp-12); }
-  .stat { border-left: 2px solid var(--accent-dim); padding-left: var(--sp-4); }
-  .stat-num { font-family: var(--font-display); font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; }
-  .stat-num span { color: var(--accent); }
-  .stat-lbl { font-size: var(--fs-small); color: var(--text-muted); margin-top: 2px; }
+  /* ---------- compare ---------- */
+  .cmp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .cmp { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: var(--sp-6); }
+  .cmp-verified { border-color: var(--accent-dim); box-shadow: var(--elev-glow); }
+  .cmp-top { display: flex; align-items: baseline; gap: var(--sp-3); margin-bottom: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 1px solid var(--border-subtle); }
+  .cmp-top h3 { font-size: var(--fs-h3); }
+  .cmp-info .cmp-top h3 { color: var(--state-info); }
+  .cmp-pending .cmp-top h3 { color: var(--state-pending); }
+  .cmp-verified .cmp-top h3 { color: var(--accent); }
+  .cmp-sub { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); }
+  .cmp-row { display: flex; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+  .cmp-k { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); width: 72px; flex-shrink: 0; }
+  .cmp-k.miss { color: var(--text-muted); }
+  .cmp-row p { font-size: var(--fs-small); }
 
-  /* ---------- section scaffolding ---------- */
-  .section-alt { background: rgba(17,22,31,0.4); border-block: 1px solid var(--border-subtle); }
-  .section-head { max-width: 60ch; margin-bottom: var(--sp-12); }
-  .section-head h2 { margin: var(--sp-3) 0; }
-  .section-desc { font-size: var(--fs-body-lg); color: var(--text-secondary); }
-  .center { text-align: center; margin-top: var(--sp-8); }
-
-  .link-arrow { color: var(--accent); font-size: var(--fs-small); font-weight: 600; }
-  .link-arrow:hover { color: var(--accent-bright); }
-
-  /* ---------- steps ---------- */
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
-  .step { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
-    padding: var(--sp-8); transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
-  .step:hover { border-color: var(--border); transform: translateY(-3px); }
-  .step-n { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--accent); }
-  .step h3 { margin: var(--sp-3) 0 var(--sp-2); }
-  .step p { font-size: var(--fs-small); }
-
-  /* ---------- annotations two-col ---------- */
+  /* ---------- two-col (agents, get started) ---------- */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-16); align-items: center; }
   .two-col h2 { margin: var(--sp-3) 0; }
-  .anno-list { margin: var(--sp-8) 0; display: grid; gap: var(--sp-4); }
-  .anno-list dt { font-family: var(--font-mono); color: var(--accent); font-size: var(--fs-small); font-weight: 600; }
-  .anno-list dd { color: var(--text-secondary); font-size: var(--fs-small); margin-top: 2px; }
-  .anno-list code { color: var(--accent-bright); font-size: 0.85em; }
+  .two-col .section-desc strong { color: var(--accent-bright); font-weight: 600; }
 
-  /* ---------- proof panel ---------- */
-  .proof-panel { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--sp-3); align-items: stretch; }
-  .proof-out { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: var(--sp-4); }
-  .proof-glow { box-shadow: var(--elev-glow); }
-  .proof-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-3); }
-  .proof-lbl { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-  .proof-out pre { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; }
-  .proof-arrow { display: grid; place-items: center; color: var(--accent); font-family: var(--font-mono); font-size: 1.4rem; }
+  .loop { display: grid; gap: var(--sp-2); }
+  .loop-step { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-md);
+    padding: var(--sp-3) var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-secondary); display: flex; align-items: center; gap: var(--sp-3); }
+  .loop-step.counter { border-color: rgba(244,85,78,0.3); color: var(--state-counter); }
+  .loop-step.counter code { color: var(--state-counter); }
+  .loop-step.ok { border-color: var(--accent-dim); color: var(--accent); box-shadow: var(--elev-glow); }
+  .loop-n { width: 20px; height: 20px; border-radius: 50%; background: var(--bg-overlay); color: var(--text-muted);
+    display: grid; place-items: center; font-size: var(--fs-caption); flex-shrink: 0; }
+  .loop-arrow { text-align: center; color: var(--text-faint); font-size: var(--fs-small); }
 
-  /* ---------- case studies ---------- */
-  .case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
-  .case-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
-    padding: var(--sp-6); position: relative; overflow: hidden; transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
-  .case-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity var(--dur-3) var(--ease); }
-  .case-card:hover { border-color: var(--border); transform: translateY(-3px); }
-  .case-card:hover::before { opacity: 1; }
-  .case-kind { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--accent); }
-  .case-kind.brown { color: var(--state-pending); }
-  .case-card h3 { font-size: var(--fs-h3); margin: var(--sp-2) 0; font-family: var(--font-mono); font-weight: 600; }
-  .case-card p { font-size: var(--fs-small); margin-bottom: var(--sp-4); }
-  .case-link { font-size: var(--fs-small); color: var(--text-muted); }
-  .case-card:hover .case-link { color: var(--accent); }
+  /* ---------- evidence ---------- */
+  .ev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .ev-card { display: flex; flex-direction: column; }
+  .ev-kind { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+  .ev-kind.brown { color: var(--state-pending); }
+  .ev-metric { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; margin: var(--sp-2) 0; }
+  .ev-card h3 { font-family: var(--font-mono); font-weight: 600; font-size: var(--fs-body); color: var(--accent-bright); margin-bottom: var(--sp-2); }
+  .ev-card p { font-size: var(--fs-small); margin-bottom: var(--sp-4); }
+  .ev-link { margin-top: auto; font-size: var(--fs-small); color: var(--text-muted); }
+  .ev-card:hover .ev-link { color: var(--accent); }
 
-  /* ---------- cta ---------- */
-  .cta { text-align: center; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-xl);
-    padding: var(--sp-16); box-shadow: var(--elev-glow); }
-  .cta h2 { font-size: var(--fs-h1); margin: var(--sp-3) 0 var(--sp-8); }
-  .center-actions { justify-content: center; }
-
-  /* ---------- responsive ---------- */
   @media (max-width: 900px) {
-    .hero-grid, .two-col { grid-template-columns: 1fr; gap: var(--sp-12); }
-    .steps, .case-grid { grid-template-columns: 1fr; }
-    .strip-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6); }
-    .proof-panel { grid-template-columns: 1fr; }
-    .proof-arrow { transform: rotate(90deg); }
-    .hero-title { font-size: 2.6rem; }
+    .two-col { grid-template-columns: 1fr; gap: var(--sp-12); }
+    .cmp-grid, .ev-grid { grid-template-columns: 1fr; }
+    .problem-h, .shift-h { font-size: 2rem; }
   }
 </style>

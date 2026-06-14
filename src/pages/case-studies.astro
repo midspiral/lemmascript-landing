@@ -4,14 +4,14 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 const greenfield = [
   {
     name: 'quota-lemmascript',
-    desc: 'A booking application whose core allocation logic is formally verified to never overbook. The same annotated TypeScript produces proofs in both Lean 4 and Dafny.',
-    points: ['Provably no overbooking', 'Deployable locally or on Cloudflare', 'Verified in Lean 4 + Dafny'],
+    desc: 'A booking application whose core allocation logic is guaranteed never to overbook — no matter the inputs.',
+    points: ['Guaranteed: no overbooking', 'Deployable locally or on Cloudflare', 'Correct for every input'],
     href: 'https://github.com/midspiral/quota-lemmascript',
   },
   {
     name: 'quorum-lemmascript',
-    desc: 'A login-free group scheduler whose scheduling logic is proved correct with Dafny — guaranteeing the chosen slot always satisfies every participant’s stated constraints.',
-    points: ['Verified scheduling logic', 'No accounts, no backend lock-in', 'Dafny proofs'],
+    desc: 'A login-free group scheduler whose scheduling logic is guaranteed correct — the chosen slot always satisfies every participant’s stated constraints.',
+    points: ['Guaranteed scheduling logic', 'No accounts, no lock-in', 'Correct for every input'],
     href: 'https://github.com/midspiral/quorum-lemmascript',
   },
 ]
@@ -19,14 +19,14 @@ const greenfield = [
 const brownfield = [
   {
     name: 'hono-lemmascript',
-    desc: 'A fork of the Hono web framework with security-critical middleware formally verified against four real CVEs — demonstrating LemmaScript on production-grade, third-party code.',
-    points: ['4 CVEs verified against', 'IP restriction · cookies · path traversal', 'Applied to an existing codebase'],
+    desc: 'A fork of the Hono web framework with security-critical middleware guaranteed safe against four real CVEs — LemmaScript on production-grade, third-party code.',
+    points: ['Hardened against 4 CVEs', 'IP restriction · cookies · path traversal', 'Applied to an existing codebase'],
     href: 'https://github.com/midspiral/hono-lemmascript',
   },
   {
     name: 'opencode-lemmascript',
-    desc: 'A fork of opencode with formal verification applied to its permission system. Eleven functions governing access control were proved to honor their contracts.',
-    points: ['11 functions verified', 'Permission / access-control logic', 'Applied to an existing codebase'],
+    desc: 'A fork of opencode with its permission system locked down. Eleven functions governing access control are guaranteed to honor their contracts.',
+    points: ['11 functions guaranteed', 'Permission / access-control logic', 'Applied to an existing codebase'],
     href: 'https://github.com/midspiral/opencode-lemmascript',
   },
 ]
@@ -34,14 +34,14 @@ const brownfield = [
 
 <BaseLayout
   title="Case studies — LemmaScript"
-  description="Greenfield builds and brownfield forks of real projects, formally verified with LemmaScript in Lean 4 and Dafny — from booking apps to production frameworks and CVEs."
+  description="Greenfield builds and brownfield forks of real projects, guaranteed correct with LemmaScript — from booking apps to production frameworks and CVEs."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// case studies</span>
-      <h1>Real code, <em>proved</em> correct.</h1>
+      <h1>Real code, <em>guaranteed</em> correct.</h1>
       <p class="lede">
-        Each project below uses the same annotated TypeScript as input and generates machine-checked proofs.
+        Each project below starts from ordinary TypeScript with contracts — and ends up guaranteed correct.
         Greenfield builds show LemmaScript from scratch; brownfield forks show it applied to existing,
         production-grade software.
       </p>
@@ -52,7 +52,7 @@ const brownfield = [
     <div class="container">
       <div class="cs-head">
         <span class="badge badge-verified"><span class="bdot"></span>Greenfield</span>
-        <p>New projects designed around verification from the first line.</p>
+        <p>New projects designed around correctness from the first line.</p>
       </div>
       <div class="cs-grid">
         {greenfield.map((c) => (
@@ -74,7 +74,7 @@ const brownfield = [
     <div class="container">
       <div class="cs-head">
         <span class="badge badge-pending"><span class="bdot"></span>Brownfield</span>
-        <p>Verification retrofitted onto existing, real-world codebases.</p>
+        <p>Correctness guarantees retrofitted onto existing, real-world codebases.</p>
       </div>
       <div class="cs-grid">
         {brownfield.map((c) => (
@@ -95,7 +95,7 @@ const brownfield = [
   <section class="section">
     <div class="container center">
       <div class="cs-cta card">
-        <span class="kicker">// have a codebase to verify?</span>
+        <span class="kicker">// have a codebase to lock down?</span>
         <h2>Bring LemmaScript to your own code.</h2>
         <p class="section-desc" style="margin:var(--sp-3) auto var(--sp-8);max-width:48ch">Start with one critical function or a whole module — greenfield or a fork.</p>
         <div class="cs-actions">

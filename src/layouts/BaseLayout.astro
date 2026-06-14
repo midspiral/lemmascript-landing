@@ -4,13 +4,9 @@ import '@fontsource/dm-sans/400.css'
 import '@fontsource/dm-sans/500.css'
 import '@fontsource/dm-sans/600.css'
 import '@fontsource/dm-sans/700.css'
+import '@fontsource/dm-sans/800.css'
 import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/jetbrains-mono/600.css'
-import '@fontsource/sora/300.css'
-import '@fontsource/sora/400.css'
-import '@fontsource/sora/500.css'
-import '@fontsource/sora/600.css'
-import '@fontsource/sora/700.css'
 import '../styles/tokens.css'
 import '../styles/base.css'
 import '../styles/components.css'
@@ -51,6 +47,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     {image && <meta name="twitter:image" content={new URL(image, Astro.site).href} />}
   </head>
   <body>
+    <div class="atmosphere" aria-hidden="true"></div>
     <a href="#main" class="skip-nav">Skip to main content</a>
     <Nav />
     <main id="main">

@@ -1,0 +1,77 @@
+/* ============================================================
+   LEMMASCRIPT — SHARED COMPONENT PRIMITIVES
+   Global classes used across pages. Page-specific layout stays
+   scoped inside each .astro file.
+   ============================================================ */
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  font-size: var(--fs-small); font-weight: 600;
+  padding: 11px var(--sp-4); border-radius: var(--r-md);
+  border: 1px solid transparent; cursor: pointer;
+  transition: all var(--dur-2) var(--ease);
+}
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: var(--accent-bright); box-shadow: 0 0 24px var(--accent-glow); transform: translateY(-1px); }
+.btn-secondary { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border); }
+.btn-secondary:hover { border-color: var(--accent-dim); color: var(--accent-bright); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { color: var(--accent); background: var(--state-verified-bg); }
+
+/* ---------- badges ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
+  padding: 4px 10px; border-radius: var(--r-full); border: 1px solid;
+}
+.badge .bdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge-verified { color: var(--state-verified); background: var(--state-verified-bg); border-color: var(--accent-dim); }
+.badge-pending  { color: var(--state-pending);  background: var(--state-pending-bg);  border-color: rgba(245,196,81,0.3); }
+.badge-counter  { color: var(--state-counter);  background: var(--state-counter-bg);  border-color: rgba(244,85,78,0.3); }
+.badge-info     { color: var(--state-info);     background: var(--state-info-bg);     border-color: rgba(91,168,255,0.3); }
+
+/* ---------- section header ---------- */
+.section-head { max-width: 64ch; margin-bottom: var(--sp-12); }
+.section-head h2 { margin: var(--sp-3) 0; }
+.section-desc { font-size: var(--fs-body-lg); color: var(--text-secondary); }
+.section-alt { background: rgba(17,22,31,0.4); border-block: 1px solid var(--border-subtle); }
+
+.link-arrow { color: var(--accent); font-size: var(--fs-small); font-weight: 600; }
+.link-arrow:hover { color: var(--accent-bright); }
+.center { text-align: center; }
+
+/* ---------- page header (inner pages) ---------- */
+.page-head { padding-block: var(--sp-16) var(--sp-12); border-bottom: 1px solid var(--border-subtle); }
+.page-head h1 { font-size: var(--fs-display-l); font-weight: 800; letter-spacing: -0.03em; line-height: var(--lh-tight); margin: var(--sp-4) 0; max-width: 18ch; }
+.page-head h1 em { font-style: normal; color: var(--accent); }
+.page-head .lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 60ch; }
+
+/* ---------- code block ---------- */
+.codeblock { background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--elev-2); }
+.code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: 10px var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: var(--bg-overlay); }
+.code-bar .dots { display: flex; gap: 6px; }
+.code-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); }
+.code-file { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+.code-body { padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.8; overflow-x: auto; color: var(--text-primary); white-space: pre; }
+.code-body .ln { color: var(--text-faint); user-select: none; display: inline-block; width: 2ch; margin-right: var(--sp-3); text-align: right; }
+.t-anno { color: var(--accent); } .t-annokw { color: var(--accent-bright); font-weight: 600; }
+.t-kw { color: var(--state-info); } .t-fn { color: var(--state-pending); }
+.t-num { color: #C8A6FF; } .t-cmt { color: var(--text-muted); } .t-str { color: var(--accent-bright); }
+
+/* ---------- card ---------- */
+.card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
+  padding: var(--sp-6); position: relative; overflow: hidden;
+  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
+.card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity var(--dur-3) var(--ease); }
+.card:hover { border-color: var(--border); transform: translateY(-3px); }
+.card:hover::before { opacity: 1; }
+
+/* ---------- callout ---------- */
+.callout { display: flex; gap: var(--sp-3); padding: var(--sp-4); border-radius: var(--r-md); border: 1px solid; font-size: var(--fs-small); }
+.callout .mark { font-family: var(--font-mono); font-weight: 700; flex-shrink: 0; }
+.callout-info { background: var(--state-info-bg); border-color: rgba(91,168,255,0.25); }
+.callout-info .mark, .callout-info b { color: var(--state-info); }
+.callout-warn { background: var(--state-pending-bg); border-color: rgba(245,196,81,0.25); }
+.callout-warn .mark, .callout-warn b { color: var(--state-pending); }

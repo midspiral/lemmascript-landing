@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LemmaScript — Background Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-base:#0A0E14; --bg-surface:#11161F; --bg-overlay:#161C27;
+  --border-subtle:#1C242F; --border:#2A3441;
+  --text-primary:#E6EDF3; --text-secondary:#9BA8B7; --text-muted:#6B7888; --text-faint:#4A5563;
+  --accent:#2DD4A7; --accent-bright:#5BF0C5; --accent-dim:#1B8A6E; --accent-glow:rgba(45,212,167,0.18);
+  --state-verified-bg:rgba(45,212,167,0.10);
+  --font-display:'Sora',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);-webkit-font-smoothing:antialiased;}
+
+/* each option is a full-height band */
+.band{position:relative;min-height:100vh;overflow:hidden;display:grid;place-items:center;border-bottom:1px solid var(--border-subtle);}
+.bg{position:absolute;inset:0;z-index:0;}
+.content{position:relative;z-index:2;max-width:760px;padding:0 32px;text-align:center;}
+.tag{position:absolute;top:28px;left:28px;z-index:3;font-family:var(--font-mono);font-size:12px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--accent);padding:6px 12px;border:1px solid var(--accent-dim);
+  border-radius:999px;background:rgba(10,14,20,0.7);backdrop-filter:blur(6px);}
+.tag b{color:var(--text-muted);font-weight:400;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--accent);padding:5px 12px;border-radius:999px;background:var(--state-verified-bg);
+  border:1px solid var(--accent-dim);margin-bottom:24px;}
+.eyebrow .d{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+h1{font-family:var(--font-display);font-size:3.5rem;font-weight:800;letter-spacing:-0.03em;line-height:1.05;margin-bottom:18px;}
+h1 em{font-style:normal;color:var(--accent);}
+.lede{font-size:1.125rem;color:var(--text-secondary);max-width:52ch;margin:0 auto 32px;}
+.btns{display:flex;gap:12px;justify-content:center;}
+.btn{font-family:var(--font-body);font-size:0.9rem;font-weight:600;padding:11px 20px;border-radius:8px;
+  border:1px solid transparent;cursor:pointer;text-decoration:none;transition:all .2s var(--ease);}
+.btn-p{background:var(--accent);color:#04140E;} .btn-p:hover{background:var(--accent-bright);box-shadow:0 0 24px var(--accent-glow);}
+.btn-s{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border);} .btn-s:hover{border-color:var(--accent-dim);color:var(--accent-bright);}
+
+/* shared subtle top glow for all */
+.glow{background:radial-gradient(ellipse 80% 50% at 50% -5%, var(--accent-glow), transparent 60%);}
+
+/* ---------- A · SPIRAL ---------- */
+.bg-spiral svg{position:absolute;right:-12%;top:50%;transform:translateY(-50%);width:120vh;height:120vh;opacity:0.5;}
+.bg-spiral .arc{fill:none;stroke:url(#spiralStroke);stroke-width:1.1;}
+
+/* ---------- B · NOISE GRAIN ---------- */
+.bg-noise::after{content:'';position:absolute;inset:0;opacity:0.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ---------- C · PROOF SYMBOLS ---------- */
+.bg-sym{font-family:var(--font-mono);color:var(--accent);}
+.bg-sym span{position:absolute;opacity:0.07;user-select:none;}
+
+/* ---------- D · DIAGONAL HATCH ---------- */
+.bg-hatch{background-image:repeating-linear-gradient(135deg, rgba(45,212,167,0.04) 0 1px, transparent 1px 13px);}
+.bg-hatch::after{content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg, rgba(91,168,255,0.03) 0 1px, transparent 1px 13px);}
+
+/* ---------- E · CONTOUR / CONCENTRIC ---------- */
+.bg-contour{background-image:
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 60px, rgba(45,212,167,0.045) 60px, rgba(45,212,167,0.045) 61px, transparent 61px),
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 130px, rgba(45,212,167,0.04) 130px, rgba(45,212,167,0.04) 131px, transparent 131px),
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 220px, rgba(45,212,167,0.035) 220px, rgba(45,212,167,0.035) 221px, transparent 221px),
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 330px, rgba(45,212,167,0.03) 330px, rgba(45,212,167,0.03) 331px, transparent 331px),
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 460px, rgba(45,212,167,0.025) 460px, rgba(45,212,167,0.025) 461px, transparent 461px),
+  radial-gradient(circle at 75% 35%, transparent 0, transparent 610px, rgba(45,212,167,0.02) 610px, rgba(45,212,167,0.02) 611px, transparent 611px);}
+
+@media(max-width:640px){h1{font-size:2.4rem;}}
+</style>
+</head>
+<body>
+
+<!-- ============ A · SPIRAL ============ -->
+<section class="band">
+  <div class="tag"><b>option A —</b> &nbsp;Brand spiral</div>
+  <div class="bg glow"></div>
+  <div class="bg bg-spiral">
+    <svg viewBox="-130 -130 260 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="spiralStroke" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#5BF0C5" stop-opacity="0.9"/>
+          <stop offset="55%" stop-color="#2DD4A7" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#2DD4A7" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path class="arc" d="M 2.2,0.0 L 2.23,0.41 L 2.18,0.82 L 2.06,1.23 L 1.86,1.63 L 1.58,1.99 L 1.23,2.31 L 0.82,2.56 L 0.36,2.75 L -0.14,2.85 L -0.67,2.86 L -1.2,2.77 L -1.73,2.58 L -2.23,2.3 L -2.68,1.92 L -3.06,1.45 L -3.37,0.9 L -3.58,0.29 L -3.68,-0.36 L -3.66,-1.05 L -3.51,-1.73 L -3.23,-2.4 L -2.83,-3.03 L -2.31,-3.59 L -1.68,-4.06 L -0.95,-4.42 L -0.15,-4.65 L 0.7,-4.74 L 1.59,-4.67 L 2.47,-4.43 L 3.31,-4.03 L 4.1,-3.47 L 4.79,-2.76 L 5.36,-1.91 L 5.78,-0.95 L 6.03,0.1 L 6.08,1.21 L 5.94,2.35 L 5.58,3.47 L 5.01,4.55 L 4.24,5.53 L 3.27,6.38 L 2.14,7.06 L 0.86,7.54 L -0.52,7.79 L -1.96,7.8 L -3.42,7.54 L -4.85,7.0 L -6.2,6.19 L -7.42,5.13 L -8.46,3.83 L -9.27,2.32 L -9.82,0.64 L -10.06,-1.16 L -9.97,-3.03 L -9.54,-4.91 L -8.75,-6.73 L -7.62,-8.42 L -6.17,-9.93 L -4.41,-11.19 L -2.41,-12.15 L -0.2,-12.74 L 2.15,-12.94 L 4.56,-12.71 L 6.96,-12.03 L 9.26,-10.9 L 11.39,-9.33 L 13.25,-7.35 L 14.77,-5.0 L 15.88,-2.34 L 16.51,0.56 L 16.61,3.6 L 16.16,6.71 L 15.13,9.77 L 13.52,12.68 L 11.35,15.33 L 8.67,17.62 L 5.53,19.44 L 2.02,20.7 L -1.77,21.33 L -5.72,21.27 L -9.72,20.49 L -13.61,18.96 L -17.28,16.69 L -20.57,13.71 L -23.36,10.09 L -25.51,5.92 L -26.92,1.29 L -27.5,-3.65 L -27.17,-8.76 L -25.9,-13.88 L -23.67,-18.83 L -20.5,-23.43 L -16.44,-27.5 L -11.58,-30.87 L -6.03,-33.39 L 0.04,-34.93 L 6.48,-35.36 L 13.08,-34.61 L 19.62,-32.64 L 25.88,-29.43 L 31.63,-25.03 L 36.64,-19.52 L 40.7,-13.02 L 43.61,-5.68 L 45.2,2.28 L 45.35,10.64 L 43.96,19.13 L 40.99,27.47 L 36.45,35.37 L 30.39,42.53 L 22.93,48.67 L 14.25,53.51 L 4.57,56.81 L -5.84,58.36 L -16.66,58.02 L -27.56,55.68 L -38.17,51.31 L -48.11,44.92 L -56.99,36.62 L -64.45,26.58 L -70.16,15.04 L -73.82,2.3 L -75.17,-11.27 L -74.04,-25.26 L -70.32,-39.23 L -63.97,-52.68 L -55.07,-65.13 L -43.77,-76.09 L -30.3,-85.12 L -14.99,-91.77 L 1.73,-95.69 L 19.38,-96.57 L 37.42,-94.22 L 55.25,-88.51 L 72.26,-79.44 L 87.8,-67.13 L 101.28,-51.8 L 112.1,-33.79 L 119.74,-13.56"/>
+    </svg>
+  </div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">A single faint logarithmic spiral — the Midspiral mark, scaled to the canvas. Ownable, on-brand, quietly mathematical.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+</section>
+
+<!-- ============ B · NOISE GRAIN ============ -->
+<section class="band">
+  <div class="tag"><b>option B —</b> &nbsp;Film grain + glow</div>
+  <div class="bg glow bg-noise"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">No geometry at all — just a fine film grain over the glow. Pure atmosphere and depth. The calmest, most "premium product" option.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+</section>
+
+<!-- ============ C · PROOF SYMBOLS ============ -->
+<section class="band">
+  <div class="tag"><b>option C —</b> &nbsp;Proof-symbol field</div>
+  <div class="bg glow"></div>
+  <div class="bg bg-sym" id="symField"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Scattered logic symbols — ∀ ∃ ⊢ λ → ∎ — drifting faintly behind the content. Unmistakably formal-methods. Risky if it gets busy.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+</section>
+
+<!-- ============ D · DIAGONAL HATCH ============ -->
+<section class="band">
+  <div class="tag"><b>option D —</b> &nbsp;Blueprint hatch</div>
+  <div class="bg glow bg-hatch"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Fine crossed diagonals — an engineering-blueprint texture. Structured like the grid, but directional and less generic.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+</section>
+
+<!-- ============ E · CONTOUR / CONCENTRIC ============ -->
+<section class="band">
+  <div class="tag"><b>option E —</b> &nbsp;Concentric contour</div>
+  <div class="bg glow bg-contour"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Faint concentric rings radiating from one point — a radar / topographic feel that nods to the spiral without drawing it literally.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+</section>
+
+<script>
+// scatter proof symbols for option C
+(function(){
+  const field=document.getElementById('symField');
+  const syms=['∀','∃','⊢','⊨','λ','→','⇒','¬','∧','∨','∎','≤','≥','⊥','⊤','∈','//@','✓','∴','□'];
+  const N=46;
+  for(let i=0;i<N;i++){
+    const s=document.createElement('span');
+    s.textContent=syms[i%syms.length];
+    const size=14+((i*37)%52);          // 14–66px, deterministic
+    s.style.fontSize=size+'px';
+    s.style.left=((i*53)%100)+'%';
+    s.style.top=((i*71)%100)+'%';
+    s.style.transform='rotate('+(((i*47)%60)-30)+'deg)';
+    s.style.opacity=(0.04+((i%5)*0.012)).toFixed(3);
+    field.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

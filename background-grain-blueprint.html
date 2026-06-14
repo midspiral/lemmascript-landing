@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LemmaScript — Grain & Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-base:#0A0E14;--bg-surface:#11161F;--bg-overlay:#161C27;
+  --border-subtle:#1C242F;--border:#2A3441;
+  --text-primary:#E6EDF3;--text-secondary:#9BA8B7;--text-muted:#6B7888;--text-faint:#4A5563;
+  --accent:#2DD4A7;--accent-bright:#5BF0C5;--accent-dim:#1B8A6E;--accent-glow:rgba(45,212,167,0.18);
+  --state-verified-bg:rgba(45,212,167,0.10);
+  --font-display:'Sora',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);-webkit-font-smoothing:antialiased;}
+.band{position:relative;min-height:100vh;overflow:hidden;display:grid;place-items:center;border-bottom:1px solid var(--border-subtle);}
+.bg{position:absolute;inset:0;z-index:0;}
+.content{position:relative;z-index:2;max-width:720px;padding:0 32px;text-align:center;}
+.tag{position:absolute;top:28px;left:28px;z-index:3;font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--accent);padding:6px 12px;border:1px solid var(--accent-dim);
+  border-radius:999px;background:rgba(10,14,20,0.7);backdrop-filter:blur(6px);}
+.tag b{color:var(--text-muted);font-weight:400;}
+.note{position:absolute;bottom:28px;left:28px;z-index:3;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);max-width:46ch;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--accent);padding:5px 12px;border-radius:999px;background:var(--state-verified-bg);
+  border:1px solid var(--accent-dim);margin-bottom:24px;}
+.eyebrow .d{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+h1{font-family:var(--font-display);font-size:3.4rem;font-weight:800;letter-spacing:-0.03em;line-height:1.05;margin-bottom:18px;}
+h1 em{font-style:normal;color:var(--accent);}
+.lede{font-size:1.1rem;color:var(--text-secondary);max-width:50ch;margin:0 auto 32px;}
+.btns{display:flex;gap:12px;justify-content:center;}
+.btn{font-family:var(--font-body);font-size:0.9rem;font-weight:600;padding:11px 20px;border-radius:8px;border:1px solid transparent;
+  cursor:pointer;text-decoration:none;transition:all .2s var(--ease);}
+.btn-p{background:var(--accent);color:#04140E;}.btn-p:hover{background:var(--accent-bright);box-shadow:0 0 24px var(--accent-glow);}
+.btn-s{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border);}.btn-s:hover{border-color:var(--accent-dim);color:var(--accent-bright);}
+
+.glow{background:radial-gradient(ellipse 80% 50% at 50% -5%, var(--accent-glow), transparent 60%);}
+
+/* ---- grain generators ---- */
+.grain-fine::after{content:'';position:absolute;inset:0;opacity:0.45;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.grain-soft::after{content:'';position:absolute;inset:0;opacity:0.32;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.grain-coarse::after{content:'';position:absolute;inset:0;opacity:0.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.vignette::before{content:'';position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse 70% 70% at 50% 45%, transparent 40%, rgba(0,0,0,0.55) 100%);}
+
+/* ---- blueprint generators ---- */
+.bp-cross{background-image:
+  repeating-linear-gradient(135deg, rgba(45,212,167,0.045) 0 1px, transparent 1px 14px),
+  repeating-linear-gradient(45deg, rgba(91,168,255,0.03) 0 1px, transparent 1px 14px);}
+.bp-single-wide{background-image:repeating-linear-gradient(135deg, rgba(45,212,167,0.05) 0 1px, transparent 1px 26px);}
+/* faded crossed blueprint — strong up top, dissolves downward */
+.bp-faded{background-image:
+  repeating-linear-gradient(135deg, rgba(45,212,167,0.06) 0 1px, transparent 1px 16px),
+  repeating-linear-gradient(45deg, rgba(45,212,167,0.04) 0 1px, transparent 1px 16px);
+  -webkit-mask-image:linear-gradient(180deg, #000 0%, transparent 75%);
+  mask-image:linear-gradient(180deg, #000 0%, transparent 75%);}
+
+@media(max-width:640px){h1{font-size:2.3rem;}}
+</style>
+</head>
+<body>
+
+<!-- ===== G1 grain calm ===== -->
+<section class="band">
+  <div class="tag"><b>grain 1 —</b> &nbsp;Calm (recommended grain)</div>
+  <div class="bg glow grain-fine"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Fine film grain at low intensity over the glow. Quiet, premium, lets type and color lead.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">baseFrequency 0.9 · opacity 0.45 · overlay blend</div>
+</section>
+
+<!-- ===== G2 grain + vignette ===== -->
+<section class="band">
+  <div class="tag"><b>grain 2 —</b> &nbsp;With vignette depth</div>
+  <div class="bg glow grain-soft vignette"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Softer grain plus a darkened vignette at the edges — pulls the eye to center, adds cinematic depth.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">grain 0.32 + radial vignette to rgba(0,0,0,0.55)</div>
+</section>
+
+<!-- ===== G3 grain coarse ===== -->
+<section class="band">
+  <div class="tag"><b>grain 3 —</b> &nbsp;Coarser texture</div>
+  <div class="bg glow grain-coarse"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Larger, more visible grain — more tactile and analog, edges toward "scanned print."</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">baseFrequency 0.62 · 3 octaves · opacity 0.5</div>
+</section>
+
+<!-- ===== BP1 crossed ===== -->
+<section class="band">
+  <div class="tag"><b>blueprint 1 —</b> &nbsp;Crossed hatch</div>
+  <div class="bg glow bp-cross"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Fine crossed diagonals in green + blue — an engineering drawing feel, evenly across the canvas.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">135° green 0.045 × 45° blue 0.03 · 14px pitch</div>
+</section>
+
+<!-- ===== BP2 single wide ===== -->
+<section class="band">
+  <div class="tag"><b>blueprint 2 —</b> &nbsp;Single diagonal, wide</div>
+  <div class="bg glow bp-single-wide"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">One direction, wider pitch — cleaner and more restrained than crossed hatching.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">135° green 0.05 · 26px pitch</div>
+</section>
+
+<!-- ===== BP3 faded ===== -->
+<section class="band">
+  <div class="tag"><b>blueprint 3 —</b> &nbsp;Faded (dissolves down)</div>
+  <div class="bg glow bp-faded"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Crossed hatch that's strongest at the top and dissolves toward the bottom — structure where it counts, calm where the content sits.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">crossed hatch · masked with top-to-bottom fade</div>
+</section>
+
+<!-- ===== COMBO 1 grain + single blueprint ===== -->
+<section class="band">
+  <div class="tag"><b>combo 1 —</b> &nbsp;Grain + faint blueprint</div>
+  <div class="bg glow bp-single-wide grain-soft"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">The hybrid: structure from a single diagonal, atmosphere from grain on top. Best of both — my pick.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">26px diagonal + soft grain overlay</div>
+</section>
+
+<!-- ===== COMBO 2 grain + faded crossed ===== -->
+<section class="band">
+  <div class="tag"><b>combo 2 —</b> &nbsp;Grain + faded crossed</div>
+  <div class="bg glow bp-faded grain-soft"></div>
+  <div class="content">
+    <span class="eyebrow"><span class="d"></span> Tech Preview</span>
+    <h1>Ship TypeScript you can <em>prove</em> is correct.</h1>
+    <p class="lede">Faded crossed blueprint up top, grain throughout. Richer and more technical than combo 1.</p>
+    <div class="btns"><a class="btn btn-p" href="#">Start verifying →</a><a class="btn btn-s" href="#">Read the docs</a></div>
+  </div>
+  <div class="note">masked crossed hatch + soft grain overlay</div>
+</section>
+
+</body>
+</html>

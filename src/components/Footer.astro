@@ -1,14 +1,107 @@
 ---
+const year = new Date().getFullYear()
+
+const cols = [
+  {
+    title: 'Product',
+    links: [
+      { href: '/how-it-works', label: 'How it works' },
+      { href: '/annotations', label: 'Annotations' },
+      { href: '/integrations', label: 'Integrations' },
+      { href: '/case-studies', label: 'Case studies' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { href: 'https://docs.lemmascript.com', label: 'Documentation', external: true },
+      { href: 'https://github.com/midspiral/LemmaScript', label: 'GitHub', external: true },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: 'https://midspiral.com', label: 'Midspiral', external: true },
+    ],
+  },
+]
 ---
 <footer class="footer">
-  <a href="/" class="footer-logo">
-    <div class="footer-logo-mark">LS</div>
-    <div class="footer-logo-text">Lemma<span>Script</span></div>
-  </a>
-  <div class="footer-links">
-    <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://docs.lemmascript.com" target="_blank" rel="noopener">Docs</a>
-    <a href="https://midspiral.com" target="_blank" rel="noopener">Midspiral</a>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo" aria-label="LemmaScript home">
+        <span class="footer-mark">LS</span>
+        <span class="footer-name">Lemma<span>Script</span></span>
+      </a>
+      <p class="footer-tag">The correctness layer for AI-generated software.</p>
+      <p class="footer-mono">// built by Midspiral</p>
+    </div>
+
+    <div class="footer-cols">
+      {cols.map((col) => (
+        <div class="footer-col">
+          <h4>{col.title}</h4>
+          {col.links.map((l) => (
+            <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
+          ))}
+        </div>
+      ))}
+    </div>
   </div>
-  <span class="footer-copy">&copy; {new Date().getFullYear()} Midspiral</span>
+
+  <div class="footer-base">
+    <span>&copy; {year} Midspiral</span>
+    <span class="footer-mono">v0.1 · Tech Preview</span>
+  </div>
 </footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border-subtle);
+    margin-top: var(--sp-24);
+  }
+  .footer-inner {
+    max-width: var(--container);
+    margin-inline: auto;
+    padding: var(--sp-16) var(--sp-6) var(--sp-12);
+    display: grid;
+    grid-template-columns: 1.4fr 2fr;
+    gap: var(--sp-16);
+  }
+  .footer-logo { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .footer-mark {
+    width: 30px; height: 30px; border-radius: var(--r-md);
+    display: grid; place-items: center;
+    background: var(--state-verified-bg); border: 1px solid var(--accent-dim);
+    color: var(--accent); font-family: var(--font-mono); font-weight: 700; font-size: 12px;
+  }
+  .footer-name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+  .footer-name span { color: var(--accent); }
+  .footer-tag { color: var(--text-secondary); font-size: var(--fs-small); max-width: 32ch; }
+  .footer-mono { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
+
+  .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-8); }
+  .footer-col h4 {
+    font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
+    margin-bottom: var(--sp-4);
+  }
+  .footer-col a { display: block; font-size: var(--fs-small); color: var(--text-secondary); padding-block: var(--sp-1); }
+  .footer-col a:hover { color: var(--accent); }
+
+  .footer-base {
+    max-width: var(--container);
+    margin-inline: auto;
+    padding: var(--sp-6);
+    border-top: 1px solid var(--border-subtle);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-3);
+    color: var(--text-muted); font-size: var(--fs-small);
+  }
+  .footer-base .footer-mono { margin-top: 0; }
+
+  @media (max-width: 720px) {
+    .footer-inner { grid-template-columns: 1fr; gap: var(--sp-8); }
+    .footer-cols { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

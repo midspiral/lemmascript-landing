@@ -4,11 +4,15 @@ const year = new Date().getFullYear()
 const cols = [
   {
     title: 'Product',
+    cols2: true,
     links: [
       { href: '/how-it-works', label: 'How it works' },
-      { href: '/try', label: 'Try it' },
-      { href: '/annotations', label: 'Annotations' },
+      { href: '/features', label: 'Features' },
       { href: '/integrations', label: 'Integrations' },
+      { href: '/install', label: 'Install' },
+      { href: '/try', label: 'Try it' },
+      { href: '/emira', label: 'Emira', soon: true },
+      { href: '/annotations', label: 'Annotations' },
       { href: '/plugins/guard', label: 'guard plugin' },
       { href: '/case-studies', label: 'Case studies' },
     ],
@@ -42,11 +46,13 @@ const cols = [
 
     <div class="footer-cols">
       {cols.map((col) => (
-        <div class="footer-col">
+        <div class:list={['footer-col', { 'footer-col-wide': col.cols2 }]}>
           <h4>{col.title}</h4>
-          {col.links.map((l) => (
-            <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
-          ))}
+          <div class:list={['footer-links', { 'footer-links2': col.cols2 }]}>
+            {col.links.map((l) => (
+              <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}{l.soon && <span class="footer-soon">soon</span>}</a>
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -83,7 +89,9 @@ const cols = [
   .footer-tag { color: var(--text-secondary); font-size: var(--fs-small); max-width: 32ch; }
   .footer-mono { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
 
-  .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-8); }
+  .footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--sp-8); }
+  .footer-links2 { columns: 2; column-gap: var(--sp-8); }
+  .footer-links2 a { break-inside: avoid; }
   .footer-col h4 {
     font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
     letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint);
@@ -91,6 +99,8 @@ const cols = [
   }
   .footer-col a { display: block; font-size: var(--fs-small); color: var(--text-secondary); padding-block: var(--sp-1); }
   .footer-col a:hover { color: var(--accent); }
+  .footer-soon { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--accent-dim); border-radius: var(--r-sm); padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
 
   .footer-base {
     max-width: var(--container);
@@ -105,5 +115,6 @@ const cols = [
   @media (max-width: 720px) {
     .footer-inner { grid-template-columns: 1fr; gap: var(--sp-8); }
     .footer-cols { grid-template-columns: repeat(2, 1fr); }
+    .footer-links2 { columns: 1; }
   }
 </style>

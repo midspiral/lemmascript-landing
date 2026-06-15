@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Install — LemmaScript"
+  description="Add LemmaScript to any TypeScript project in a minute: install the package, write a contract on a function, and run the checker."
+>
+  <header class="page-head">
+    <div class="container">
+      <span class="kicker">// install</span>
+      <h1>Get set up in <em>a minute</em>.</h1>
+      <p class="lede">
+        Add LemmaScript to any TypeScript project — greenfield or existing. No new language, no runtime cost.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container install-wrap">
+      <ol class="steps">
+        <li class="step">
+          <div class="step-head"><span class="step-n">1</span><h3>Add the package</h3></div>
+          <p>Install LemmaScript as a dev dependency. It never ships to production.</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> npm install -D lemmascript</pre>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-head"><span class="step-n">2</span><h3>Write a contract</h3></div>
+          <p>Add a <code class="inline">//@</code> contract to any function you care about. The implementation stays exactly as it is.</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">charge.ts</span></div>
+            <pre class="code-body"><span class="ln">1</span><span class="t-anno">//@ requires</span> <span class="t-annokw">amount &gt;= 0</span>
+<span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= balance</span>
+<span class="ln">3</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">4</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
+<span class="ln">5</span>&#125;</pre>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-head"><span class="step-n">3</span><h3>Check it</h3></div>
+          <p>Run the checker — locally, in a pre-commit hook, or in CI. It passes only when every contract holds.</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> npx lemmascript check src/
+
+<span class="t-kw">✓</span> charge   correct
+<span class="t-cmt">1 / 1 correct · 0.4s</span></pre>
+          </div>
+        </li>
+      </ol>
+
+      <div class="install-side">
+        <div class="card install-next">
+          <span class="kicker">// next</span>
+          <h3>Go deeper</h3>
+          <p>Full reference, the contract language, and the backends that power it.</p>
+          <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Read the docs →</a>
+          <a href="/try" class="btn btn-secondary">Try it live</a>
+          <a href="/annotations" class="link-arrow">Browse all contract clauses →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .install-wrap { display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--sp-16); align-items: start; }
+  .steps { list-style: none; display: grid; gap: var(--sp-12); }
+  .step-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+  .step-n { width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--r-full); display: grid; place-items: center;
+    background: var(--state-verified-bg); border: 1px solid var(--accent-dim); color: var(--accent);
+    font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600; }
+  .step-head h3 { font-size: var(--fs-h3); }
+  .step > p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-4); max-width: 52ch; }
+  .inline { font-family: var(--font-mono); color: var(--accent-bright); font-size: 0.9em; }
+
+  .install-next { position: sticky; top: 96px; box-shadow: var(--elev-glow); display: grid; gap: var(--sp-3); }
+  .install-next h3 { font-size: var(--fs-h3); margin-top: var(--sp-2); }
+  .install-next p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-2); }
+  .install-next .btn { width: 100%; justify-content: center; }
+  .install-next .link-arrow { margin-top: var(--sp-2); }
+
+  @media (max-width: 860px) {
+    .install-wrap { grid-template-columns: 1fr; gap: var(--sp-12); }
+    .install-next { position: static; }
+  }
+</style>

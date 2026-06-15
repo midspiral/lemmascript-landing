@@ -40,8 +40,10 @@ body {
   background: radial-gradient(ellipse 70% 70% at 50% 45%, transparent 40%, rgba(0,0,0,0.55) 100%);
 }
 
-/* lift all real content above the fixed atmosphere layer */
-body > *:not(.atmosphere) { position: relative; z-index: 1; }
+/* lift all real content above the fixed atmosphere layer.
+   Exclude .nav (keeps its position: sticky) and .skip-nav (keeps its
+   position: absolute — otherwise it sits in flow and pushes the nav down). */
+body > *:not(.atmosphere):not(.nav):not(.skip-nav) { position: relative; z-index: 1; }
 body > main { flex: 1; }
 
 /* ---------- typography ---------- */

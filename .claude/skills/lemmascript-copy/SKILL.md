@@ -15,6 +15,8 @@ LemmaScript **is TypeScript with syntax for contracts** (mirrors "TypeScript is 
 
 Copy sells the **WHAT** and the **IMPACT**, never the HOW. Talk about: correctness, contracts, guarantees, trust, code that's correct by construction, zero runtime cost, works on existing code, agent-written, human-reviewable.
 
+**Don't anthropomorphize the agents.** Emira (and any agent) is a tool, not a person — never "she/her/he/him." Use the name "Emira" or "it", or rephrase to focus on the output. Avoid personality verbs that imply a mind ("she thinks", "she decides"); prefer functional ones ("writes", "emits", "produces", "checks").
+
 ---
 
 ## Rule 1 — Never use "and hope"

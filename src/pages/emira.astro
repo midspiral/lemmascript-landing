@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const traits = [
+  {
+    title: 'Correct by construction',
+    body: 'Every function Emira ships comes with a contract it can’t violate. There are no bugs to chase down later — correctness is built in from the first line.',
+  },
+  {
+    title: 'Native, not bolted on',
+    body: 'Correctness isn’t a tool Emira calls at the end. It’s how the code gets written — no prompt gymnastics, no retry-until-it-looks-right.',
+  },
+  {
+    title: 'Reviewable in seconds',
+    body: 'Emira emits plain TypeScript with declarative contracts. You review the intent at a glance, never the implementation.',
+  },
+]
+---
+
+<BaseLayout
+  title="Emira — Coming soon | LemmaScript"
+  description="Emira is the agent that writes correct-by-construction TypeScript natively. Join the waitlist for early access."
+>
+  <!-- ===================== HERO ===================== -->
+  <section class="em-hero">
+    <div class="container em-wrap">
+      <span class="em-eyebrow">// coming soon</span>
+      <h1 class="em-title">Meet <span class="em-name">Emira</span>.</h1>
+      <p class="em-tag">The agent that writes TypeScript with correctness built in. <br />No follow-up tests, no bugs in prod. <br />Emira emits code that’s <em>correct by construction.</em></p>  
+      <p class="em-lede">
+        Emira doesn’t check correctness after the fact — it writes the contract and the code together,
+        and emits a function only once it’s correct. Every function, every time. Built on LemmaScript.
+      </p>
+
+      <!-- waitlist -->
+      <form class="em-form" id="em-form" novalidate>
+        <input type="email" id="em-email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
+        <button type="submit" class="btn btn-primary">Join the waitlist →</button>
+      </form>
+      <p class="em-formnote" id="em-note">Be first to build with Emira. No spam — just one note when it’s live.</p>
+    </div>
+  </section>
+
+  <!-- ===================== WHAT MAKES HER DIFFERENT ===================== -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// what makes it different</span>
+        <h2>No guesswork. Correct on the first pass.</h2>
+      </div>
+      <div class="em-grid">
+        {traits.map((t) => (
+          <div class="card em-card">
+            <h3>{t.title}</h3>
+            <p>{t.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OUTPUT TEASER ===================== -->
+  <section class="section">
+    <div class="container em-teaser">
+      <div>
+        <span class="kicker">// what Emira ships</span>
+        <h2>Code with the guarantee already attached.</h2>
+        <p class="section-desc">No follow-up pass, no “please add tests.” Emira’s output arrives correct — contract and implementation, together.</p>
+      </div>
+      <div class="codeblock">
+        <div class="code-bar"><span class="code-file">charge.ts</span><span class="code-by">// by Emira</span><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
+        <pre class="code-body"><span class="ln">1</span><span class="t-cmt">// a charge can never overdraw the account</span>
+<span class="ln">2</span><span class="t-anno">//@ requires</span> <span class="t-annokw">amount &gt;= 0</span>
+<span class="ln">3</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= balance</span>
+<span class="ln">4</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">5</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
+<span class="ln">6</span>&#125;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="em-cta card">
+        <span class="kicker">// coming soon</span>
+        <h2>Get early access to Emira.</h2>
+        <p class="section-desc" style="margin:var(--sp-3) auto var(--sp-8);max-width:46ch">Join the waitlist and we’ll reach out the moment it’s ready.</p>
+        <a href="#em-form" class="btn btn-primary">Join the waitlist →</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById('em-form')
+    const note = document.getElementById('em-note')
+    if (!form) return
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const email = document.getElementById('em-email')
+      const val = (email.value || '').trim()
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        note.textContent = 'Please enter a valid email address.'
+        note.style.color = 'var(--state-counter)'
+        email.focus()
+        return
+      }
+      // TODO: wire to a real waitlist endpoint (Formspree / API / etc.).
+      form.innerHTML = '<div class="em-success">✓ You’re on the list. We’ll be in touch.</div>'
+      note.textContent = 'Thanks — keep an eye on your inbox.'
+      note.style.color = 'var(--accent)'
+    })
+  })()
+</script>
+
+<style>
+  .em-hero { padding-block: var(--sp-24) var(--sp-16); }
+  .em-wrap { max-width: 760px; margin-inline: auto; text-align: center; }
+  .em-eyebrow { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-small);
+    letter-spacing: 0.02em; color: var(--accent); margin-bottom: var(--sp-6); }
+  .em-title { font-size: clamp(2.6rem, 7vw, 4.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; margin-bottom: var(--sp-4); }
+  .em-name { color: var(--accent); }
+  .em-tag { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 500; color: var(--text-primary);
+    letter-spacing: -0.01em; max-width: 60ch; margin: 0 auto var(--sp-4); line-height: 1.3; }
+  .em-tag em { font-style: normal; color: var(--accent); }
+  .em-lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 56ch; margin: 0 auto var(--sp-8); }
+
+  .em-form { display: flex; gap: var(--sp-3); justify-content: center; max-width: 480px; margin: 0 auto var(--sp-3); }
+  .em-form input { flex: 1; min-width: 0; background: var(--bg-inset); border: 1px solid var(--border);
+    border-radius: var(--r-md); color: var(--text-primary); font-family: var(--font-body); font-size: var(--fs-small);
+    padding: 11px var(--sp-4); transition: border-color var(--dur-2) var(--ease); }
+  .em-form input::placeholder { color: var(--text-faint); }
+  .em-form input:focus { outline: none; border-color: var(--accent-dim); }
+  .em-form .btn { flex-shrink: 0; }
+  .em-formnote { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .em-success { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--accent);
+    background: var(--state-verified-bg); border: 1px solid var(--accent-dim); border-radius: var(--r-md);
+    padding: 11px var(--sp-4); }
+
+  .em-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .em-card h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
+  .em-card p { font-size: var(--fs-small); color: var(--text-secondary); }
+
+  .em-teaser { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-16); align-items: center; }
+  .em-teaser h2 { margin: var(--sp-3) 0; }
+  .code-by { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); }
+
+  .em-cta { text-align: center; padding: var(--sp-16); box-shadow: var(--elev-glow); }
+  .em-cta h2 { font-size: var(--fs-h1); margin-top: var(--sp-3); }
+
+  @media (max-width: 860px) {
+    .em-grid { grid-template-columns: 1fr; }
+    .em-teaser { grid-template-columns: 1fr; gap: var(--sp-8); }
+    .em-form { flex-direction: column; }
+  }
+</style>

@@ -49,6 +49,11 @@
 .page-head h1 em { font-style: normal; color: var(--accent); }
 .page-head .lede { font-size: var(--fs-body-lg); color: var(--text-secondary); max-width: 60ch; }
 
+/* grid/flex items that contain a code block must be allowed to shrink
+   (min-width:0) so long <pre> lines scroll inside the block instead of
+   widening the whole page on small screens. */
+.two-col > *, .stage > *, .install-wrap > *, .em-teaser > *, .review-grid > * { min-width: 0; }
+
 /* ---------- code block ---------- */
 .codeblock { background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--elev-2); }
 .code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: transparent; }

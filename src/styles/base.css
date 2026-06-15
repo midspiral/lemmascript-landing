@@ -88,6 +88,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 
 .section { padding-block: var(--sp-24); }
 
+/* ---------- mobile: scale down large headings + section padding ---------- */
+@media (max-width: 640px) {
+  :root {
+    --fs-display-xl: 2.6rem;
+    --fs-display-l:  2.1rem;
+    --fs-h1:         1.85rem;
+    --fs-h2:         1.45rem;
+    --fs-h3:         1.2rem;
+    --fs-body-lg:    1.05rem;
+  }
+  .section { padding-block: var(--sp-16); }
+  .container, .container-narrow { padding-inline: var(--sp-4); }
+}
+/* prevent any stray element from forcing horizontal scroll on phones */
+html, body { overflow-x: hidden; }
+
 /* monospace eyebrow / kicker used across sections */
 .kicker {
   font-family: var(--font-mono);

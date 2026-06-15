@@ -1,79 +1,95 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-
-const stages = [
-  {
-    n: '01',
-    title: 'Annotate your TypeScript',
-    body: 'You (or your agent) add //@ specifications to the functions worth proving. They sit in comments, so your editor, type-checker, linter, bundler, and CI behave exactly as before. The implementation is never rewritten.',
-    code: `<span class="t-anno">//@ requires</span> <span class="t-annokw">items.length > 0</span>
-<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\\result >= 0</span>
-<span class="t-kw">function</span> <span class="t-fn">total</span>(items: <span class="t-kw">number</span>[]): <span class="t-kw">number</span> &#123;
-  <span class="t-kw">return</span> items.reduce((a, b) => a + b, <span class="t-num">0</span>);
-&#125;`,
-  },
-  {
-    n: '02',
-    title: 'Compile to a verified model',
-    body: 'LemmaScript lowers the annotated source into a formal model in your chosen backend — Lean 4 or Dafny. Both are generated from the same TypeScript, so a single specification yields independent proofs in two systems.',
-    code: `<span class="t-cmt">-- generated Lean 4 model</span>
-<span class="t-kw">def</span> <span class="t-fn">total</span> (items : List Int) : Int :=
-  items.foldl (· + ·) <span class="t-num">0</span>
-
-<span class="t-kw">theorem</span> total_nonneg (h : items.all (· ≥ 0)) :
-  total items ≥ <span class="t-num">0</span> := <span class="t-kw">by</span> ...`,
-  },
-  {
-    n: '03',
-    title: 'Discharge the proof obligations',
-    body: 'The prover attempts each obligation. When it succeeds, you have a machine-checked guarantee the function meets its spec. When it fails, you get a concrete counterexample — a precise input that breaks the contract.',
-    code: `<span class="t-cmt">$ lemmascript verify total.ts</span>
-<span class="t-anno">✓ total</span>  verified   (2 obligations discharged)
-<span class="t-cmt">backend: lean4 · 0.41s</span>`,
-  },
-  {
-    n: '04',
-    title: 'Iterate inside the agent loop',
-    body: 'A counterexample is a precise, actionable signal — it pinpoints the exact input that breaks the contract. Your agent reads it, fixes the implementation or sharpens the spec, and re-runs verification until everything is green. Correctness becomes a repeatable loop.',
-    code: `<span class="t-counter">✗ charge</span>  counterexample found
-   remaining = <span class="t-num">5</span>, cost = <span class="t-num">-3</span>
-   → \\result = <span class="t-num">8</span> violates (\\result <= remaining)
-<span class="t-cmt">agent: tightening //@ requires cost >= 0 …</span>`,
-  },
-]
 ---
 
 <BaseLayout
   title="How it works — LemmaScript"
-  description="The LemmaScript pipeline: annotate ordinary TypeScript, compile to a verified Lean 4 or Dafny model, discharge proof obligations, and iterate inside the agent loop."
+  description="You and your agent only touch ordinary TypeScript. The model, the proofs, and the fix-and-retry loop are sealed inside the engine — out comes the same code, guaranteed correct."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// how it works</span>
-      <h1>From TypeScript to <em>theorem</em>, and back.</h1>
+      <h1>From TypeScript to <em>math</em> — and back.</h1>
       <p class="lede">
-        LemmaScript turns ordinary TypeScript into formally verified code through a four-stage loop —
-        without ever leaving the language your team and your agents already write.
+        You and your agent only ever touch ordinary TypeScript. Everything in between — the formal model,
+        the proofs, the fix-and-retry loop — is sealed inside the engine. What comes out is the same code,
+        guaranteed correct.
       </p>
     </div>
   </header>
 
+  <!-- the pipeline: input -> black box -> output -->
   <section class="section">
-    <div class="container stages">
-      {stages.map((s, i) => (
-        <div class="stage">
-          <div class="stage-copy">
-            <span class="stage-n">{s.n}</span>
-            <h2>{s.title}</h2>
-            <p>{s.body}</p>
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// the pipeline</span>
+        <h2>You write the contract. The rest is automatic.</h2>
+      </div>
+
+      <div class="flow">
+        <!-- INPUT — what you / your agent touch -->
+        <div class="flow-col">
+          <span class="flow-tag">You &amp; your agent write</span>
+          <div class="codeblock flow-card">
+            <div class="code-bar"><span class="code-file">charge.ts</span></div>
+            <pre class="code-body"><span class="t-anno">//@ requires</span> <span class="t-annokw">amt &gt;= 0</span>
+<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= bal</span>
+<span class="t-kw">function</span> <span class="t-fn">charge</span>(bal, amt) &#123;
+  <span class="t-kw">return</span> amt &gt; bal ? <span class="t-num">0</span> : bal - amt;
+&#125;</pre>
           </div>
-          <div class="stage-code">
-            <div class="codeblock">
-              <pre class="code-body" set:html={s.code}></pre>
-            </div>
-          </div>
+          <p class="flow-note">Ordinary TypeScript with <code class="t-anno">//@</code> contracts. Nothing new to learn.</p>
         </div>
-      ))}
+
+        <div class="flow-arrow" aria-hidden="true">↓</div>
+
+        <!-- BLACK BOX — the engine, fully automatic -->
+        <div class="flow-box">
+          <div class="flow-box-top">
+            <span class="flow-box-name">LemmaScript engine</span>
+            <span class="flow-box-auto">automatic</span>
+          </div>
+          <ol class="flow-steps">
+            <li><span class="flow-step-n">1</span><div><b>Compiles</b> to a formal model — Lean 4 or Dafny, from the same source.</div></li>
+            <li><span class="flow-step-n">2</span><div><b>Proves</b> every obligation holds — for <em>every</em> input, not a sample.</div></li>
+            <li><span class="flow-step-n">3</span><div><b>Iterates</b> — a counterexample sends the agent back to fix and re-run, until green.</div></li>
+          </ol>
+          <p class="flow-box-foot">// you never touch any of this</p>
+        </div>
+
+        <div class="flow-arrow" aria-hidden="true">↓</div>
+
+        <!-- OUTPUT — what comes out -->
+        <div class="flow-col">
+          <span class="flow-tag">What ships</span>
+          <div class="codeblock flow-card flow-out-card">
+            <div class="code-bar"><span class="code-file">charge.ts</span><span class="badge badge-verified" style="margin-left:auto">Verified</span></div>
+            <pre class="code-body"><span class="t-kw">function</span> <span class="t-fn">charge</span>(bal, amt) &#123;
+  <span class="t-kw">return</span> amt &gt; bal ? <span class="t-num">0</span> : bal - amt;
+&#125;</pre>
+          </div>
+          <p class="flow-note">Your original TypeScript — guaranteed correct for every input.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- why -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// why it matters</span>
+        <h2>What a proof adds to your test suite.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why"><h3>Every input, not just the ones you run</h3><p>Your tests exercise real behavior on the paths you choose. A proof adds what tests can’t: certainty the contract holds for <em>every</em> possible input — including the ones no one thought to try.</p></div>
+        <div class="why"><h3>Built for agents</h3><p>LLMs generate plausible code fast. A counterexample is the ground-truth signal an agent needs to converge on correct code instead of confident-but-wrong code.</p></div>
+        <div class="why"><h3>Zero runtime cost</h3><p>Verification happens at build time. The shipped artifact is your original TypeScript — no wrappers, no checks, no overhead.</p></div>
+        <div class="why"><h3>Drop-in, incremental</h3><p>Annotate one critical function or a whole module. Greenfield or a fork of an existing project — adopt it exactly as far as you want.</p></div>
+      </div>
+      <div class="center" style="margin-top:var(--sp-12)">
+        <a href="/annotations" class="btn btn-primary">Explore the annotations →</a>
+      </div>
     </div>
   </section>
 
@@ -100,47 +116,50 @@ const stages = [
     </div>
   </section>
 
-  <!-- why -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// why it matters</span>
-        <h2>What a proof adds to your test suite.</h2>
-      </div>
-      <div class="why-grid">
-        <div class="why"><h3>Every input, not just the ones you run</h3><p>Your tests exercise real behavior on the paths you choose. A proof adds what tests can’t: certainty the contract holds for <em>every</em> possible input — including the ones no one thought to try.</p></div>
-        <div class="why"><h3>Built for agents</h3><p>LLMs generate plausible code fast. A counterexample is the ground-truth signal an agent needs to converge on correct code instead of confident-but-wrong code.</p></div>
-        <div class="why"><h3>Zero runtime cost</h3><p>Verification happens at build time. The shipped artifact is your original TypeScript — no wrappers, no checks, no overhead.</p></div>
-        <div class="why"><h3>Drop-in, incremental</h3><p>Annotate one critical function or a whole module. Greenfield or a fork of an existing project — adopt it exactly as far as you want.</p></div>
-      </div>
-      <div class="center" style="margin-top:var(--sp-12)">
-        <a href="/annotations" class="btn btn-primary">Explore the annotations →</a>
-      </div>
-    </div>
-  </section>
+
 </BaseLayout>
 
 <style>
-  .stages { display: grid; gap: var(--sp-16); }
-  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); align-items: center; }
-  .stage:nth-child(even) .stage-copy { order: 2; }
-  .stage-n { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--accent); }
-  .stage-copy h2 { font-size: var(--fs-h2); margin: var(--sp-3) 0; }
-  .stage-copy p { font-size: var(--fs-body); }
-  .stage-copy p em { font-style: normal; color: var(--accent-bright); }
-  .t-counter { color: var(--state-counter); }
+  /* ---------- pipeline flow ---------- */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: var(--sp-4); max-width: 760px; margin-inline: auto; }
+  .flow-col { width: 100%; max-width: 540px; }
+  .flow-tag { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: var(--sp-3); }
+  .flow-card .code-body { font-size: var(--fs-small); line-height: 1.7; }
+  .flow-out-card { box-shadow: var(--elev-glow); border-color: var(--accent-dim); }
+  .flow-note { font-size: var(--fs-caption); color: var(--text-muted); margin-top: var(--sp-3); }
+  .flow-note code { font-size: 0.95em; }
+  .flow-arrow { color: var(--accent); font-size: 1.6rem; line-height: 1; }
+
+  /* the engine is dimmed + dashed — it reads as automatic/background, not a hero card */
+  .flow-box { width: 100%; max-width: 760px; background: var(--bg-base); border: 1px dashed var(--border-strong); border-radius: var(--r-xl);
+    padding: var(--sp-8); position: relative; }
+  .flow-box-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+    padding-bottom: var(--sp-4); margin-bottom: var(--sp-4); border-bottom: 1px solid var(--border-subtle); }
+  .flow-box-name { font-family: var(--font-mono); font-size: var(--fs-body); font-weight: 600; color: var(--text-secondary); }
+  .flow-box-auto { font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--r-full); padding: 2px 8px; }
+  .flow-steps { list-style: none; display: grid; gap: var(--sp-6); }
+  .flow-steps li { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4); align-items: center;
+    font-size: var(--fs-body); color: var(--text-muted); }
+  .flow-steps b { color: var(--text-secondary); font-weight: 600; }
+  .flow-steps em { font-style: normal; color: var(--accent-bright); }
+  .flow-step-n { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: var(--bg-surface); color: var(--text-muted);
+    border: 1px dashed var(--border-strong); font-family: var(--font-mono); font-size: var(--fs-small); display: grid; place-items: center; }
+  .flow-box-foot { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-6); }
 
   .backend-grid, .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
   .card h3 { margin: var(--sp-3) 0 var(--sp-2); }
   .card p { font-size: var(--fs-small); }
-  .why { padding: var(--sp-6); border-left: 2px solid var(--accent-dim); }
+  .why { padding: var(--sp-6); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
   .why h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
   .why p { font-size: var(--fs-small); }
   .why p em { font-style: normal; color: var(--accent-bright); }
 
-  @media (max-width: 860px) {
-    .stage { grid-template-columns: 1fr; gap: var(--sp-6); }
-    .stage:nth-child(even) .stage-copy { order: 0; }
+  @media (max-width: 900px) {
     .backend-grid, .why-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .flow-box { padding: var(--sp-6); }
   }
 </style>

@@ -127,13 +127,44 @@ input:focus-visible {
 .nav-github-badge {
   display: flex;
   align-items: center;
-  line-height: 0;
+  line-height: 1;
+  color: inherit;
 }
 
-.nav-github-badge img {
-  display: block;
+.github-badge-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--charcoal);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
   height: 20px;
+  padding: 0 8px;
   border-radius: 4px;
+  white-space: nowrap;
+}
+
+.github-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.github-label {
+  letter-spacing: 0.01em;
+}
+
+.github-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255,255,255,0.2);
+  opacity: 0.85;
+}
+
+.nav-github-badge:hover .github-badge-inner {
+  background: #2d2d2d;
 }
 
 /* Footer */

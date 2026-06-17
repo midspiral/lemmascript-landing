@@ -3,6 +3,12 @@ import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   site: 'https://lemmascript.com',
+  redirects: {
+    '/integrations': '/ecosystem',
+  },
+  server: {
+    allowedHosts: ["midspiral-blog.metareflective.space"],
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-light',

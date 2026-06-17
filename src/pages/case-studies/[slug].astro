@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { caseStudies } from '../../data/caseStudies'
+
+export function getStaticPaths() {
+  return caseStudies.map((study) => ({
+    params: { slug: study.slug },
+    props: { study },
+  }))
+}
+
+const { study } = Astro.props
+
+// other studies for the "more" rail
+const others = caseStudies.filter((c) => c.slug !== study.slug)
+
+// --- tiny, faithful code highlighter (annotation/comment/keyword only) ---
+const KW =
+  /\b(export|function|return|const|let|while|for|if|else|break|true|false|type|interface|new)\b/g
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+function hl(line: string): string {
+  const e = esc(line)
+  if (/^\s*\/\/@/.test(line)) return `<span class="t-anno">${e}</span>`
+  if (/^\s*\/\//.test(line)) return `<span class="t-cmt">${e}</span>`
+  return e.replace(KW, '<span class="t-kw">$1</span>')
+}
+const snippetHtml = study.snippet
+  ? study.snippet.code.split('\n').map(hl).join('\n')
+  : ''
+
+const isBrown = study.kind === 'Brownfield'
+const kindClass = isBrown ? 'badge-pending' : 'badge-verified'
+---
+
+<BaseLayout
+  title={`${study.repoName} — Case study | LemmaScript`}
+  description={study.tagline}
+>
+  <!-- ===================== HEADER ===================== -->
+  <header class="page-head cs-detail-head">
+    <div class="container">
+      <a href="/case-studies" class="cs-back">← All case studies</a>
+      <div class="cs-meta">
+        <span class={`badge ${kindClass}`}><span class="bdot"></span>{study.kind}</span>
+        <code class="cs-repo-name">{study.repoName}</code>
+        {study.upstream && (
+          <span class="cs-fork">
+            fork of <a href={study.upstream.href} target="_blank" rel="noopener">{study.upstream.label} ↗</a>
+          </span>
+        )}
+      </div>
+      <h1>{study.title}</h1>
+      <p class="lede">{study.tagline}</p>
+      <div class="cs-actions">
+        <a href={study.repo} target="_blank" rel="noopener" class="btn btn-primary">View repository →</a>
+        {study.diff && (
+          <a href={study.diff} target="_blank" rel="noopener" class="btn btn-secondary">View as diff</a>
+        )}
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="section cs-stats-section">
+    <div class="container">
+      <div class="cs-stats">
+        {study.stats.map((s) => (
+          <div class="cs-stat">
+            <span class="cs-stat-v">{s.value}</span>
+            <span class="cs-stat-l">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STAKES ===================== -->
+  <section class="section section-alt">
+    <div class="container narrow-prose">
+      <span class="kicker">// what’s at stake</span>
+      <p class="cs-stakes">{study.stakes}</p>
+    </div>
+  </section>
+
+  <!-- ===================== CVEs (brownfield w/ CVEs) ===================== -->
+  {study.cves && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">// closed for good</span>
+          <h2>The CVEs, and what now holds instead</h2>
+          <p class="section-desc">Each was a real, published advisory against the upstream framework. The fix isn’t patched — it’s guaranteed, for every input.</p>
+        </div>
+        <ul class="cs-cves">
+          {study.cves.map((c) => (
+            <li class="cs-cve">
+              <a href={c.href} target="_blank" rel="noopener" class="cs-cve-id">{c.id} ↗</a>
+              <p set:html={c.summary.replace(/`([^`]+)`/g, '<code>$1</code>')}></p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- ===================== GUARANTEES ===================== -->
+  <section class={study.cves ? 'section section-alt' : 'section'}>
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// the guarantees</span>
+        <h2>{study.guaranteesHead}</h2>
+      </div>
+      <div class="cs-guarantees">
+        {study.guarantees.map((g) => (
+          <div class="card cs-guarantee">
+            <h3>{g.title}</h3>
+            <p set:html={g.body.replace(/`([^`]+)`/g, '<code>$1</code>')}></p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CODE SNIPPET ===================== -->
+  {study.snippet && (
+    <section class="section">
+      <div class="container narrow-prose">
+        <span class="kicker">// in the code itself</span>
+        <h2 class="cs-snip-h">{study.snippet.caption}</h2>
+        <div class="codeblock">
+          <div class="code-bar">
+            <span class="code-file">{study.snippet.file}</span>
+            <a href={study.snippet.href} target="_blank" rel="noopener" class="cs-gh-link">View on GitHub ↗</a>
+          </div>
+          <pre class="code-body" set:html={snippetHtml}></pre>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ===================== OUTCOME ===================== -->
+  <section class="section section-alt">
+    <div class="container narrow-prose">
+      <span class="kicker">// the outcome</span>
+      <p class="cs-outcome">{study.outcome}</p>
+    </div>
+  </section>
+
+  <!-- ===================== MORE ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><span class="kicker">// more case studies</span></div>
+      <div class="cs-more">
+        {others.map((c) => (
+          <a href={`/case-studies/${c.slug}`} class="card cs-more-card">
+            <span class={`cs-kind ${c.kind === 'Brownfield' ? 'brown' : ''}`}>{c.kind}</span>
+            <h3>{c.repoName}</h3>
+            <p>{c.cardDesc}</p>
+            <span class="cs-link">Read the case study →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cs-detail-head { padding-block: var(--sp-12) var(--sp-12); }
+  .cs-back { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); display: inline-block; margin-bottom: var(--sp-6); }
+  .cs-back:hover { color: var(--accent); }
+  .cs-meta { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-5); }
+  .cs-repo-name { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-secondary); background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--r-sm); padding: 2px 8px; }
+  .cs-fork { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); }
+  .cs-fork a { color: var(--text-muted); }
+  .cs-fork a:hover { color: var(--accent); }
+  .cs-detail-head h1 { max-width: 20ch; }
+  .cs-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-8); }
+
+  /* stats */
+  .cs-stats-section { padding-block: var(--sp-12); }
+  .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .cs-stat { padding: var(--sp-6); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  .cs-stat-v { display: block; font-family: var(--font-mono); font-size: var(--fs-display-l); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+  .cs-stat-l { display: block; font-size: var(--fs-small); color: var(--text-secondary); margin-top: var(--sp-3); }
+
+  /* prose blocks */
+  .cs-stakes, .cs-outcome { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 500; line-height: 1.5; color: var(--text-primary); letter-spacing: -0.01em; margin-top: var(--sp-4); }
+
+  /* cves */
+  .cs-cves { list-style: none; display: grid; gap: var(--sp-3); }
+  .cs-cve { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-5); align-items: baseline; padding: var(--sp-5); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  .cs-cve-id { font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600; color: var(--state-counter); white-space: nowrap; }
+  .cs-cve-id:hover { color: var(--accent-bright); }
+  .cs-cve p { font-size: var(--fs-small); color: var(--text-secondary); }
+
+  /* guarantees */
+  .cs-guarantees { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+  .cs-guarantee h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
+  .cs-guarantee p { font-size: var(--fs-small); color: var(--text-secondary); }
+
+  /* snippet */
+  .cs-snip-h { font-size: var(--fs-h3); font-weight: 500; margin: var(--sp-3) 0 var(--sp-6); max-width: 56ch; }
+  .cs-gh-link { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-left: auto; }
+  .cs-gh-link:hover { color: var(--accent); }
+
+  /* more */
+  .cs-more { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .cs-more-card { display: flex; flex-direction: column; }
+  .cs-kind { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+  .cs-kind.brown { color: var(--state-pending); }
+  .cs-more-card h3 { font-family: var(--font-mono); font-weight: 600; font-size: var(--fs-body); margin: var(--sp-2) 0; }
+  .cs-more-card p { font-size: var(--fs-small); color: var(--text-secondary); }
+  .cs-link { margin-top: auto; padding-top: var(--sp-4); font-size: var(--fs-small); color: var(--text-muted); }
+  .cs-more-card:hover .cs-link { color: var(--accent); }
+
+  @media (max-width: 860px) {
+    .cs-stats, .cs-guarantees, .cs-more { grid-template-columns: 1fr; }
+    .cs-cve { grid-template-columns: 1fr; gap: var(--sp-2); }
+  }
+</style>

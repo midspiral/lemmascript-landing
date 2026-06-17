@@ -289,20 +289,17 @@ function clamp(x: number, lo: number, hi: number): number {
   .pg-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
     padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: var(--bg-overlay); flex-wrap: wrap; }
   .pg-tabs { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
-  .pg-tab { display: inline-flex; align-items: baseline; gap: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-small);
+  .pg-tab { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-small);
     color: var(--text-muted); background: transparent; border: 1px solid transparent; border-radius: var(--r-md);
-    padding: 6px var(--sp-3); cursor: pointer; transition: all var(--dur-1) var(--ease); }
+    height: 42px; padding: 0 var(--sp-3); cursor: pointer; transition: all var(--dur-1) var(--ease); }
   .pg-tab:hover { color: var(--text-secondary); }
   .pg-tab.active { color: var(--accent); background: var(--state-verified-bg); border-color: var(--accent-dim); }
   .pg-tab-note { font-size: var(--fs-caption); color: var(--text-faint); }
   .pg-tab.active .pg-tab-note { color: var(--accent-dim); }
 
   .pg-toolbar-right { display: flex; align-items: center; gap: var(--sp-3); }
-  .pg-backend { display: inline-flex; padding: 3px; background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-md); gap: 2px; }
-  .pg-be { font-family: var(--font-mono); font-size: var(--fs-caption); padding: 5px var(--sp-3); border: none; background: transparent;
-    color: var(--text-muted); border-radius: var(--r-sm); cursor: pointer; transition: all var(--dur-2) var(--ease); }
-  .pg-be.active { background: var(--state-info-bg); color: var(--state-info); box-shadow: inset 0 0 0 1px rgba(91,168,255,0.3); }
-  .pg-verify { font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600; padding: 8px var(--sp-4);
+  .pg-verify { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600;
+    height: 42px; padding: 0 var(--sp-4);
     background: var(--accent); color: var(--accent-ink); border: none; border-radius: var(--r-md); cursor: pointer; transition: all var(--dur-2) var(--ease); }
   .pg-verify:hover:not(:disabled) { background: var(--accent-bright); box-shadow: 0 0 20px var(--accent-glow); }
   .pg-verify:disabled { opacity: 0.6; cursor: default; }
@@ -328,9 +325,6 @@ function clamp(x: number, lo: number, hi: number): number {
   .pg-result { width: 100%; }
   .pg-r-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); flex-wrap: wrap; }
   .pg-r-count { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
-  .pg-proof { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-secondary); line-height: 1.7;
-    background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: var(--sp-4); white-space: pre-wrap; }
-  .pg-ok .pg-proof { box-shadow: var(--elev-glow); }
   .pg-guarantee { font-size: var(--fs-small); color: var(--accent-bright); background: var(--state-verified-bg);
     border: 1px solid var(--accent-dim); border-radius: var(--r-md); padding: var(--sp-4); box-shadow: var(--elev-glow); }
   .pg-r-foot { font-size: var(--fs-small); color: var(--text-muted); margin-top: var(--sp-4); }

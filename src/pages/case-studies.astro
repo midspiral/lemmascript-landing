@@ -1,35 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { byKind } from '../data/caseStudies'
 
-const greenfield = [
-  {
-    name: 'quota-lemmascript',
-    desc: 'A booking application whose core allocation logic is guaranteed never to overbook — no matter the inputs.',
-    points: ['Guaranteed: no overbooking', 'Deployable locally or on Cloudflare', 'Correct for every input'],
-    href: 'https://github.com/midspiral/quota-lemmascript',
-  },
-  {
-    name: 'quorum-lemmascript',
-    desc: 'A login-free group scheduler whose scheduling logic is guaranteed correct — the chosen slot always satisfies every participant’s stated constraints.',
-    points: ['Guaranteed scheduling logic', 'No accounts, no lock-in', 'Correct for every input'],
-    href: 'https://github.com/midspiral/quorum-lemmascript',
-  },
-]
+const greenfield = byKind('Greenfield')
+const brownfield = byKind('Brownfield')
 
-const brownfield = [
-  {
-    name: 'hono-lemmascript',
-    desc: 'A fork of the Hono web framework with security-critical middleware guaranteed safe against four real CVEs — LemmaScript on production-grade, third-party code.',
-    points: ['Hardened against 4 CVEs', 'IP restriction · cookies · path traversal', 'Applied to an existing codebase'],
-    href: 'https://github.com/midspiral/hono-lemmascript',
-  },
-  {
-    name: 'opencode-lemmascript',
-    desc: 'A fork of opencode with its permission system locked down. Eleven functions governing access control are guaranteed to honor their contracts.',
-    points: ['11 functions guaranteed', 'Permission / access-control logic', 'Applied to an existing codebase'],
-    href: 'https://github.com/midspiral/opencode-lemmascript',
-  },
-]
+const headlinePoints: Record<string, string[]> = {
+  hono: ['4 real CVEs guaranteed closed', 'IP restriction · cookies · path traversal', 'Applied to an existing framework'],
+  opencode: ['11 functions guaranteed', 'Agent permission / access control', 'A real Plan-Mode bypass closed'],
+  quota: ['Guaranteed: never oversells', 'Local-first or on Cloudflare', 'Correct for every input'],
+  quorum: ['Guaranteed: the count is exact', 'No accounts, no lock-in', 'Correct for every input'],
+}
 ---
 
 <BaseLayout
@@ -56,14 +37,14 @@ const brownfield = [
       </div>
       <div class="cs-grid">
         {greenfield.map((c) => (
-          <a href={c.href} target="_blank" rel="noopener" class="card cs-card">
+          <a href={`/case-studies/${c.slug}`} class="card cs-card">
             <span class="cs-kind">Greenfield</span>
-            <h3>{c.name}</h3>
-            <p>{c.desc}</p>
+            <h3>{c.repoName}</h3>
+            <p>{c.cardDesc}</p>
             <ul class="cs-points">
-              {c.points.map((p) => <li>{p}</li>)}
+              {headlinePoints[c.slug].map((p) => <li>{p}</li>)}
             </ul>
-            <span class="cs-link">View repository →</span>
+            <span class="cs-link">Read the case study →</span>
           </a>
         ))}
       </div>
@@ -78,14 +59,14 @@ const brownfield = [
       </div>
       <div class="cs-grid">
         {brownfield.map((c) => (
-          <a href={c.href} target="_blank" rel="noopener" class="card cs-card">
+          <a href={`/case-studies/${c.slug}`} class="card cs-card">
             <span class="cs-kind brown">Brownfield</span>
-            <h3>{c.name}</h3>
-            <p>{c.desc}</p>
+            <h3>{c.repoName}</h3>
+            <p>{c.cardDesc}</p>
             <ul class="cs-points">
-              {c.points.map((p) => <li>{p}</li>)}
+              {headlinePoints[c.slug].map((p) => <li>{p}</li>)}
             </ul>
-            <span class="cs-link">View repository →</span>
+            <span class="cs-link">Read the case study →</span>
           </a>
         ))}
       </div>

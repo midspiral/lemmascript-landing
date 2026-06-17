@@ -8,7 +8,7 @@
 .btn {
   display: inline-flex; align-items: center; gap: var(--sp-2);
   font-size: var(--fs-small); font-weight: 600;
-  padding: 11px var(--sp-4); border-radius: var(--r-md);
+  height: 42px; padding: 0 var(--sp-4); border-radius: var(--r-md);
   border: 1px solid transparent; cursor: pointer;
   transition: all var(--dur-2) var(--ease);
 }
@@ -57,7 +57,6 @@
 /* ---------- code block ---------- */
 .codeblock { background: var(--bg-inset); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--elev-2); }
 .code-bar { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-4); border-bottom: 1px solid var(--border-subtle); background: transparent; }
-.code-bar .dots { display: none; }
 .code-file { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
 .code-body { padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.8; overflow-x: auto; color: var(--text-primary); white-space: pre; }
 .code-body .ln { color: var(--text-faint); user-select: none; display: inline-block; width: 2ch; margin-right: var(--sp-3); text-align: right; }

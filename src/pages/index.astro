@@ -16,16 +16,16 @@ const evidence = [
   <section class="hero">
     <div class="container hero-full">
         <span class="hero-eyebrow">// built for agents</span>
-        <h1 class="hero-title">LemmaScript is TypeScript with syntax for <span class="pos-contracts">contracts</span>.</h1>
+        <h1 class="hero-title">LemmaScript is TypeScript with verified <span class="pos-contracts">contracts</span>.</h1>
         <div class="hero-code">
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">core.verified.ts</span><a class="code-src" href="https://github.com/midspiral/hono-rate-limiter-with-lemmascript/blob/main/src/core.verified.ts#L38-L57" target="_blank" rel="noopener">// real code ↗</a><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
-            <pre class="code-body"><span class="ln">43</span><span class="t-cmt">// keep only the requests still inside the time window</span>
+            <pre class="code-body"><span class="ln">43</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Keeps only the requests still inside the sliding time window.</span>
 <span class="ln">44</span><span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">pruneWindow</span>(log: <span class="t-kw">number</span>[], now: <span class="t-kw">number</span>, W: <span class="t-kw">number</span>): <span class="t-kw">number</span>[] &#123;
-<span class="ln">45</span>  <span class="t-anno">//@ requires</span> <span class="t-annokw">forall(k, 0 &lt;= k &amp;&amp; k &lt; log.length ==&gt; log[k] &lt;= now)</span>
-<span class="ln">46</span>  <span class="t-anno">//@ decreases</span> <span class="t-annokw">log.length</span>
-<span class="ln">47</span>  <span class="t-anno">//@ ensures</span> <span class="t-annokw">\result.length &lt;= log.length</span>
-<span class="ln">48</span>  <span class="t-anno">//@ ensures</span> <span class="t-annokw">forall(k, 0 &lt;= k &amp;&amp; k &lt; \result.length ==&gt; now - W &lt; \result[k] &amp;&amp; \result[k] &lt;= now)</span>
+<span class="ln">45</span>  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; log.length ==&gt; log[k] &lt;= now)</span>
+<span class="ln">46</span>  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir">decreases</span> <span class="t-annokw">log.length</span>
+<span class="ln">47</span>  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span>.length &lt;= log.length</span>
+<span class="ln">48</span>  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; <span class="t-result">\result</span>.length ==&gt; now - W &lt; <span class="t-result">\result</span>[k] &amp;&amp; <span class="t-result">\result</span>[k] &lt;= now)</span>
 <span class="ln">49</span>  <span class="t-kw">if</span> (log.length === <span class="t-num">0</span>) &#123;
 <span class="ln">50</span>    <span class="t-kw">return</span> [];
 <span class="ln">51</span>  &#125;
@@ -59,7 +59,12 @@ const evidence = [
           <div class="catch-head"><span class="badge badge-counter">Rejected</span><span class="catch-label">the agent’s first try</span></div>
           <div class="codeblock catch-bad">
             <div class="code-bar"><span class="code-file">allocateNaive.ts</span><a class="code-src" href="https://github.com/midspiral/eventab-lemmascript/blob/main/src/allocateNaive.ts#L36" target="_blank" rel="noopener">// real code ↗</a></div>
-            <pre class="code-body"><span class="t-anno">//@ ensures</span> <span class="t-annokw">sum(result) === total</span>  <span class="t-cmt">// must sum to the whole</span>
+            <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Splits total across weights so every unit is accounted for.</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">total >= 0</span>  <span class="t-cmt">// whole units, e.g. cents</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">weights.length >= 1</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; weights.length ==&gt; weights[k] >= 0)</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">sum(weights) >= 1</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span>
 <span class="t-kw">function</span> <span class="t-fn">allocateNaive</span>(total, weights) &#123;
   <span class="t-kw">const</span> W = <span class="t-fn">sum</span>(weights);
   <span class="t-kw">return</span> weights.map(w =&gt;
@@ -74,7 +79,12 @@ const evidence = [
           <div class="catch-head"><span class="badge badge-verified">Guaranteed</span><span class="catch-label">the agent’s fix</span></div>
           <div class="codeblock catch-ok">
             <div class="code-bar"><span class="code-file">allocate.ts</span><a class="code-src" href="https://github.com/midspiral/eventab-lemmascript/blob/main/src/allocate.ts#L49" target="_blank" rel="noopener">// real code ↗</a></div>
-            <pre class="code-body"><span class="t-anno">//@ ensures</span> <span class="t-annokw">sum(result) === total</span>  <span class="t-cmt">// must sum to the whole</span>
+            <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Splits total across weights so every unit is accounted for.</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">total >= 0</span>  <span class="t-cmt">// whole units, e.g. cents</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">weights.length >= 1</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; weights.length ==&gt; weights[k] >= 0)</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">sum(weights) >= 1</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span>
 <span class="t-kw">function</span> <span class="t-fn">allocate</span>(total, weights) &#123;
   <span class="t-kw">const</span> W = <span class="t-fn">sum</span>(weights);
   <span class="t-kw">const</span> result = weights.map(w =&gt; Math.floor(total * w / W));
@@ -100,19 +110,20 @@ const evidence = [
       </div>
       <div class="review-grid">
         <div class="review-col review-spec">
-          <div class="review-label"><span class="badge badge-verified"><span class="bdot"></span>What you review</span><span class="review-meta">the spec · 4 lines</span></div>
+          <div class="review-label"><span class="badge badge-verified"><span class="bdot"></span>What you review</span><span class="review-meta">the spec · 5 lines</span></div>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">binarySearch.ts</span><a class="code-src" href="https://github.com/midspiral/LemmaScript/blob/main/examples/binarySearch.ts" target="_blank" rel="noopener">// real code ↗</a></div>
-            <pre class="code-body"><span class="t-cmt">// find target in a sorted array, or -1</span>
-<span class="t-anno">//@ requires</span> <span class="t-annokw">sorted(arr)</span>
-<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 ==&gt; arr[\result] === target</span>
-<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result === -1 ==&gt; forall(k, arr[k] !== target)</span></pre>
+            <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Finds target in a sorted array, or reports -1.</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">sorted(arr)</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw"><span class="t-result">\result</span> &gt;= -1 &amp;&amp; <span class="t-result">\result</span> &lt; arr.length</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw"><span class="t-result">\result</span> &gt;= 0 ==&gt; arr[<span class="t-result">\result</span>] === target</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw"><span class="t-result">\result</span> === -1 ==&gt; <span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; arr.length ==&gt; arr[k] !== target)</span></pre>
           </div>
           <p class="review-note">Read it in seconds. This is the whole guarantee.</p>
         </div>
 
         <div class="review-col review-impl">
-          <div class="review-label"><span class="review-meta">what the agent writes · a while-loop with 6 invariants</span></div>
+          <div class="review-label"><span class="review-meta">what the agent writes · a while-loop with 7 spec lines</span></div>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">binarySearch.ts</span></div>
             <pre class="code-body impl-dim">export function binarySearch(arr: number[], target: number): number &#123;
@@ -125,8 +136,9 @@ const evidence = [
     //@ invariant -1 &lt;= hi &amp;&amp; hi &lt; arr.length
     //@ invariant forall(k, 0 &lt;= k &amp;&amp; k &lt; lo ==&gt; arr[k] !== target)
     //@ invariant forall(k, hi &lt; k &amp;&amp; k &lt; arr.length ==&gt; arr[k] !== target)
-    //@ invariant result === -1 || (result &gt;= 0 &amp;&amp; arr[result] === target)
-    //@ decreases (hi - lo + 1)
+    //@ invariant result === -1 || (result &gt;= 0 &amp;&amp; result &lt; arr.length &amp;&amp; arr[result] === target)
+    //@ done_with result !== -1 || !(lo &lt;= hi)
+    //@ decreases (hi - lo + 1).toNat
 
     const mid = Math.floor((lo + hi) / 2);
     if (arr[mid] === target) &#123;
@@ -204,7 +216,7 @@ const evidence = [
   .hero-full { text-align: center; max-width: 1040px; margin-inline: auto; }
   .hero-eyebrow { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-small);
     letter-spacing: 0.02em; color: var(--accent); margin-bottom: var(--sp-6); }
-  .hero-title { font-size: clamp(1.6rem, 6vw, 3.1rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: var(--sp-6); text-wrap: balance; }
+  .hero-title { font-size: clamp(1.8rem, 6.5vw, var(--fs-display-l)); font-weight: 800; letter-spacing: -0.03em; line-height: var(--lh-tight); margin-bottom: var(--sp-6); text-wrap: balance; }
   .hero-title .pos-contracts { color: var(--accent); }
   .hero-code { max-width: 960px; margin: 0 auto var(--sp-8); text-align: left; }
   .hero-code .code-body { line-height: 1.85; }

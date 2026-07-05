@@ -34,17 +34,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
           <span class="code-file">src/permission.ts</span>
           <span class="badge badge-verified" style="margin-left:auto">Guaranteed</span>
         </div>
-        <pre class="code-body"><span class="t-kw">function</span> <span class="t-fn">evaluate</span>(rules: Rule[], req: Request): Decision &#123;
+        <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Deny always wins, no match means ask, and the decision is always valid.</span>
+<span class="t-kw">function</span> <span class="t-fn">evaluate</span>(rules: Rule[], req: Request): Decision &#123;
   <span class="t-cmt">// deny always wins — an earlier allow can't override a later deny</span>
-  <span class="t-anno">//@ ensures (\exists r in rules: r.type === 'deny' &amp;&amp; matches(r, req))</span>
-  <span class="t-anno">//@   ==&gt; \result === 'deny'</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">(<span class="t-quant">exists</span>(k, 0 &lt;= k &amp;&amp; k &lt; rules.length &amp;&amp; rules[k].type === 'deny' &amp;&amp; matches(rules[k], req)))</span>
+  <span class="t-cmt">//   ==&gt; \result === 'deny'</span>
 
   <span class="t-cmt">// no match means ask, never allow</span>
-  <span class="t-anno">//@ ensures !(\exists r in rules: matches(r, req))</span>
-  <span class="t-anno">//@   ==&gt; \result === 'ask'</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">!(<span class="t-quant">exists</span>(k, 0 &lt;= k &amp;&amp; k &lt; rules.length &amp;&amp; matches(rules[k], req)))</span>
+  <span class="t-cmt">//   ==&gt; \result === 'ask'</span>
 
   <span class="t-cmt">// result is always a valid decision</span>
-  <span class="t-anno">//@ ensures \result === 'allow' || \result === 'deny' || \result === 'ask'</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span> === 'allow' || <span class="t-result">\result</span> === 'deny' || <span class="t-result">\result</span> === 'ask'</span>
 
   <span class="t-kw">for</span> (<span class="t-kw">const</span> rule <span class="t-kw">of</span> rules) &#123;
     <span class="t-kw">if</span> (rule.type === <span class="t-str">'deny'</span> &amp;&amp; matches(rule, req)) <span class="t-kw">return</span> <span class="t-str">'deny'</span>

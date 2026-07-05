@@ -7,7 +7,7 @@ export default defineConfig({
     '/integrations': '/ecosystem',
   },
   server: {
-    allowedHosts: ["midspiral-blog.metareflective.space"],
+    allowedHosts: ["midspiral-blog.metareflective.space", "localhost4321.metareflective.space"],
   },
   markdown: {
     shikiConfig: {

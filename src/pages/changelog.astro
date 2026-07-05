@@ -1,0 +1,458 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { changelog, type ChangelogCategory } from '../data/changelog'
+import { repoKinds, CORE_REPO, type CaseStudyFlavor } from '../data/repoKinds'
+
+const badgeClass: Record<ChangelogCategory, string> = {
+  Feature: 'badge-verified',
+  Fix: 'badge-counter',
+  Improvement: 'badge-info',
+  'Case Study': 'badge-pending',
+  Documentation: 'badge-doc',
+}
+
+// LemmaScript itself is the core repo; everything else is ecosystem-adjacent
+// and classified in repoKinds.ts. Fail the build if a repo with entries slips
+// through unclassified, so the taxonomy can't silently drift out of date.
+const repos = [...new Set(changelog.map((e) => e.repo))]
+const unmapped = repos.filter((r) => r !== CORE_REPO && !repoKinds[r])
+if (unmapped.length) {
+  throw new Error(`Unclassified ecosystem repos in repoKinds.ts: ${unmapped.join(', ')}`)
+}
+
+const coreEntries = changelog.filter((e) => e.repo === CORE_REPO)
+const coreCount = coreEntries.length
+const ecosystemRepos = repos.filter((r) => r !== CORE_REPO)
+
+const kindOf = (repo: string) => (repo === CORE_REPO ? '' : repoKinds[repo].kind)
+const flavorOf = (repo: string) => (repo === CORE_REPO ? '' : repoKinds[repo].flavor ?? '')
+const repoCount = (repo: string) => changelog.filter((e) => e.repo === repo).length
+
+// Category filters. Counts render for the DEFAULT (core) scope; the client
+// script recomputes them whenever the scope or browse selection changes.
+const categoryOrder: ChangelogCategory[] = ['Feature', 'Fix', 'Improvement', 'Case Study', 'Documentation']
+const catCounts = categoryOrder.map((cat) => ({
+  cat,
+  count: coreEntries.filter((e) => e.category === cat).length,
+}))
+
+// Ecosystem "Browse" facet, grouped by kind. Case studies split by flavor.
+const asRepoItems = (list: string[]) =>
+  list.map((repo) => ({ repo, count: repoCount(repo) })).sort((a, b) => b.count - a.count || a.repo.localeCompare(b.repo))
+const sumCounts = (items: { count: number }[]) => items.reduce((n, x) => n + x.count, 0)
+
+const flavorOrder: CaseStudyFlavor[] = ['Greenfield', 'Brownfield', 'Green-in-brown']
+const caseStudyGroups = flavorOrder
+  .map((flavor) => ({
+    flavor,
+    repos: asRepoItems(ecosystemRepos.filter((r) => repoKinds[r].kind === 'Case Study' && repoKinds[r].flavor === flavor)),
+  }))
+  .filter((g) => g.repos.length)
+const toolingRepos = asRepoItems(ecosystemRepos.filter((r) => repoKinds[r].kind === 'Tooling'))
+const skillsRepos = asRepoItems(ecosystemRepos.filter((r) => repoKinds[r].kind === 'Skills'))
+const ecosystemRepoCount = ecosystemRepos.length
+
+const groups: { date: string; items: typeof changelog }[] = []
+for (const entry of changelog) {
+  const last = groups[groups.length - 1]
+  if (last && last.date === entry.date) last.items.push(entry)
+  else groups.push({ date: entry.date, items: [entry] })
+}
+
+const formatDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+
+// Split a summary on backtick pairs so `inline code` renders as <code>.
+// Backticks are balanced across all summaries, so odd segments are code.
+const codeParts = (s: string) => s.split('`').map((text, i) => ({ text, code: i % 2 === 1 }))
+
+// Range reflects the default (core) scope shown in the lede.
+const rangeStart = formatDate(coreEntries[coreEntries.length - 1].date)
+const rangeEnd = formatDate(coreEntries[0].date)
+---
+
+<BaseLayout
+  title="Changelog — LemmaScript"
+  description="A running log of formally-verified features, fixes, improvements, and case studies shipped across LemmaScript and its ecosystem."
+>
+  <header class="page-head">
+    <div class="container">
+      <span class="kicker">// changelog</span>
+      <h1>What we've <em>shipped</em>.</h1>
+      <p class="lede">
+        {coreCount} notable changes in LemmaScript itself, {rangeStart} – {rangeEnd}.
+        Widen the scope in the sidebar to include its {ecosystemRepoCount} ecosystem repos.
+      </p>
+    </div>
+  </header>
+
+  <div class="container cl-layout">
+    <aside class="cl-rail" aria-label="Filter changes">
+      <div class="cl-rail-inner">
+        <label class="cl-search">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7 12.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm4-1.5 3.5 3.5"/></svg>
+          <input type="search" id="cl-search" placeholder="Search changes…" autocomplete="off" aria-label="Search changes" />
+        </label>
+
+        <div class="cl-rail-group">
+          <h2 class="cl-rail-head">Scope</h2>
+          <div class="cl-scope" role="group" aria-label="Scope">
+            <button class="cl-scopebtn is-active" data-scope="core" aria-pressed="true">LemmaScript</button>
+            <button class="cl-scopebtn" data-scope="all" aria-pressed="false">All repos</button>
+          </div>
+        </div>
+
+        <div class="cl-rail-group">
+          <h2 class="cl-rail-head">Type</h2>
+          <ul class="cl-navlist cl-catlist" role="group" aria-label="Filter by change type">
+            <li>
+              <button class="cl-navbtn is-active" data-cat="all" aria-pressed="true">
+                <span class="cl-navlabel">All changes</span><span class="cl-n">{coreCount}</span>
+              </button>
+            </li>
+            {catCounts.map(({ cat, count }) => (
+              <li>
+                <button class="cl-navbtn" data-cat={cat} aria-pressed="false">
+                  <span class="cl-navlabel"><span class="cl-dot" data-cat={cat}></span>{cat}</span><span class="cl-n">{count}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="cl-rail-group" id="cl-browse-group" hidden>
+          <h2 class="cl-rail-head">Browse</h2>
+          <ul class="cl-navlist cl-browselist" role="group" aria-label="Filter by repository or kind">
+            <li>
+              <button class="cl-navbtn is-active" data-ftype="all" aria-pressed="true">
+                <span class="cl-navlabel">All repos</span><span class="cl-n">{changelog.length}</span>
+              </button>
+            </li>
+
+            <li class="cl-sectionlabel" aria-hidden="true">Case studies</li>
+            {caseStudyGroups.map((g) => (
+              <Fragment>
+                <li>
+                  <button class="cl-navbtn cl-group" data-ftype="flavor" data-fvalue={g.flavor} aria-pressed="false">
+                    <span class="cl-navlabel"><span class="cl-dot cs-dot" data-flavor={g.flavor}></span>{g.flavor}</span><span class="cl-n">{sumCounts(g.repos)}</span>
+                  </button>
+                </li>
+                {g.repos.map(({ repo, count }) => (
+                  <li>
+                    <button class="cl-navbtn cl-sub" data-ftype="repo" data-fvalue={repo} aria-pressed="false">
+                      <span class="cl-navlabel">{repo}</span><span class="cl-n">{count}</span>
+                    </button>
+                  </li>
+                ))}
+              </Fragment>
+            ))}
+
+            <li>
+              <button class="cl-navbtn cl-group" data-ftype="kind" data-fvalue="Tooling" aria-pressed="false">
+                <span class="cl-navlabel">Tooling</span><span class="cl-n">{sumCounts(toolingRepos)}</span>
+              </button>
+            </li>
+            {toolingRepos.map(({ repo, count }) => (
+              <li>
+                <button class="cl-navbtn cl-sub" data-ftype="repo" data-fvalue={repo} aria-pressed="false">
+                  <span class="cl-navlabel">{repo}</span><span class="cl-n">{count}</span>
+                </button>
+              </li>
+            ))}
+
+            <li>
+              <button class="cl-navbtn cl-group" data-ftype="kind" data-fvalue="Skills" aria-pressed="false">
+                <span class="cl-navlabel">Skills</span><span class="cl-n">{sumCounts(skillsRepos)}</span>
+              </button>
+            </li>
+            {skillsRepos.map(({ repo, count }) => (
+              <li>
+                <button class="cl-navbtn cl-sub" data-ftype="repo" data-fvalue={repo} aria-pressed="false">
+                  <span class="cl-navlabel">{repo}</span><span class="cl-n">{count}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <main class="cl-main">
+      <p class="cl-status" id="cl-status" aria-live="polite"></p>
+
+      {groups.map((group) => (
+        <div class="cl-day" data-day>
+          <h2 class="cl-date">{formatDate(group.date)}</h2>
+          <div class="cl-list">
+            {group.items.map((entry) => (
+              <a
+                href={entry.href}
+                target="_blank"
+                rel="noopener"
+                class="card cl-entry"
+                data-cat={entry.category}
+                data-repo={entry.repo}
+                data-kind={kindOf(entry.repo)}
+                data-flavor={flavorOf(entry.repo)}
+                data-text={`${entry.summary} ${entry.repo} ${entry.category}`.toLowerCase()}
+              >
+                <div class="cl-meta">
+                  <span class={`badge ${badgeClass[entry.category]}`}>{entry.category}</span>
+                  <span class="cl-repo">{entry.repo}</span>
+                </div>
+                <p>{codeParts(entry.summary).map((p) => (p.code ? <code>{p.text}</code> : p.text))}</p>
+                <span class="cl-link">View on GitHub →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <p class="cl-empty" id="cl-empty" hidden>No changes match those filters. <button type="button" id="cl-reset" class="cl-reset">Clear filters</button></p>
+    </main>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  // Keep the sticky rail docked just below the sticky nav, whatever its height.
+  const nav = document.querySelector('.nav')
+  const setNavH = () => document.documentElement.style.setProperty('--nav-h', (nav ? nav.offsetHeight : 56) + 'px')
+  setNavH()
+  window.addEventListener('resize', setNavH)
+
+  // Keep in sync with CORE_REPO in repoKinds.ts.
+  const CORE_REPO = 'LemmaScript'
+
+  const search = document.getElementById('cl-search')
+  const scopeButtons = Array.from(document.querySelectorAll('.cl-scopebtn'))
+  const catButtons = Array.from(document.querySelectorAll('.cl-catlist .cl-navbtn'))
+  const browseButtons = Array.from(document.querySelectorAll('.cl-browselist .cl-navbtn'))
+  const browseGroup = document.getElementById('cl-browse-group')
+  const entries = Array.from(document.querySelectorAll('.cl-entry'))
+  const days = Array.from(document.querySelectorAll('[data-day]'))
+  const status = document.getElementById('cl-status')
+  const empty = document.getElementById('cl-empty')
+  const reset = document.getElementById('cl-reset')
+
+  let scope = 'core' // 'core' = LemmaScript only, 'all' = every repo
+  let activeCat = 'all'
+  let browse = { ftype: 'all', fvalue: null } // ecosystem browse selection (all scope only)
+  let query = ''
+
+  function selectIn(buttons, activeEl) {
+    buttons.forEach((b) => {
+      const on = b === activeEl
+      b.classList.toggle('is-active', on)
+      b.setAttribute('aria-pressed', String(on))
+    })
+  }
+
+  const inScope = (el) => scope === 'all' || el.dataset.repo === CORE_REPO
+  function inBrowse(el) {
+    if (scope === 'core') return true
+    if (browse.ftype === 'repo') return el.dataset.repo === browse.fvalue
+    if (browse.ftype === 'kind') return el.dataset.kind === browse.fvalue
+    if (browse.ftype === 'flavor') return el.dataset.flavor === browse.fvalue
+    return true // 'all'
+  }
+
+  function recount(base) {
+    catButtons.forEach((b) => {
+      const cat = b.dataset.cat
+      b.querySelector('.cl-n').textContent = cat === 'all' ? base.length : base.filter((e) => e.dataset.cat === cat).length
+    })
+  }
+
+  function apply() {
+    const q = query.trim().toLowerCase()
+    const base = entries.filter((el) => inScope(el) && inBrowse(el))
+    recount(base)
+
+    let shown = 0
+    entries.forEach((el) => {
+      const matchCat = activeCat === 'all' || el.dataset.cat === activeCat
+      const matchText = q === '' || el.dataset.text.includes(q)
+      const visible = inScope(el) && inBrowse(el) && matchCat && matchText
+      el.hidden = !visible
+      if (visible) shown++
+    })
+
+    days.forEach((day) => { day.hidden = !day.querySelector('.cl-entry:not([hidden])') })
+
+    empty.hidden = shown !== 0
+    let where
+    if (scope === 'core') where = 'in LemmaScript'
+    else if (browse.ftype === 'all') where = 'across all repos'
+    else if (browse.ftype === 'flavor') where = `in ${browse.fvalue} case studies`
+    else if (browse.ftype === 'kind') where = `in ${browse.fvalue}`
+    else where = `in ${browse.fvalue}`
+    const count = shown === base.length ? `${base.length} changes` : `${shown} of ${base.length} changes`
+    status.textContent = `${count} · ${where}`
+  }
+
+  scopeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      scope = btn.dataset.scope
+      selectIn(scopeButtons, btn)
+      browseGroup.hidden = scope !== 'all'
+      if (scope !== 'all') { browse = { ftype: 'all', fvalue: null }; selectIn(browseButtons, browseButtons[0]) }
+      apply()
+    })
+  })
+  catButtons.forEach((btn) => {
+    btn.addEventListener('click', () => { activeCat = btn.dataset.cat; selectIn(catButtons, btn); apply() })
+  })
+  browseButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      browse = { ftype: btn.dataset.ftype, fvalue: btn.dataset.fvalue ?? null }
+      selectIn(browseButtons, btn)
+      apply()
+    })
+  })
+  search.addEventListener('input', () => { query = search.value; apply() })
+
+  reset.addEventListener('click', () => {
+    scope = 'core'
+    activeCat = 'all'
+    browse = { ftype: 'all', fvalue: null }
+    query = ''
+    search.value = ''
+    selectIn(scopeButtons, scopeButtons[0])
+    selectIn(catButtons, catButtons[0])
+    selectIn(browseButtons, browseButtons[0])
+    browseGroup.hidden = true
+    apply()
+  })
+
+  apply()
+</script>
+
+<style>
+  /* ---- two-column layout: sticky filter rail + list ---- */
+  .cl-layout {
+    display: grid; grid-template-columns: 240px 1fr; gap: var(--sp-10);
+    align-items: start; padding-block: var(--sp-12) var(--sp-24);
+  }
+
+  .cl-rail { position: sticky; top: calc(var(--nav-h, 56px) + var(--sp-6)); }
+  .cl-rail-inner {
+    display: flex; flex-direction: column; gap: var(--sp-6);
+    max-height: calc(100vh - var(--nav-h, 56px) - var(--sp-10));
+  }
+
+  .cl-search {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    height: 38px; padding: 0 var(--sp-3);
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-md);
+    color: var(--text-muted);
+    transition: border-color var(--dur-2) var(--ease);
+  }
+  .cl-search:focus-within { border-color: var(--accent-dim); color: var(--accent); }
+  .cl-search svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .cl-search input {
+    flex: 1; min-width: 0; background: none; border: none; outline: none;
+    color: var(--text-primary); font-family: var(--font-body); font-size: var(--fs-small);
+  }
+  .cl-search input::placeholder { color: var(--text-faint); }
+
+  .cl-rail-group { display: flex; flex-direction: column; gap: var(--sp-2); min-height: 0; }
+  /* author `display:flex` above outranks the UA `[hidden]` rule, so the
+     collapsible browse group needs display:none stated explicitly. */
+  .cl-rail-group[hidden] { display: none; }
+  .cl-rail-head {
+    font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-faint); font-weight: 500;
+    padding-inline: var(--sp-2);
+  }
+
+  /* ---- scope segmented control ---- */
+  .cl-scope {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px;
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-md);
+  }
+  .cl-scopebtn {
+    border: none; background: none; cursor: pointer; padding: 7px 8px; border-radius: calc(var(--r-md) - 2px);
+    font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-secondary); white-space: nowrap;
+    transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+  }
+  .cl-scopebtn:hover { color: var(--text-primary); }
+  .cl-scopebtn.is-active { background: var(--accent); color: var(--accent-ink); }
+
+  .cl-navlist { list-style: none; display: flex; flex-direction: column; gap: 1px; }
+  /* the browse list can get long — let it scroll inside the rail */
+  .cl-browselist { overflow-y: auto; max-height: clamp(200px, 42vh, 460px); padding-right: 2px; }
+
+  .cl-navbtn {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+    padding: 6px var(--sp-2); border: none; background: none; cursor: pointer; border-radius: var(--r-md);
+    font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-secondary);
+    text-align: left;
+    transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+  }
+  .cl-navbtn:hover { background: var(--bg-surface); color: var(--text-primary); }
+  .cl-navbtn.is-active { background: var(--state-verified-bg); color: var(--accent); }
+  .cl-navlabel { display: inline-flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+  .cl-navlabel > :not(.cl-dot) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cl-n { color: var(--text-faint); flex-shrink: 0; }
+  .cl-navbtn.is-active .cl-n { color: var(--accent); }
+
+  /* browse hierarchy: group rows read as headers, repo rows indent beneath */
+  .cl-group { color: var(--text-primary); }
+  .cl-sub { padding-left: var(--sp-6); color: var(--text-muted); }
+  .cl-sectionlabel {
+    font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--text-faint); padding: var(--sp-3) var(--sp-2) var(--sp-1);
+  }
+
+  .cl-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+  .cl-dot[data-cat="Feature"] { background: var(--state-verified); }
+  .cl-dot[data-cat="Fix"] { background: var(--state-counter); }
+  .cl-dot[data-cat="Improvement"] { background: var(--state-info); }
+  .cl-dot[data-cat="Case Study"] { background: var(--state-pending); }
+  .cl-dot[data-cat="Documentation"] { background: var(--text-secondary); }
+  .cs-dot[data-flavor="Greenfield"] { background: var(--state-verified); }
+  .cs-dot[data-flavor="Brownfield"] { background: var(--state-pending); }
+  .cs-dot[data-flavor="Green-in-brown"] { background: var(--state-info); }
+
+  /* ---- list ---- */
+  .cl-status { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-bottom: var(--sp-8); }
+
+  .cl-day { margin-bottom: var(--sp-12); }
+  .cl-date {
+    font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted);
+    padding-bottom: var(--sp-3); margin-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .cl-list { display: grid; gap: var(--sp-3); }
+  .cl-entry { display: block; }
+  /* `hidden` alone can't beat the `display` rules above on specificity, so
+     filtered-out entries/days would stay visible — force them off here. */
+  .cl-entry[hidden], .cl-day[hidden] { display: none; }
+  .cl-meta { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); flex-wrap: wrap; }
+  .cl-repo { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .cl-entry p { font-size: var(--fs-small); color: var(--text-secondary); }
+  .cl-entry code {
+    font-family: var(--font-mono); font-size: 0.86em;
+    background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--r-sm);
+    padding: 0.5px 5px; color: var(--text-primary); white-space: nowrap;
+  }
+  .cl-link { display: inline-block; margin-top: var(--sp-3); font-size: var(--fs-caption); color: var(--text-muted); }
+  .cl-entry:hover .cl-link { color: var(--accent); }
+
+  .cl-empty { font-size: var(--fs-small); color: var(--text-muted); }
+  .cl-reset { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; padding: 0; text-decoration: underline; }
+
+  /* Documentation has no dedicated semantic proof-state color; a muted
+     neutral variant keeps it visually distinct without implying a
+     verified/pending/counter meaning it doesn't have. */
+  .badge-doc { color: var(--text-secondary); background: var(--bg-surface); border-color: var(--border); }
+
+  /* ---- mobile: rail stacks above the list, no longer sticky ---- */
+  @media (max-width: 860px) {
+    .cl-layout { grid-template-columns: 1fr; gap: var(--sp-8); }
+    .cl-rail { position: static; }
+    .cl-rail-inner { max-height: none; }
+    .cl-browselist { max-height: 260px; }
+  }
+</style>

@@ -37,10 +37,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
           <a href="https://github.com/midspiral/hono-lemmascript/blob/lemmascript/src/utils/cookie.ts#L79" target="_blank" rel="noopener" class="code-gh-link">View on GitHub ↗</a>
         </div>
         <pre class="code-body"><span class="t-kw">const</span> <span class="t-fn">trimCookieWhitespace</span> = (value: string): string =&gt; &#123;
-  <span class="t-anno">//@ ensures \result.length &lt;= value.length</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Trims only ASCII space and tab — never a look-alike whitespace byte.</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span>.length &lt;= value.length</span>
   <span class="t-cmt">// CVE-2026-39410: only space (0x20) and tab (0x09) are stripped — nothing else (e.g. 0xA0).</span>
-  <span class="t-anno">//@ ensures \result.length &gt; 0 ==&gt;</span>
-  <span class="t-anno">//@   \result.charCodeAt(0) !== 0x20 &amp;&amp; \result.charCodeAt(0) !== 0x09</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span>.length &gt; 0 ==&gt;</span>
+  <span class="t-cmt">//   \result.charCodeAt(0) !== 0x20 &amp;&amp; \result.charCodeAt(0) !== 0x09</span>
 
   <span class="t-kw">let</span> start = 0
   <span class="t-kw">let</span> end = value.length
@@ -49,7 +50,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
     <span class="t-kw">if</span> (charCode !== <span class="t-num">0x20</span> &amp;&amp; charCode !== <span class="t-num">0x09</span>) <span class="t-kw">break</span>
     start++
   &#125;
-  <span class="t-cmt">// …end trimmed by the same rule…</span>
+  <span class="t-kw">while</span> (end &gt; start) &#123;
+    <span class="t-kw">const</span> charCode = value.charCodeAt(end - <span class="t-num">1</span>)
+    <span class="t-kw">if</span> (charCode !== <span class="t-num">0x20</span> &amp;&amp; charCode !== <span class="t-num">0x09</span>) <span class="t-kw">break</span>
+    end--
+  &#125;
   <span class="t-kw">return</span> value.slice(start, end)
 &#125;</pre>
       </div>

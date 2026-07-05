@@ -71,15 +71,33 @@ Legend: `[ ]` open · severity P0 (blocker) → P4 (confirm).
   matches the source exactly. Either show the verbatim comment or drop the `43` label.
 - [ ] **Hero anchor vs displayed range.** `index.astro:22` links `#L38-L57` but the block
   displays lines 43–57. Harmless (anchor includes the comment block) but slightly off. (Low.)
+- [ ] **Wrapped `//@` clauses split a single rule across lines — invalid as real LemmaScript,
+  a website-only transcription bug (not a real-code issue).** `//@` annotations are one
+  complete statement per line; the toolchain doesn't concatenate a line onto the next. Real
+  shipped code confirms this — `hono-lemmascript/src/utils/cookie.ts` keeps even its longest
+  `ensures` (a nested `exists(...)` clause far longer than anything wrapped on this site) on
+  one unbroken line. Four snippets wrap anyway, which silently truncates the rule the tool
+  would actually read (e.g. an `X ==> Y` implication gets read as just `X`, an unconditional
+  and wrong postcondition):
+  - `solutions/agents.astro:40-41,44-45` ("Representative" example, not a repo excerpt)
+  - `solutions/web-apps.astro` (`ensures \result === (` / `0 <= idx...` / `)` — illustrative,
+    not tied to a specific line in `quota-lemmascript`)
+  - `solutions/security.astro` (claims to excerpt the real `cookie.ts` — the real file doesn't
+    wrap this clause)
+  - `src/data/caseStudies.ts` (hono case study, same cookie snippet, same real-file mismatch)
+  Fix: collapse each back onto a single line, matching the real convention, even where that
+  makes for a long line.
 
 ---
 
 ## P3 — Consistency & polish
 
 - [ ] **CLI name is inconsistent.** `npm install -D lemmascript` + `npx lemmascript check`
-  (`index.astro:229,232`, `install.astro:27,49`) vs `lsc` (`plugins/guard.astro:43,138,141,142`,
-  `ecosystem.astro:56` "the `lsc` compiler") vs `lemmascript check` (`ecosystem.astro:31`).
-  Decide the canonical binary/invocation and use it everywhere.
+  (`index.astro:229,232`, `install.astro:27,49`) vs `lsc` — `lsc plugin add guard`, `lsc guard
+  src/core.ts`, `lsc check` (`plugins/guard.astro:138,141,142`, `ecosystem.astro:56` "the `lsc`
+  compiler") vs `lemmascript check` (`ecosystem.astro:31`). Three different invocation stories
+  for what's presumably one binary. Decide the canonical binary/invocation and use it
+  everywhere.
 - [ ] **"Guaranteed" vs "Verified" badge label.** Most pages use **Guaranteed**
   (home, annotations, playground); `how-it-works.astro:66` uses **Verified** on the output
   badge. "Verified" is allowed only there, but standardize for visual consistency.
@@ -93,11 +111,44 @@ Legend: `[ ]` open · severity P0 (blocker) → P4 (confirm).
 - [ ] **Playground "charge" tab note is mislabeled.** `Playground.astro:9` note "No
   overbooking" — `charge` is about not overdrawing a balance, not overbooking. → e.g.
   "Never goes negative."
+- [ ] **Added `//@ contract` lines don't exist in the linked real source.** The "real code ↗"
+  snippets (`index.astro` hero `pruneWindow`, `solutions/web-apps.astro` `hasRoom`) and the
+  case-study excerpts (`caseStudies.ts` — `trimCookieWhitespace`, `hasRoom`) now show a
+  `//@ contract` line for narrative consistency with the rest of the site, but the actual
+  GitHub files behind their "View on GitHub ↗" / `href` links don't contain that line. Either
+  add the contract to the upstream repos, or note the excerpt is illustrative.
 
 ---
 
 ## P4 — Content / claims to confirm (accuracy)
 
+- [ ] **`pruneWindow`'s contract under-specifies "keeps only" (upstream code fix, not the
+  site).** `hono-rate-limiter-with-lemmascript/src/core.verified.ts` — the site's hero
+  snippet (`index.astro:23`) is a verbatim, faithful copy of the real contract, so this isn't
+  a site-fidelity bug. The real `ensures` clauses only prove "no false positives" (every
+  surviving entry is genuinely in-window) — they don't prove "no false negatives" (every
+  in-window entry of `log` survives) or that `\result` is an order-preserving subsequence of
+  `log`. Concretely, an implementation that always `return []` would satisfy both existing
+  `ensures` clauses. For a rate limiter this is a real asymmetric risk: a regression that
+  silently drops valid entries (under-counting usage) would pass the proof untouched. Fix in
+  the upstream repo by adding a completeness clause (e.g. every `log[k]` that's in-window
+  appears in `\result`, or a proper order-preserving-subsequence characterization), then the
+  site snippet just needs to be re-synced to match.
+- [ ] **IMPORTANT — `number` is modeled as `int` by default (SPEC.md §2.4), creating a real gap
+  between "proven" and "runtime-safe" for money/count values (upstream toolchain, not a site
+  bug).** Example: `index.astro`'s `allocate`/`allocateNaive` — `//@ requires total >= 0`, with
+  `total: number`. In the verification model, `total` is already an integer by construction
+  (the default `number` → `int` mapping), so the proof of `sum(\result) === total` is airtight
+  *within that model*. But at actual JS runtime, `number` is IEEE754 float — nothing stops a
+  caller from passing `allocate(10.5, [1,1,1])` for real. That call is outside the domain the
+  proof ever reasoned about, and the real upstream `allocate.ts` has no runtime guard
+  (`Number.isInteger` or otherwise) to reject it before the "guaranteed correct" logic runs.
+  This isn't specific to `allocate` — it's a structural property of the whole `number`→`int`
+  convention, so it likely affects every money/count-typed function across every repo. Worth
+  resolving deliberately (either a compiler-inserted runtime check at verified-function
+  boundaries, or a documented caller obligation) rather than leaving as an implicit assumption,
+  since "guaranteed correct for every input" is the site's core claim and this is the kind of
+  gap that undermines it if a caller doesn't know to avoid non-integer `number`s.
 - [ ] **Two backends?** `how-it-works.astro` claims **Lean 4 and Dafny** ("Choose the proof
   system"). All four case studies use **Dafny only**. Confirm Lean 4 is actually available, or
   adjust the framing.

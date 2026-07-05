@@ -34,11 +34,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
           <span class="code-file">src/schedule.ts</span>
           <span class="badge badge-verified" style="margin-left:auto">Guaranteed</span>
         </div>
-        <pre class="code-body"><span class="t-cmt">// find the slots the most participants can attend</span>
+        <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Finds the slots the most participants can attend.</span>
 <span class="t-kw">function</span> <span class="t-fn">bestSlots</span>(slots: Slot[], availability: Availability[]): Slot[] &#123;
-  <span class="t-anno">//@ ensures \result.length >= 1</span>
-  <span class="t-anno">//@ ensures \forall s in \result: countFree(s, availability) === maxFree(slots, availability)</span>
-  <span class="t-anno">//@ ensures \forall s in slots: countFree(s, availability) &lt;= countFree(\result[0], availability)</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">slots.length >= 1</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span>.length >= 1</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; <span class="t-result">\result</span>.length ==&gt; countFree(<span class="t-result">\result</span>[k], availability) === maxFree(slots, availability))</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; slots.length ==&gt; countFree(slots[k], availability) &lt;= countFree(<span class="t-result">\result</span>[0], availability))</span>
 
   <span class="t-kw">const</span> max = Math.max(...slots.map(s =&gt; countFree(s, availability)))
   <span class="t-kw">return</span> slots.filter(s =&gt; countFree(s, availability) === max)

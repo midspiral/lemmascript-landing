@@ -41,9 +41,10 @@ body {
 }
 
 /* lift all real content above the fixed atmosphere layer.
-   Exclude .nav (keeps its position: sticky) and .skip-nav (keeps its
-   position: absolute — otherwise it sits in flow and pushes the nav down). */
-body > *:not(.atmosphere):not(.nav):not(.skip-nav) { position: relative; z-index: 1; }
+   Exclude .nav (keeps its position: sticky), .skip-nav (keeps its
+   position: absolute — otherwise it sits in flow and pushes the nav down),
+   and .theme-toggle (keeps its position: fixed corner pin). */
+body > *:not(.atmosphere):not(.nav):not(.skip-nav):not(.theme-toggle) { position: relative; z-index: 1; }
 body > main { flex: 1; }
 
 /* ---------- typography ---------- */
@@ -116,4 +117,10 @@ html, body { overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
+}
+
+/* ---------- light theme: same atmosphere recipe, tuned for paper ---------- */
+[data-theme="light"] .atmosphere::after { opacity: 0.05; }
+[data-theme="light"] .atmosphere::before {
+  background: radial-gradient(ellipse 70% 70% at 50% 45%, transparent 40%, rgba(16,21,28,0.06) 100%);
 }

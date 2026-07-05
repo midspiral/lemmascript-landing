@@ -78,3 +78,50 @@
   --container: 1200px;
   --container-narrow: 760px;
 }
+
+/* ============================================================
+   LIGHT THEME
+   Same structure, same accent hue family — coherent with the
+   dark theme above, not a separate system. Toggled via
+   [data-theme="light"] on <html> (see Nav.astro for the switch).
+   ============================================================ */
+:root[data-theme="light"] {
+  /* — Canvas (soft paper, never stark white) — */
+  --bg-base:       #F6F7F9;
+  --bg-surface:    #FFFFFF;
+  --bg-overlay:    #FFFFFF;
+  --bg-inset:      #EEF1F5;
+
+  /* — Borders — */
+  --border-subtle: #E3E7ED;
+  --border:        #D2D8E0;
+  --border-strong: #AFB8C4;
+
+  /* — Text — */
+  --text-primary:   #10151C;
+  --text-secondary: #47525E;
+  --text-muted:     #5C6773;
+  --text-faint:     #666F79;
+
+  /* — Brand accent: same green, darkened for contrast on paper — */
+  --accent:        #0D805D;
+  --accent-bright: #0B7A57;
+  --accent-dim:    #9BDDC7;
+  --accent-glow:   rgba(13, 128, 93, 0.14);
+  --accent-ink:    #F3FFFA;
+
+  /* — Proof-state semantics (same hues, darkened for AA text contrast) — */
+  --state-verified: #0D805D;
+  --state-pending:  #8A6100;
+  --state-counter:  #C13A32;
+  --state-info:     #1A63C4;
+  --state-verified-bg: rgba(13, 128, 93, 0.08);
+  --state-pending-bg:  rgba(138, 97, 0, 0.08);
+  --state-counter-bg:  rgba(193, 58, 50, 0.08);
+  --state-info-bg:     rgba(26, 99, 196, 0.08);
+
+  /* — Elevation (paper needs a softer, warmer shadow) — */
+  --elev-1: 0 0 0 1px var(--border-subtle), 0 1px 2px rgba(16,21,28,0.05);
+  --elev-2: 0 0 0 1px var(--border), 0 8px 24px rgba(16,21,28,0.08);
+  --elev-glow: 0 0 0 1px var(--accent-dim), 0 0 32px var(--accent-glow);
+}

@@ -46,12 +46,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
             <span class="code-file">src/domain.ts</span>
             <span class="badge badge-verified" style="margin-left:auto">Guaranteed</span>
           </div>
-          <pre class="code-body"><span class="t-cmt">// same code — contract pins exactly what it must return</span>
+          <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">The room only ever reports available when it truly has capacity.</span>
 <span class="t-kw">export function</span> <span class="t-fn">hasRoom</span>(p: Page, idx: number): boolean &#123;
-  <span class="t-anno">//@ ensures \result === (</span>
-  <span class="t-anno">//@   0 &lt;= idx &amp;&amp; idx &lt; p.slots.length &amp;&amp;</span>
-  <span class="t-anno">//@   confirmedCount(p.bookings, idx) &lt; capacityAt(p.slots, idx)</span>
-  <span class="t-anno">//@ )</span>
+  <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw"><span class="t-result">\result</span> === (</span>
+  <span class="t-cmt">//   0 &lt;= idx &amp;&amp; idx &lt; p.slots.length &amp;&amp;</span>
+  <span class="t-cmt">//   confirmedCount(p.bookings, idx) &lt; capacityAt(p.slots, idx)</span>
+  <span class="t-cmt">// )</span>
+  <span class="t-kw">if</span> (idx &lt; <span class="t-num">0</span>) <span class="t-kw">return</span> <span class="t-kw">false</span>
+  <span class="t-kw">if</span> (idx &gt;= p.slots.length) <span class="t-kw">return</span> <span class="t-kw">false</span>
   <span class="t-kw">return</span> confirmedCount(p.bookings, idx) &lt; capacityAt(p.slots, idx)
 &#125;</pre>
         </div>
@@ -95,7 +97,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
         </div>
 
         <div class="concur-contract">
-          <span class="concur-contract-title"><code class="t-anno">//@ ensures</code> never oversells</span>
+          <span class="concur-contract-title"><code class="t-dir-ensures">//@ ensures</code> never oversells</span>
           <span class="concur-contract-sub">holds for every input — any order, any timing</span>
         </div>
 

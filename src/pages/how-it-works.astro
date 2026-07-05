@@ -32,8 +32,11 @@ import BaseLayout from '../layouts/BaseLayout.astro'
           <span class="flow-tag">You &amp; your agent write</span>
           <div class="codeblock flow-card">
             <div class="code-bar"><span class="code-file">charge.ts</span></div>
-            <pre class="code-body"><span class="t-anno">//@ requires</span> <span class="t-annokw">amt &gt;= 0</span>
-<span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= bal</span>
+            <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Never lets the charge exceed the available balance.</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">bal &gt;= 0</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">amt &gt;= 0</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amt &lt;= bal ==&gt; <span class="t-result">\result</span> === bal - amt</span>
+<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amt &gt; bal ==&gt; <span class="t-result">\result</span> === 0</span>
 <span class="t-kw">function</span> <span class="t-fn">charge</span>(bal, amt) &#123;
   <span class="t-kw">return</span> amt &gt; bal ? <span class="t-num">0</span> : bal - amt;
 &#125;</pre>

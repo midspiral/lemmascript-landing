@@ -116,6 +116,7 @@ export const caseStudies: CaseStudy[] = [
       caption:
         'Verified in place — the production cookie parser itself carries the guarantee (excerpt).',
       code: `const trimCookieWhitespace = (value: string): string => {
+  //@ contract Trims only ASCII space and tab — never a look-alike whitespace byte.
   //@ verify
   //@ ensures \\result.length <= value.length
   // CVE-2026-39410: only space (0x20) and tab (0x09) are stripped — nothing else (e.g. 0xA0).
@@ -127,7 +128,11 @@ export const caseStudies: CaseStudy[] = [
     if (charCode !== 0x20 && charCode !== 0x09) break
     start++
   }
-  // …the end of the string is trimmed by the same rule…
+  while (end > start) {
+    const charCode = value.charCodeAt(end - 1)
+    if (charCode !== 0x20 && charCode !== 0x09) break
+    end--
+  }
   return value.slice(start, end)
 }`,
     },
@@ -220,9 +225,11 @@ export const caseStudies: CaseStudy[] = [
       href: 'https://github.com/midspiral/quota-lemmascript/blob/main/src/domain.ts',
       caption:
         'The booking core in ordinary TypeScript — the `//@ ensures` pins the rule that keeps it from overselling.',
-      code: `// Room at slot \`idx\` iff it's in range and its confirmed count is below capacity.
-export function hasRoom(p: Page, idx: number): boolean {
+      code: `export function hasRoom(p: Page, idx: number): boolean {
+  //@ contract The room only ever reports available when it truly has capacity.
   //@ ensures \\result === (0 <= idx && idx < p.slots.length && confirmedCount(p.bookings, idx) < capacityAt(p.slots, idx))
+  if (idx < 0) return false
+  if (idx >= p.slots.length) return false
   return confirmedCount(p.bookings, idx) < capacityAt(p.slots, idx)
 }`,
     },

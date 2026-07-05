@@ -203,9 +203,9 @@ const extend = [
     display: flex; flex-direction: column;
     padding: var(--sp-6); background: var(--bg-surface);
     border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
-    transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+    transition: border-color var(--dur-2) var(--ease);
   }
-  .pillar:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
+  .pillar:hover { border-color: var(--accent-dim); }
   .pillar h3 { font-size: var(--fs-h3); margin: var(--sp-2) 0; }
   .pillar p { font-size: var(--fs-small); color: var(--text-secondary); }
   .pillar-more { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-top: var(--sp-4); }
@@ -217,8 +217,8 @@ const extend = [
   .int-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
   .int-card h3 { font-size: var(--fs-h3); }
   .int-card p { font-size: var(--fs-small); }
-  .int-link { transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
-  .int-link:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
+  .int-link { transition: border-color var(--dur-2) var(--ease); }
+  .int-link:hover { border-color: var(--accent-dim); }
   .int-more { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-top: auto; }
 
   .ext-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }

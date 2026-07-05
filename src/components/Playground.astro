@@ -7,9 +7,10 @@ const scenarios = [
     id: 'charge',
     label: 'charge',
     note: 'No overbooking',
-    code: `//@ requires remaining >= 0 && cost >= 0
-//@ ensures \\result >= 0
-//@ ensures \\result <= remaining
+    code: `//@ contract Charges up to the remaining balance and never goes negative.
+//@ requires remaining >= 0 && cost >= 0
+//@ ensures cost > remaining || \\result === remaining - cost
+//@ ensures cost <= remaining || \\result === 0
 function charge(remaining: number, cost: number): number {
   if (cost > remaining) return 0;
   return remaining - cost;
@@ -19,7 +20,8 @@ function charge(remaining: number, cost: number): number {
     id: 'abs',
     label: 'abs',
     note: 'Always non-negative',
-    code: `//@ ensures \\result >= 0
+    code: `//@ contract Returns the magnitude of n, regardless of sign.
+//@ ensures \\result >= 0
 //@ ensures \\result == n || \\result == -n
 function abs(n: number): number {
   if (n < 0) return -n;
@@ -30,7 +32,8 @@ function abs(n: number): number {
     id: 'clamp',
     label: 'clamp',
     note: 'Stays within bounds',
-    code: `//@ requires lo <= hi
+    code: `//@ contract Clamps x into the [lo, hi] range.
+//@ requires lo <= hi
 //@ ensures \\result >= lo && \\result <= hi
 function clamp(x: number, lo: number, hi: number): number {
   if (x < lo) return lo;

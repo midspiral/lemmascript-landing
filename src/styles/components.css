@@ -64,14 +64,26 @@
 .t-kw { color: var(--state-info); } .t-fn { color: var(--state-pending); }
 .t-num { color: #C8A6FF; } .t-cmt { color: var(--text-muted); } .t-str { color: var(--accent-bright); }
 
+/* ---------- LemmaScript annotation directives ----------
+   Mirrors github.com/midspiral/lemmascript-vscode's textMateRules exactly:
+   `requires` amber, `ensures` teal, `contract` (the natural-language line)
+   pink-purple, every other directive grey — all bold. These hexes are
+   fixed by the extension (chosen to read on both light and dark hosts),
+   so they're literal, not theme tokens. */
+.t-at { font-weight: 700; }
+.t-dir { font-weight: 700; color: #808080; }
+.t-dir-requires { font-weight: 700; color: #C08A2E; }
+.t-dir-ensures  { font-weight: 700; color: #1B8A6E; }
+.t-dir-contract { font-weight: 700; color: #AD3DA4; }
+.t-prose  { color: var(--text-secondary); font-style: italic; }
+.t-result { color: var(--state-info); }
+.t-quant  { color: var(--state-info); }
+
 /* ---------- card ---------- */
 .card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
   padding: var(--sp-6); position: relative; overflow: hidden;
-  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
-.card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity var(--dur-3) var(--ease); }
-.card:hover { border-color: var(--border); transform: translateY(-3px); }
-.card:hover::before { opacity: 1; }
+  transition: border-color var(--dur-2) var(--ease); }
+.card:hover { border-color: var(--border); }
 
 /* ---------- callout ---------- */
 .callout { display: flex; gap: var(--sp-3); padding: var(--sp-4); border-radius: var(--r-md); border: 1px solid; font-size: var(--fs-small); }
@@ -79,4 +91,16 @@
 .callout-info { background: var(--state-info-bg); border-color: rgba(91,168,255,0.25); }
 .callout-info .mark, .callout-info b { color: var(--state-info); }
 .callout-warn { background: var(--state-pending-bg); border-color: rgba(245,196,81,0.25); }
+
+/* ---------- light theme overrides ----------
+   Border tints above are hand-tuned to the dark-mode hues; the
+   light palette darkens those same semantic colors for contrast,
+   so their border tints need the same adjustment. */
+[data-theme="light"] .badge-pending  { border-color: rgba(138,97,0,0.35); }
+[data-theme="light"] .badge-counter  { border-color: rgba(193,58,50,0.35); }
+[data-theme="light"] .badge-info     { border-color: rgba(26,99,196,0.35); }
+[data-theme="light"] .callout-info   { border-color: rgba(26,99,196,0.3); }
+[data-theme="light"] .callout-warn   { border-color: rgba(138,97,0,0.3); }
+[data-theme="light"] .section-alt    { background: rgba(236,239,244,0.6); }
+[data-theme="light"] .t-num          { color: #7A4FCB; }
 .callout-warn .mark, .callout-warn b { color: var(--state-pending); }

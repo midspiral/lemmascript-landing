@@ -69,12 +69,14 @@ const traits = [
       </div>
       <div class="codeblock">
         <div class="code-bar"><span class="code-file">charge.ts</span><span class="code-by">// by Emira</span><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
-        <pre class="code-body"><span class="ln">1</span><span class="t-cmt">// a charge can never overdraw the account</span>
-<span class="ln">2</span><span class="t-anno">//@ requires</span> <span class="t-annokw">amount &gt;= 0</span>
-<span class="ln">3</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= balance</span>
-<span class="ln">4</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
-<span class="ln">5</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
-<span class="ln">6</span>&#125;</pre>
+        <pre class="code-body"><span class="ln">1</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">A charge can never overdraw the account.</span>
+<span class="ln">2</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">balance &gt;= 0</span>
+<span class="ln">3</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">amount &gt;= 0</span>
+<span class="ln">4</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amount &lt;= balance ==&gt; <span class="t-result">\result</span> === balance - amount</span>
+<span class="ln">5</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amount &gt; balance ==&gt; <span class="t-result">\result</span> === 0</span>
+<span class="ln">6</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">7</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
+<span class="ln">8</span>&#125;</pre>
       </div>
     </div>
   </section>

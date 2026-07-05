@@ -2,21 +2,22 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 const annotations = [
-  { tag: '//@ requires', sig: 'requires <expr>', desc: 'A precondition that must hold whenever the function is called. The caller is responsible for satisfying it; the function may rely on it.', ex: 'remaining >= 0 && cost >= 0' },
-  { tag: '//@ ensures', sig: 'ensures <expr>', desc: 'A postcondition the function guarantees on return. Use \\result to refer to the returned value.', ex: '\\result <= remaining' },
-  { tag: '//@ invariant', sig: 'invariant <expr>', desc: 'A loop invariant — a property that holds before the loop and after every iteration. The engine uses it to reason about unbounded loops.', ex: 'i >= 0 && sum == partial(i)' },
-  { tag: '//@ decreases', sig: 'decreases <expr>', desc: 'A termination measure: an expression that strictly decreases each iteration (or recursive call) and is bounded below — proving the code terminates.', ex: 'n - i' },
-  { tag: '//@ assert', sig: 'assert <expr>', desc: 'A condition that must hold at this exact program point. Useful for guiding LemmaScript or documenting intermediate facts.', ex: 'balance == credits - debits' },
-  { tag: '//@ assume', sig: 'assume <expr>', desc: 'A fact LemmaScript may take as given from this point forward. Use sparingly — assumptions are trust, not a guarantee.', ex: 'isValidated(input)' },
-  { tag: '//@ pure', sig: 'pure', desc: 'Marks a function as side-effect free so it may be referenced inside other specifications.', ex: '' },
-  { tag: '//@ ghost', sig: 'ghost <decl>', desc: 'Declares specification-only state used purely for reasoning. Ghost code is erased before runtime and never ships.', ex: 'ghost let seen: Set<number>' },
+  { tag: '//@ contract', kind: 'contract', sig: 'contract <prose>', desc: 'A natural-language statement of intent. Provers ignore it — it exists so the spec reads like a sentence, not just logic.', ex: 'Returns a value occurring in more than half of arr, or -1 if none.' },
+  { tag: '//@ requires', kind: 'requires', sig: 'requires <expr>', desc: 'A precondition that must hold whenever the function is called. The caller is responsible for satisfying it; the function may rely on it.', ex: 'remaining >= 0 && cost >= 0' },
+  { tag: '//@ ensures', kind: 'ensures', sig: 'ensures <expr>', desc: 'A postcondition the function guarantees on return. Use \\result to refer to the returned value.', ex: '\\result <= remaining' },
+  { tag: '//@ invariant', kind: 'other', sig: 'invariant <expr>', desc: 'A loop invariant — a property that holds before the loop and after every iteration. The engine uses it to reason about unbounded loops.', ex: 'i >= 0 && sum == partial(i)' },
+  { tag: '//@ decreases', kind: 'other', sig: 'decreases <expr>', desc: 'A termination measure: an expression that strictly decreases each iteration (or recursive call) and is bounded below — proving the code terminates.', ex: 'n - i' },
+  { tag: '//@ assert', kind: 'other', sig: 'assert <expr>', desc: 'A condition that must hold at this exact program point. Useful for guiding LemmaScript or documenting intermediate facts.', ex: 'balance == credits - debits' },
+  { tag: '//@ assume', kind: 'other', sig: 'assume <expr>', desc: 'A fact LemmaScript may take as given from this point forward. Use sparingly — assumptions are trust, not a guarantee.', ex: 'isValidated(input)' },
+  { tag: '//@ pure', kind: 'other', sig: 'pure', desc: 'Marks a function as side-effect free so it may be referenced inside other specifications.', ex: '' },
+  { tag: '//@ ghost', kind: 'other', sig: 'ghost <decl>', desc: 'Declares specification-only state used purely for reasoning. Ghost code is erased before runtime and never ships.', ex: 'ghost let seen: Set<number>' },
 ]
 
 const keywords = [
   { k: '\\result', d: 'The function’s return value, usable in ensures clauses.' },
   { k: '\\old(e)', d: 'The value of expression e on function entry (for mutation).' },
-  { k: 'forall', d: 'Universal quantifier: forall x :: P(x).' },
-  { k: 'exists', d: 'Existential quantifier: exists x :: P(x).' },
+  { k: 'forall', d: 'Universal quantifier: forall(x, P(x)).' },
+  { k: 'exists', d: 'Existential quantifier: exists(x, P(x)).' },
   { k: '==>', d: 'Logical implication.' },
   { k: '&&  ||  !', d: 'Conjunction, disjunction, negation.' },
 ]
@@ -53,12 +54,14 @@ const keywords = [
       </div>
       <div class="codeblock">
         <div class="code-bar"><span class="code-file">charge.ts</span><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
-        <pre class="code-body"><span class="ln">1</span><span class="t-anno">//@ requires</span> <span class="t-annokw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span>
-<span class="ln">2</span><span class="t-anno">//@ ensures</span>  <span class="t-annokw">\result &gt;= 0 &amp;&amp; \result &lt;= remaining</span>
-<span class="ln">3</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
-<span class="ln">4</span>  <span class="t-kw">if</span> (cost &gt; remaining) <span class="t-kw">return</span> <span class="t-num">0</span>;
-<span class="ln">5</span>  <span class="t-kw">return</span> remaining - cost;
-<span class="ln">6</span>&#125;</pre>
+        <pre class="code-body"><span class="ln">1</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Charges up to the remaining balance and never goes negative.</span>
+<span class="ln">2</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">remaining &gt;= 0 &amp;&amp; cost &gt;= 0</span>
+<span class="ln">3</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">cost &lt;= remaining ==&gt; <span class="t-result">\result</span> === remaining - cost</span>
+<span class="ln">4</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">cost &gt; remaining ==&gt; <span class="t-result">\result</span> === 0</span>
+<span class="ln">5</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(remaining: <span class="t-kw">number</span>, cost: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
+<span class="ln">6</span>  <span class="t-kw">if</span> (cost &gt; remaining) <span class="t-kw">return</span> <span class="t-num">0</span>;
+<span class="ln">7</span>  <span class="t-kw">return</span> remaining - cost;
+<span class="ln">8</span>&#125;</pre>
       </div>
     </div>
   </section>
@@ -73,7 +76,7 @@ const keywords = [
       <div class="anno-table">
         {annotations.map((a) => (
           <div class="anno-card">
-            <div class="anno-tag">{a.tag}</div>
+            <div class={`anno-tag ${a.kind === 'other' ? 't-dir' : 't-dir-' + a.kind}`}>{a.tag}</div>
             <p class="anno-desc">{a.desc}</p>
             {a.ex && <code class="anno-ex">{a.tag} {a.ex}</code>}
           </div>
@@ -124,7 +127,7 @@ const keywords = [
 
   .anno-table { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
   .anno-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: var(--sp-6); }
-  .anno-tag { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-size: var(--fs-body); }
+  .anno-tag { font-family: var(--font-mono); font-size: var(--fs-body); }
   .anno-desc { font-size: var(--fs-small); margin: var(--sp-3) 0; }
   .anno-ex { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
     background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--r-sm); padding: var(--sp-2) var(--sp-3); }

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { caseStudies } from '../../data/caseStudies'
+import { highlightAnnotations } from '../../lib/highlightAnnotations'
 
 export function getStaticPaths() {
   return caseStudies.map((study) => ({
@@ -14,20 +15,7 @@ const { study } = Astro.props
 // other studies for the "more" rail
 const others = caseStudies.filter((c) => c.slug !== study.slug)
 
-// --- tiny, faithful code highlighter (annotation/comment/keyword only) ---
-const KW =
-  /\b(export|function|return|const|let|while|for|if|else|break|true|false|type|interface|new)\b/g
-const esc = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-function hl(line: string): string {
-  const e = esc(line)
-  if (/^\s*\/\/@/.test(line)) return `<span class="t-anno">${e}</span>`
-  if (/^\s*\/\//.test(line)) return `<span class="t-cmt">${e}</span>`
-  return e.replace(KW, '<span class="t-kw">$1</span>')
-}
-const snippetHtml = study.snippet
-  ? study.snippet.code.split('\n').map(hl).join('\n')
-  : ''
+const snippetHtml = study.snippet ? highlightAnnotations(study.snippet.code) : ''
 
 const isBrown = study.kind === 'Brownfield'
 const kindClass = isBrown ? 'badge-pending' : 'badge-verified'

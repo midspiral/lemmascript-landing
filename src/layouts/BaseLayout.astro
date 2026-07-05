@@ -13,6 +13,7 @@ import '../styles/components.css'
 import Analytics from '../components/Analytics.astro'
 import Nav from '../components/Nav.astro'
 import Footer from '../components/Footer.astro'
+import ThemeToggle from '../components/ThemeToggle.astro'
 
 interface Props {
   title: string
@@ -28,6 +29,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script is:inline>
+      // Applied before first paint to avoid a flash. Light is the default;
+      // dark is opt-in, remembered per visitor.
+      (function () {
+        var t = localStorage.getItem('theme')
+        if (t !== 'dark') document.documentElement.setAttribute('data-theme', 'light')
+      })()
+    </script>
     <Analytics />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,5 +63,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       <slot />
     </main>
     <Footer />
+    <ThemeToggle />
   </body>
 </html>

@@ -9,8 +9,8 @@ const annotations = [
   { tag: '//@ decreases', kind: 'other', sig: 'decreases <expr>', desc: 'A termination measure: an expression that strictly decreases each iteration (or recursive call) and is bounded below — proving the code terminates.', ex: 'n - i' },
   { tag: '//@ assert', kind: 'other', sig: 'assert <expr>', desc: 'A condition that must hold at this exact program point. Useful for guiding LemmaScript or documenting intermediate facts.', ex: 'balance == credits - debits' },
   { tag: '//@ assume', kind: 'other', sig: 'assume <expr>', desc: 'A fact LemmaScript may take as given from this point forward. Use sparingly — assumptions are trust, not a guarantee.', ex: 'isValidated(input)' },
-  { tag: '//@ pure', kind: 'other', sig: 'pure', desc: 'Marks a function as side-effect free so it may be referenced inside other specifications.', ex: '' },
-  { tag: '//@ ghost', kind: 'other', sig: 'ghost <decl>', desc: 'Declares specification-only state used purely for reasoning. Ghost code is erased before runtime and never ships.', ex: 'ghost let seen: Set<number>' },
+  { tag: '//@ pure', kind: 'other', sig: 'pure', desc: 'Treats a function as side-effect free so it may be referenced inside other specifications.', ex: '' },
+  { tag: '//@ ghost', kind: 'other', sig: 'ghost <decl>', desc: 'Declares specification-only state used purely for reasoning. Ghost code is erased for runtime and never ships.', ex: 'let seen: Set<number>' },
 ]
 
 const keywords = [

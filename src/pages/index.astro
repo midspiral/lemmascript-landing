@@ -16,7 +16,7 @@ const evidence = [
   <section class="hero">
     <div class="container hero-full">
         <span class="hero-eyebrow">// built for agents</span>
-        <h1 class="hero-title">LemmaScript is TypeScript with verified <span class="pos-contracts">contracts</span>.</h1>
+        <h1 class="hero-title">LemmaScript is TypeScript with syntax for <span class="pos-contracts">contracts</span>.</h1>
         <div class="hero-code">
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">core.verified.ts</span><a class="code-src" href="https://github.com/midspiral/hono-rate-limiter-with-lemmascript/blob/main/src/core.verified.ts#L38-L57" target="_blank" rel="noopener">// real code ↗</a><span class="badge badge-verified" style="margin-left:auto"><span class="bdot"></span>Guaranteed</span></div>
@@ -38,7 +38,7 @@ const evidence = [
           </div>
         </div>
         <div class="hero-actions">
-          <a href="/try" class="btn btn-primary">Try it live →</a>
+          <a href="/try" class="btn btn-primary">Install</a>
           <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
         </div>
     </div>
@@ -50,7 +50,7 @@ const evidence = [
       <div class="section-head center" style="margin-inline:auto">
         <span class="kicker">// caught in the act</span>
         <h2>The agent wrote buggy TypeScript. <br /> LemmaScript's contract caught it. <br /> The agent fixed it before surfacing the code.</h2>
-        <p class="section-desc">While splitting 10 three ways, the agent’s first attempt floored each share and called it done. It looked right, but a cent vanished. The contract said the parts <i>must sum to the whole</i>, so the implementation was rejected. The agent got the rejection feedback from the verifier and shipped the fix.</p>
+        <!-- <p class="section-desc">While splitting 10 three ways, the agent’s first attempt floored each share and called it done. It looked right, but a cent vanished. The contract said the parts <i>must sum to the whole</i>, so the implementation was rejected. The agent got the rejection feedback from the verifier and shipped the fix.</p> -->
       </div>
 
       <div class="catch-grid">
@@ -64,7 +64,7 @@ const evidence = [
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">weights.length >= 1</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; weights.length ==&gt; weights[k] >= 0)</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">sum(weights) >= 1</span>
-<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span>
+<span class="line-error"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span><svg class="icon-warn" viewBox="0 0 24 24" width="13" height="13" aria-label="violated" role="img"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm0 5.5a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1Zm0 9.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg></span>
 <span class="t-kw">function</span> <span class="t-fn">allocateNaive</span>(total, weights) &#123;
   <span class="t-kw">const</span> W = <span class="t-fn">sum</span>(weights);
   <span class="t-kw">return</span> weights.map(w =&gt;
@@ -84,7 +84,7 @@ const evidence = [
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">weights.length >= 1</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw"><span class="t-quant">forall</span>(k, 0 &lt;= k &amp;&amp; k &lt; weights.length ==&gt; weights[k] >= 0)</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">sum(weights) >= 1</span>
-<span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span>
+<span class="line-ok"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span> <span class="t-annokw">sum(<span class="t-result">\result</span>) === total</span>  <span class="t-cmt">// must sum to the whole</span><svg class="icon-ok" viewBox="0 0 24 24" width="13" height="13" aria-label="guaranteed" role="img"><path fill="currentColor" d="M9.55 17.6 4.4 12.45l1.4-1.4 3.75 3.75 8.25-8.25 1.4 1.4Z"/></svg></span>
 <span class="t-kw">function</span> <span class="t-fn">allocate</span>(total, weights) &#123;
   <span class="t-kw">const</span> W = <span class="t-fn">sum</span>(weights);
   <span class="t-kw">const</span> result = weights.map(w =&gt; Math.floor(total * w / W));
@@ -94,7 +94,7 @@ const evidence = [
   <span class="t-kw">return</span> result;
 &#125;</pre>
           </div>
-          <p class="catch-note">Hands the leftover back out — now every cent is accounted for.</p>
+          <p class="catch-note ok">Hands the leftover back out — now every cent is accounted for.</p>
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@ const evidence = [
         </div>
 
         <div class="review-col review-impl">
-          <div class="review-label"><span class="review-meta">what the agent writes · a while-loop with 7 spec lines</span></div>
+          <div class="review-label"><span class="badge badge-pending"><span class="bdot"></span>What the agent writes</span><span class="review-meta">a while-loop with 7 spec lines</span></div>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">binarySearch.ts</span></div>
             <pre class="code-body impl-dim">export function binarySearch(arr: number[], target: number): number &#123;
@@ -248,7 +248,7 @@ const evidence = [
   .review-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
   .review-spec .codeblock { box-shadow: var(--elev-glow); }
   .review-grid .code-body { overflow: hidden; }
-  .review-spec .code-body { line-height: 2; }
+  .review-spec .code-body { font-size: var(--fs-caption); line-height: 1.9; overflow-x: auto; }
   .review-impl .code-body { font-size: 0.75rem; line-height: 1.7; }
   .impl-dim { color: var(--text-muted); opacity: 0.7; white-space: pre; }
   .review-note { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
@@ -261,10 +261,17 @@ const evidence = [
   .catch-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
   .catch-label { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
   .catch-bad { border-color: rgba(244,85,78,0.35); }
+  .line-error { display: inline-block; width: 100%; background: var(--state-counter-bg); border-radius: 2px; }
+  .line-ok { display: inline-block; width: 100%; background: var(--state-verified-bg); border-radius: 2px; }
+  .icon-warn, .icon-ok { vertical-align: -2px; margin-left: var(--sp-2); }
+  .icon-warn { color: var(--state-counter); }
+  .icon-ok { color: var(--state-verified); }
   .catch-ok { border-color: var(--accent-dim); box-shadow: var(--elev-glow); }
   .catch-col .code-body { font-size: var(--fs-caption); line-height: 1.7; }
   .catch-note { font-size: var(--fs-small); color: var(--text-muted); margin-top: var(--sp-3); }
   .catch-note.bad { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--state-counter); }
+  .catch-note.ok { color: var(--state-verified); }
+  :root[data-theme="light"] .catch-note.ok { color: #0A6B4E; }
   @media (max-width: 860px) { .catch-grid { grid-template-columns: 1fr; } }
 
   @media (max-width: 900px) {

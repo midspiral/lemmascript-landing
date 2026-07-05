@@ -55,7 +55,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
           <ol class="flow-steps">
             <li><span class="flow-step-n">1</span><div><b>Compiles</b> to a formal model — Lean 4 or Dafny, from the same source.</div></li>
             <li><span class="flow-step-n">2</span><div><b>Proves</b> every obligation holds — for <em>every</em> input, not a sample.</div></li>
-            <li><span class="flow-step-n">3</span><div><b>Iterates</b> — a counterexample sends the agent back to fix and re-run, until green.</div></li>
+            <li><span class="flow-step-n">3</span><div><b>Iterates</b> — sends the agent back to fix and re-run, until green.</div></li>
           </ol>
           <p class="flow-box-foot">// you never touch any of this</p>
         </div>
@@ -86,7 +86,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       </div>
       <div class="why-grid">
         <div class="why"><h3>Every input, not just the ones you run</h3><p>Your tests exercise real behavior on the paths you choose. A proof adds what tests can’t: certainty the contract holds for <em>every</em> possible input — including the ones no one thought to try.</p></div>
-        <div class="why"><h3>Built for agents</h3><p>LLMs generate plausible code fast. A counterexample is the ground-truth signal an agent needs to converge on correct code instead of confident-but-wrong code.</p></div>
+        <div class="why"><h3>Built for agents</h3><p>LLMs generate plausible code fast. Verifier feedback is the signal an agent needs to converge on correct code instead of confident-but-wrong code.</p></div>
         <div class="why"><h3>Zero runtime cost</h3><p>Verification happens at build time. The shipped artifact is your original TypeScript — no wrappers, no checks, no overhead.</p></div>
         <div class="why"><h3>Drop-in, incremental</h3><p>Annotate one critical function or a whole module. Greenfield or a fork of an existing project — adopt it exactly as far as you want.</p></div>
       </div>
@@ -102,18 +102,17 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <div class="section-head">
         <span class="kicker">// two backends, one source</span>
         <h2>Choose the proof system. Keep the same code.</h2>
-        <p class="section-desc">The annotated TypeScript is the contract. The backend is an implementation detail you can switch without touching your source.</p>
+        <p class="section-desc">The annotated TypeScript is the contract. The proofs live in the backend.</p>
       </div>
       <div class="backend-grid">
         <div class="card">
-          <span class="badge badge-info"><span class="bdot"></span>Lean 4</span>
-          <h3>Lean 4</h3>
-          <p>A dependently-typed proof assistant with a vast mathematical library. Ideal for deep functional correctness and reusable, composable theorems.</p>
-        </div>
-        <div class="card">
-          <span class="badge badge-info"><span class="bdot"></span>Dafny</span>
+          <span class="badge badge-verified card-tag">Recommended</span>
           <h3>Dafny</h3>
           <p>An automated verification language with an SMT solver under the hood. Ideal for imperative logic, loop invariants, and fast, push-button verification.</p>
+        </div>
+        <div class="card">
+          <h3>Lean 4</h3>
+          <p>A dependently-typed proof assistant with a vast mathematical library. Ideal for deep functional correctness and reusable, composable theorems.</p>
         </div>
       </div>
     </div>
@@ -125,7 +124,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 <style>
   /* ---------- pipeline flow ---------- */
   .flow { display: flex; flex-direction: column; align-items: center; gap: var(--sp-4); max-width: 760px; margin-inline: auto; }
-  .flow-col { width: 100%; max-width: 540px; }
+  .flow-col { width: 100%; max-width: 760px; }
   .flow-tag { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase;
     letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: var(--sp-3); }
   .flow-card .code-body { font-size: var(--fs-small); line-height: 1.7; }
@@ -152,7 +151,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   .flow-box-foot { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-6); }
 
   .backend-grid, .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
-  .card h3 { margin: var(--sp-3) 0 var(--sp-2); }
+  .card h3 { margin: 0 0 var(--sp-2); }
+  .card-tag { position: absolute; top: var(--sp-4); right: var(--sp-4); }
   .card p { font-size: var(--fs-small); }
   .why { padding: var(--sp-6); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
   .why h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }

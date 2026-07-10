@@ -216,7 +216,7 @@ into `components.css`.
 - All referenced repos, files, and external domains resolve (200): LemmaScript,
   lemmascript-guard, hono-rate-limiter-with-lemmascript, eventab-lemmascript, the four case
   study repos; `examples/binarySearch.ts`, `allocate.ts`, `allocateNaive.ts`,
-  `core.verified.ts`; docs.lemmascript.com, lemmascript.com, midspiral.com; CNAME = lemmascript.com.
+  `core.verified.ts`; docs.lemmascript.org, lemmascript.org, midspiral.com; CNAME = lemmascript.org.
 - `base.css` has strong a11y foundations: skip-nav, `:focus-visible`, `prefers-reduced-motion`,
   mobile heading scale, `overflow-x` guard.
 - `how-it-works.astro` correctly uses HOW vocabulary (the one page allowed to).

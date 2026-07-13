@@ -1,52 +1,158 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
-// status: 'available' | 'preview' | 'planned'
-const label = { available: 'Available', preview: 'Tech preview', planned: 'Planned' }
-const badgeClass = { available: 'badge-verified', preview: 'badge-info', planned: 'badge-pending' }
+// Each viz is an inline SVG vignette of what the tool does — abstract, no code.
+// Shared palette: structure in --text-muted/--border-subtle, the guarantee in --state-verified,
+// the not-correct-yet state in --state-counter.
+const viz = {
+  claimcheck: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="14" y="16" width="68" height="88" rx="8" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M26 34 q6 -4 12 0 t12 0 t12 0" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M26 48 q6 -4 12 0 t12 0" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M26 62 q6 -4 12 0 t12 0 t10 0" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M26 76 q6 -4 12 0" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <rect x="138" y="16" width="68" height="88" rx="8" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="152" cy="34" r="2" fill="var(--text-muted)"/><line x1="160" y1="34" x2="194" y2="34" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="152" cy="48" r="2" fill="var(--text-muted)"/><line x1="160" y1="48" x2="186" y2="48" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="152" cy="62" r="2" fill="var(--text-muted)"/><line x1="160" y1="62" x2="194" y2="62" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="152" cy="76" r="2" fill="var(--text-muted)"/><line x1="160" y1="76" x2="180" y2="76" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="96" y1="52" x2="124" y2="52" stroke="var(--state-verified)" stroke-width="2.5"/>
+    <line x1="96" y1="62" x2="124" y2="62" stroke="var(--state-verified)" stroke-width="2.5"/>
+    <circle cx="110" cy="88" r="11" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <path d="M105 88 l3.5 3.5 l7 -7" stroke="var(--state-verified)" stroke-width="2"/>
+  </svg>`,
+  guard: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M132 14 l40 14 v26 c0 28 -40 50 -40 50 c0 0 -40 -22 -40 -50 v-26 z" fill="var(--bg-inset)" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M121 60 l8 8 l15 -16" stroke="var(--state-verified)" stroke-width="2.5"/>
+    <line x1="14" y1="46" x2="72" y2="46" stroke="var(--state-verified)" stroke-width="2"/>
+    <path d="M66 41 l7 5 l-7 5" stroke="var(--state-verified)" stroke-width="2"/>
+    <line x1="14" y1="78" x2="64" y2="78" stroke="var(--state-counter)" stroke-width="2"/>
+    <path d="M60 73 l7 5 l-7 5" stroke="var(--state-counter)" stroke-width="2"/>
+    <path d="M78 70 l12 16 M90 70 l-12 16" stroke="var(--state-counter)" stroke-width="2"/>
+  </svg>`,
+  vscode: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="24" y1="32" x2="196" y2="32" stroke="var(--border-subtle)" stroke-width="1.5"/>
+    <circle cx="38" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="48" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="58" cy="22" r="2.5" fill="var(--text-muted)"/>
+    <circle cx="42" cy="48" r="4" fill="var(--state-verified)"/>
+    <line x1="56" y1="48" x2="150" y2="48" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="42" cy="66" r="4" fill="var(--state-verified)"/>
+    <line x1="56" y1="66" x2="126" y2="66" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <rect x="30" y="78" width="160" height="16" rx="4" fill="var(--state-counter)" opacity="0.08"/>
+    <circle cx="42" cy="86" r="4" fill="var(--state-counter)"/>
+    <line x1="56" y1="86" x2="168" y2="86" stroke="var(--text-muted)" stroke-width="1.5"/>
+  </svg>`,
+  sepui: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <rect x="36" y="24" width="42" height="72" rx="6" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <rect x="88" y="24" width="96" height="32" rx="6" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <rect x="88" y="64" width="96" height="32" rx="6" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+  </svg>`,
+  ci: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="14" y1="52" x2="118" y2="52" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M42 92 h28 c14 0 18 -8 26 -22 c6 -11 10 -18 22 -18" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="28" cy="52" r="4" fill="var(--text-muted)"/>
+    <circle cx="42" cy="92" r="4" fill="var(--text-muted)"/>
+    <circle cx="86" cy="92" r="4" fill="var(--text-muted)"/>
+    <rect x="118" y="34" width="36" height="36" rx="9" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <path d="M128 52 l6 6 l12 -12" stroke="var(--state-verified)" stroke-width="2.5"/>
+    <line x1="154" y1="52" x2="198" y2="52" stroke="var(--state-verified)" stroke-width="2"/>
+    <path d="M192 47 l7 5 l-7 5" stroke="var(--state-verified)" stroke-width="2"/>
+  </svg>`,
+  skills: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M110 22 a38 38 0 1 0 38 38" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M141 66 l7 -7 l7 7" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M110 46 l4.5 9 l9.5 1.5 l-7 7 l1.5 9.5 l-8.5 -4.5 l-8.5 4.5 l1.5 -9.5 l-7 -7 l9.5 -1.5 z" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <circle cx="148" cy="30" r="12" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <path d="M142.5 30 l4 4 l8 -8" stroke="var(--state-verified)" stroke-width="2"/>
+  </svg>`,
+  seal: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M96 88 l-12 22 l14 -6 l6 13 l10 -20" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M124 88 l12 22 l-14 -6 l-6 13 l-10 -20" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="110" cy="52" r="40" fill="var(--bg-inset)" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <circle cx="110" cy="52" r="32" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="3 5"/>
+    <circle cx="110" cy="52" r="22" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <path d="M100 52 l7 7 l14 -14" stroke="var(--state-verified)" stroke-width="2.5"/>
+  </svg>`,
+  cli: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="24" y1="32" x2="196" y2="32" stroke="var(--border-subtle)" stroke-width="1.5"/>
+    <circle cx="38" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="48" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="58" cy="22" r="2.5" fill="var(--text-muted)"/>
+    <path d="M38 46 l8 6 l-8 6" stroke="var(--text-muted)" stroke-width="2"/>
+    <line x1="54" y1="52" x2="96" y2="52" stroke="var(--text-muted)" stroke-width="2"/>
+    <path d="M38 74 l4 4 l8 -8" stroke="var(--state-verified)" stroke-width="2"/>
+    <line x1="60" y1="74" x2="112" y2="74" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M38 92 l4 4 l8 -8" stroke="var(--state-verified)" stroke-width="2"/>
+    <line x1="60" y1="92" x2="126" y2="92" stroke="var(--text-muted)" stroke-width="1.5"/>
+  </svg>`,
+}
 
-const items = [
+const DOCS = 'https://docs.lemmascript.com'
+
+// `backticks` in a desc render as inline code.
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const descHtml = (s: string) =>
+  escapeHtml(s).replace(/`([^`]+)`/g, '<code>$1</code>')
+
+const tools = [
   {
     name: 'claimcheck',
-    tag: 'toolchain',
-    status: 'available',
-    desc: 'Makes sure your contracts say what you meant. A contract can be internally consistent and still guarantee something other than what you intended — claimcheck cross-examines the plain-English //@ contract against the formal clauses and surfaces those gaps, so you can trust not just that the code is correct, but that it’s correct for the right reasons.',
-  },
-  {
-    name: 'sepui',
-    tag: 'toolchain',
-    status: 'preview', // [TODO] confirm status
-    desc: '[TODO] one-paragraph description of what sepui does and why it matters.',
-  },
-  {
-    name: 'runtime-guard',
-    tag: 'toolchain',
-    status: 'available',
-    desc: 'Turns a contract-checked module into a drop-in that enforces its own //@ requires at runtime. Call it out-of-contract and you get a loud, debuggable error instead of a wrong answer — so you delete your hand-written guards.',
-  },
-  {
-    name: 'VS Code extension',
-    tag: 'editor',
-    status: 'preview',
-    desc: 'Inline correctness status in the gutter — green when the contract holds, red with the exact input that breaks it. Contract autocomplete for //@ requires and //@ ensures, so you write them fast and get them right.',
+    desc: 'Confirms your contract says exactly what you meant — it reads the plain-English claim against the formal clauses and surfaces gaps.',
+    viz: viz.claimcheck,
+    link: `${DOCS}/claimcheck`,
+    linkLabel: 'How to use claimcheck',
   },
   {
     name: 'CI',
-    tag: 'pipeline',
-    status: 'available',
-    desc: 'Enforce correctness on every pull request — a GitHub Action that fails the build on any unmet contract, so nothing merges unless every guarantee holds.',
-  },
-  {
-    name: 'Skills',
-    tag: 'agents',
-    status: 'available',
-    desc: 'Drop-in skills that teach a coding agent to drive LemmaScript — when to add a contract, how to read the result, and how to iterate until the code is correct. Install once; the agent closes its own generate → check → fix loop without prompting.',
+    desc: 'A GitHub Action that fails the build on any unmet contract — enforced on every pull request, no matter who (or what) opened it.',
+    viz: viz.ci,
+    link: `${DOCS}/ci`,
+    linkLabel: 'How to use the CI action',
   },
   {
     name: 'CLI',
-    tag: 'toolchain',
-    status: 'available',
-    desc: 'lemmascript check runs anywhere a shell does — local pre-commit hooks, scripts, or any CI system. The same loop your agent drives, available at your fingertips.',
+    desc: 'The whole toolchain from your terminal. Every step of the loop is a command, so you or your agent can run any of it anywhere a shell runs.',
+    viz: viz.cli,
+    link: `${DOCS}/cli`,
+    linkLabel: 'How to use the CLI',
+  },
+  {
+    name: 'Skills',
+    desc: 'Drop-in skills that teach agents when and how to use LemmaScript. Use them with any agent and extend them to your codebase and workflow.',
+    viz: viz.skills,
+    link: `${DOCS}/skills`,
+    linkLabel: 'How to use the skills',
+  },
+  {
+    name: 'VS Code extension',
+    desc: 'Correctness on the line where you write it — green in the gutter when the contract holds, red with the exact input that breaks it.',
+    viz: viz.vscode,
+    link: `${DOCS}/vscode`,
+    linkLabel: 'How to use the extension',
+  },
+  {
+    name: 'runtime-guard',
+    desc: 'Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of quietly returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.',
+    viz: viz.guard,
+    badge: 'Coming soon',
+    link: `${DOCS}/runtime-guard`,
+    linkLabel: 'How to use runtime-guard',
+  },
+  {
+    name: 'sepui',
+    desc: '[TODO] one line on what sepui does and what it guarantees.',
+    viz: viz.sepui,
+    badge: 'Coming soon',
+    link: `${DOCS}/sepui`,
+    linkLabel: 'How to use sepui',
+  },
+  {
+    name: 'lemmascript-seal',
+    desc: '[TODO] one line on what lemmascript-seal does and what it guarantees.',
+    viz: viz.seal,
+    link: `${DOCS}/seal`,
+    linkLabel: 'How to use lemmascript-seal',
   },
 ]
 ---
@@ -60,34 +166,33 @@ const items = [
       <span class="kicker">// ecosystem</span>
       <h1>Everything that snaps onto the <em>core</em>.</h1>
       <p class="lede">
-        The <code class="inline">lsc</code> compiler is the free, open core. Around it sits a growing ecosystem —
-        tools that extend the toolchain, an extension that brings it into your editor, enforcement for your
-        pipeline, and skills that equip your agents.
+        The compiler is the free, open core. Around it: eight pieces, each with a
+        contract that states what it guarantees.
       </p>
     </div>
   </header>
 
-  <section class="section">
+  <section class="section section-alt">
     <div class="container">
-      <div class="eco-grid">
-        {items.map((it) => (
-          <div class="card eco-card">
-            <div class="eco-top">
-              <h3>{it.name}</h3>
-              <span class={`badge ${badgeClass[it.status]}`}><span class="bdot"></span>{label[it.status]}</span>
+      <ul class="eco-grid">
+        {tools.map((t) => (
+          <li class="eco-card">
+            <h3 class="eco-name">{t.name}</h3>
+            <p class="eco-desc" set:html={descHtml(t.desc)} />
+            <div class="eco-viz" set:html={t.viz} />
+            <div class="eco-foot">
+              <a class="eco-link" href={t.link} target="_blank" rel="noopener">{t.linkLabel} →</a>
+              {t.badge && <span class="badge badge-info"><span class="bdot"></span>{t.badge}</span>}
             </div>
-            <span class="eco-tag">// {it.tag}</span>
-            <p>{it.desc}</p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div class="callout callout-warn" style="margin-top:var(--sp-12)">
-        <span class="mark">!</span>
-        <div><b>Tech preview.</b> The ecosystem is still stabilizing. Status labels above reflect current availability and will move toward <b style="color:var(--state-verified)">Available</b> as the preview matures.</div>
-      </div>
+      <p class="eco-note">
+        The ecosystem is still stabilizing — pieces will keep sharpening as the tech preview matures.
+      </p>
 
-      <div class="center" style="margin-top:var(--sp-12)">
+      <div class="center" style="margin-top:var(--sp-10)">
         <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Ecosystem docs →</a>
       </div>
     </div>
@@ -95,23 +200,50 @@ const items = [
 </BaseLayout>
 
 <style>
-  .eco-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
-  .eco-card { display: flex; flex-direction: column; gap: var(--sp-2); }
-  .eco-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
-  .eco-card h3 { font-size: var(--fs-h3); }
-  .eco-tag {
-    font-family: var(--font-mono); font-size: var(--fs-caption);
-    letter-spacing: 0.06em; color: var(--text-faint);
+  .eco-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4);
   }
-  .eco-card p { font-size: var(--fs-small); color: var(--text-secondary); margin-top: var(--sp-1); }
 
-  .inline {
-    font-family: var(--font-mono); font-size: 0.9em;
+  .eco-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-3);
+    aspect-ratio: 1 / 1;
+    padding: var(--sp-6);
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
+    transition: border-color var(--dur-2) var(--ease);
+  }
+  .eco-card:hover { border-color: var(--accent-dim); }
+
+  .eco-name { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+
+  .eco-desc { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.65; margin: 0; }
+  .eco-desc :global(code) {
+    font-family: var(--font-mono); font-size: 0.88em;
     color: var(--accent-bright); background: var(--state-verified-bg);
     padding: 1px 5px; border-radius: var(--r-sm);
   }
 
-  @media (max-width: 860px) {
+  .eco-viz { width: 100%; margin: auto 0; padding: 0 var(--sp-2); }
+  .eco-viz :global(svg) { display: block; width: 100%; height: auto; max-height: 150px; }
+
+  .eco-foot { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+  .eco-link {
+    font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
+    transition: color var(--dur-1) var(--ease);
+  }
+  .eco-link:hover { color: var(--accent); }
+
+  .eco-note {
+    margin-top: var(--sp-8);
+    font-size: var(--fs-small); color: var(--text-muted); line-height: 1.65; max-width: 62ch;
+  }
+  .eco-note b { color: var(--state-verified); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .eco-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
     .eco-grid { grid-template-columns: 1fr; }
+    .eco-card { aspect-ratio: auto; }
   }
 </style>

@@ -1,7 +1,5 @@
 ---
-const product = [
-  { href: '/how-it-works', label: 'How it works' },
-  { href: '/features', label: 'Features' },
+const links = [
   { href: '/ecosystem', label: 'Ecosystem' },
   { href: '/annotations', label: 'Annotations' },
   { href: 'https://docs.lemmascript.org', label: 'Docs', external: true },
@@ -12,6 +10,7 @@ const solutions = [
   { href: '/solutions/algorithms', label: 'Algorithms' },
   { href: '/solutions/security', label: 'Security patches' },
   { href: '/solutions/agents', label: 'Agents' },
+
 ]
 
 // Best-effort GitHub star count, fetched at build time.
@@ -38,23 +37,9 @@ const starLabel =
     </a>
 
     <div class="nav-links">
-      <div class="nav-dd">
-        <button class="nav-dd-btn" aria-haspopup="true" aria-expanded="false">Toolchain <span class="nav-dd-caret"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.75 4.5 6 7.75 9.25 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
-        <div class="nav-dd-menu">
-          {product.map((l) => (
-            <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
-          ))}
-        </div>
-      </div>
-      <div class="nav-dd">
-        <a href="/solutions" class="nav-dd-btn" aria-haspopup="true" aria-expanded="false">Solutions <span class="nav-dd-caret"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.75 4.5 6 7.75 9.25 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <div class="nav-dd-menu">
-          {solutions.map((l) => (
-            <a href={l.href}>{l.label}</a>
-          ))}
-        </div>
-      </div>
-      <a href="/changelog">Changelog</a>
+      {links.map((l) => (
+        <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
+      ))}
       <a href="/emira" class="nav-emira">Emira<span class="nav-soon">soon</span></a>
     </div>
 
@@ -78,24 +63,9 @@ const starLabel =
   </div>
 
   <div class="nav-mobile" id="nav-mobile">
-    <details class="nav-m-dd">
-      <summary>Toolchain <span class="nav-m-caret"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.75 4.5 6 7.75 9.25 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary>
-      <div class="nav-m-dd-body">
-        {product.map((l) => (
-          <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
-        ))}
-      </div>
-    </details>
-    <details class="nav-m-dd">
-      <summary>Solutions <span class="nav-m-caret"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.75 4.5 6 7.75 9.25 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary>
-      <div class="nav-m-dd-body">
-        <a href="/solutions">Overview</a>
-        {solutions.map((l) => (
-          <a href={l.href}>{l.label}</a>
-        ))}
-      </div>
-    </details>
-    <a href="/changelog">Changelog</a>
+    {links.map((l) => (
+      <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
+    ))}
     <a href="/emira" class="nav-m-emira">Emira <span class="nav-soon">soon</span></a>
     <div class="nav-mobile-foot">
       <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener">GitHub{starLabel && <span class="nav-m-stars">· {starLabel} ★</span>}</a>
@@ -105,17 +75,6 @@ const starLabel =
 </nav>
 
 <script is:inline>
-  // Reflect the hover/focus open state of the Product dropdown for screen readers.
-  document.querySelectorAll('.nav-dd').forEach((dd) => {
-    const btn = dd.querySelector('.nav-dd-btn')
-    if (!btn) return
-    const set = (v) => btn.setAttribute('aria-expanded', String(v))
-    dd.addEventListener('mouseenter', () => set(true))
-    dd.addEventListener('mouseleave', () => set(false))
-    dd.addEventListener('focusin', () => set(true))
-    dd.addEventListener('focusout', (e) => { if (!dd.contains(e.relatedTarget)) set(false) })
-  })
-
   // Mobile menu toggle.
   const navToggle = document.querySelector('.nav-toggle')
   const navEl = document.querySelector('.nav')
@@ -177,31 +136,6 @@ const starLabel =
     display: inline-flex; align-items: center; gap: 6px; }
   .nav-links > a:hover { color: var(--accent); }
 
-  /* ---- product dropdown ---- */
-  .nav-dd { position: relative; }
-  .nav-dd-btn {
-    font-family: var(--font-body); font-size: var(--fs-small); color: var(--text-secondary);
-    background: none; border: none; cursor: pointer; padding: 0;
-    display: inline-flex; align-items: center; gap: 5px;
-  }
-  .nav-dd-caret { display: inline-flex; opacity: 0.55; transition: transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease); }
-  .nav-dd-caret svg { width: 12px; height: 12px; display: block; }
-  .nav-dd:hover .nav-dd-btn, .nav-dd:focus-within .nav-dd-btn { color: var(--accent); }
-  .nav-dd:hover .nav-dd-caret, .nav-dd:focus-within .nav-dd-caret { transform: rotate(180deg); opacity: 1; }
-  /* invisible hover bridge so the menu doesn't drop on the gap */
-  .nav-dd::after { content: ''; position: absolute; top: 100%; left: -8px; right: -8px; height: 14px; }
-  .nav-dd-menu {
-    position: absolute; z-index: 60; top: calc(100% + 12px); left: 0; min-width: 210px;
-    background: var(--bg-overlay); border: 1px solid var(--border); border-radius: var(--r-lg);
-    padding: var(--sp-2); box-shadow: var(--elev-2); display: grid; gap: 2px;
-    opacity: 0; visibility: hidden; transform: translateY(-6px);
-    transition: opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease), visibility var(--dur-2);
-  }
-  .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu { opacity: 1; visibility: visible; transform: none; }
-  .nav-dd-menu a { display: block; padding: 8px var(--sp-3); border-radius: var(--r-md);
-    font-size: var(--fs-small); color: var(--text-secondary); white-space: nowrap; }
-  .nav-dd-menu a:hover { background: var(--bg-surface); color: var(--accent); }
-
   /* ---- right actions ---- */
   .nav-actions { margin-left: auto; display: flex; align-items: center; gap: var(--sp-4); }
   .nav-gh { display: inline-flex; align-items: center; gap: 7px; font-size: var(--fs-small); color: var(--text-secondary);
@@ -236,21 +170,6 @@ const starLabel =
   .nav-mobile > a { padding: var(--sp-3) 0; font-size: var(--fs-body); color: var(--text-secondary);
     border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: var(--sp-2); }
   .nav-mobile > a:hover { color: var(--accent); }
-  /* ---- mobile collapsible dropdowns ---- */
-  .nav-m-dd { border-bottom: 1px solid var(--border-subtle); }
-  .nav-m-dd > summary {
-    list-style: none; cursor: pointer; padding: var(--sp-3) 0;
-    font-size: var(--fs-body); color: var(--text-secondary);
-    display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
-  }
-  .nav-m-dd > summary::-webkit-details-marker { display: none; }
-  .nav-m-dd > summary:hover { color: var(--accent); }
-  .nav-m-caret { display: inline-flex; opacity: 0.55; transition: transform var(--dur-2) var(--ease); }
-  .nav-m-caret svg { width: 12px; height: 12px; display: block; }
-  .nav-m-dd[open] > summary .nav-m-caret { transform: rotate(180deg); opacity: 1; }
-  .nav-m-dd-body { display: flex; flex-direction: column; padding: 0 0 var(--sp-2) var(--sp-4); }
-  .nav-m-dd-body a { padding: var(--sp-2) 0; font-size: var(--fs-small); color: var(--text-muted); }
-  .nav-m-dd-body a:hover { color: var(--accent); }
   .nav-mobile-foot { display: flex; align-items: center; gap: var(--sp-6); padding-top: var(--sp-4); }
   .nav-m-stars { color: var(--text-muted); font-family: var(--font-mono); font-size: var(--fs-caption); }
 

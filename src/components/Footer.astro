@@ -4,16 +4,11 @@ const year = new Date().getFullYear()
 const cols = [
   {
     title: 'Product',
-    cols2: true,
     links: [
-      { href: '/how-it-works', label: 'How it works' },
-      { href: '/features', label: 'Features' },
       { href: '/ecosystem', label: 'Ecosystem' },
       { href: '/install', label: 'Install' },
-      { href: '/try', label: 'Try it' },
       { href: '/emira', label: 'Emira', soon: true },
-      { href: '/annotations', label: 'Annotations' },
-      { href: '/case-studies', label: 'Case studies' },
+      { href: 'https://docs.lemmascript.com', label: 'Documentation', external: true },
     ],
   },
   {
@@ -21,12 +16,6 @@ const cols = [
     links: [
       { href: 'https://docs.lemmascript.org', label: 'Documentation', external: true },
       { href: 'https://github.com/midspiral/LemmaScript', label: 'GitHub', external: true },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { href: '/about', label: 'About' },
       { href: 'https://midspiral.com', label: 'Midspiral', external: true },
     ],
   },
@@ -87,7 +76,7 @@ const cols = [
   .footer-tag { color: var(--text-secondary); font-size: var(--fs-small); max-width: 32ch; }
   .footer-mono { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
 
-  .footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--sp-8); }
+  .footer-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-8); }
   .footer-links2 { columns: 2; column-gap: var(--sp-8); }
   .footer-links2 a { break-inside: avoid; }
   .footer-col h4 {

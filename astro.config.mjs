@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
-  site: 'https://lemmascript.com',
+  site: 'https://lemmascript.org',
   redirects: {
     '/integrations': '/ecosystem',
   },

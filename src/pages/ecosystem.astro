@@ -34,13 +34,13 @@ const viz = {
     <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--text-muted)" stroke-width="1.5"/>
     <line x1="24" y1="32" x2="196" y2="32" stroke="var(--border-subtle)" stroke-width="1.5"/>
     <circle cx="38" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="48" cy="22" r="2.5" fill="var(--text-muted)"/><circle cx="58" cy="22" r="2.5" fill="var(--text-muted)"/>
-    <circle cx="42" cy="48" r="4" fill="var(--state-verified)"/>
-    <line x1="56" y1="48" x2="150" y2="48" stroke="var(--text-muted)" stroke-width="1.5"/>
-    <circle cx="42" cy="66" r="4" fill="var(--state-verified)"/>
-    <line x1="56" y1="66" x2="126" y2="66" stroke="var(--text-muted)" stroke-width="1.5"/>
-    <rect x="30" y="78" width="160" height="16" rx="4" fill="var(--state-counter)" opacity="0.08"/>
-    <circle cx="42" cy="86" r="4" fill="var(--state-counter)"/>
-    <line x1="56" y1="86" x2="168" y2="86" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="38" y1="46" x2="58" y2="46" stroke="var(--state-verified)" stroke-width="3"/>
+    <line x1="66" y1="46" x2="112" y2="46" stroke="var(--accent-dim)" stroke-width="3"/>
+    <line x1="120" y1="46" x2="152" y2="46" stroke="var(--state-verified)" stroke-width="3"/>
+    <line x1="38" y1="60" x2="58" y2="60" stroke="var(--state-verified)" stroke-width="3"/>
+    <line x1="66" y1="60" x2="132" y2="60" stroke="var(--accent-dim)" stroke-width="3"/>
+    <line x1="38" y1="78" x2="130" y2="78" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="48" y1="92" x2="110" y2="92" stroke="var(--text-muted)" stroke-width="1.5"/>
   </svg>`,
   sepui: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
@@ -60,11 +60,18 @@ const viz = {
     <path d="M192 47 l7 5 l-7 5" stroke="var(--state-verified)" stroke-width="2"/>
   </svg>`,
   skills: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M110 22 a38 38 0 1 0 38 38" stroke="var(--text-muted)" stroke-width="1.5"/>
-    <path d="M141 66 l7 -7 l7 7" stroke="var(--text-muted)" stroke-width="1.5"/>
-    <path d="M110 46 l4.5 9 l9.5 1.5 l-7 7 l1.5 9.5 l-8.5 -4.5 l-8.5 4.5 l1.5 -9.5 l-7 -7 l9.5 -1.5 z" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
-    <circle cx="148" cy="30" r="12" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
-    <path d="M142.5 30 l4 4 l8 -8" stroke="var(--state-verified)" stroke-width="2"/>
+    <rect x="30" y="18" width="52" height="66" rx="6" fill="var(--bg-inset)" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <rect x="22" y="28" width="52" height="66" rx="6" fill="var(--bg-inset)" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="32" y1="44" x2="64" y2="44" stroke="var(--state-verified)" stroke-width="2"/>
+    <line x1="32" y1="56" x2="58" y2="56" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="32" y1="68" x2="64" y2="68" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="32" y1="80" x2="52" y2="80" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <line x1="88" y1="60" x2="122" y2="60" stroke="var(--state-verified)" stroke-width="2"/>
+    <path d="M116 55 l7 5 l-7 5" stroke="var(--state-verified)" stroke-width="2"/>
+    <rect x="132" y="30" width="64" height="60" rx="12" fill="var(--bg-inset)" stroke="var(--text-muted)" stroke-width="1.5"/>
+    <path d="M164 42 c2 8 4 11 13 14 c-9 3 -11 6 -13 14 c-2 -8 -4 -11 -13 -14 c9 -3 11 -6 13 -14 z" fill="var(--state-verified-bg)" stroke="var(--state-verified)" stroke-width="1.5"/>
+    <circle cx="186" cy="40" r="2" fill="var(--state-verified)"/>
+    <circle cx="143" cy="78" r="2" fill="var(--state-verified)"/>
   </svg>`,
   seal: `<svg viewBox="0 0 220 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M96 88 l-12 22 l14 -6 l6 13 l10 -20" stroke="var(--text-muted)" stroke-width="1.5"/>
@@ -125,15 +132,15 @@ const tools = [
     linkLabel: 'How to use the skills',
   },
   {
-    name: 'VS Code extension',
-    desc: 'Correctness on the line where you write it — green in the gutter when the contract holds, red with the exact input that breaks it.',
+    name: 'VSCode extension',
+    desc: 'Makes contracts a first-class part of your editor: `//@` clauses get real syntax highlighting, so they read as language, not comments. Deeper editor support coming soon.',
     viz: viz.vscode,
     link: `${DOCS}/vscode`,
     linkLabel: 'How to use the extension',
   },
   {
     name: 'runtime-guard',
-    desc: 'Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of quietly returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.',
+    desc: 'Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.',
     viz: viz.guard,
     badge: 'Coming soon',
     link: `${DOCS}/runtime-guard`,
@@ -141,7 +148,7 @@ const tools = [
   },
   {
     name: 'sepui',
-    desc: '[TODO] one line on what sepui does and what it guarantees.',
+    desc: 'Keeps business logic out of your UI. Flags any component deciding or computing on domain data and prints the exact chain, so the rules live only in the core.',
     viz: viz.sepui,
     badge: 'Coming soon',
     link: `${DOCS}/sepui`,
@@ -149,7 +156,7 @@ const tools = [
   },
   {
     name: 'lemmascript-seal',
-    desc: '[TODO] one line on what lemmascript-seal does and what it guarantees.',
+    desc: 'An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees.',
     viz: viz.seal,
     link: `${DOCS}/seal`,
     linkLabel: 'How to use lemmascript-seal',
@@ -164,13 +171,20 @@ const tools = [
   <header class="page-head">
     <div class="container">
       <span class="kicker">// ecosystem</span>
-      <h1>Everything that snaps onto the <em>core</em>.</h1>
+      <h1>A growing <em>agent-native</em> ecosystem</h1>
       <p class="lede">
-        The compiler is the free, open core. Around it: eight pieces, each with a
-        contract that states what it guarantees.
+        LemmaScript works well on its own, but it works better with support from our tools.
       </p>
     </div>
   </header>
+
+  <div class="cta-band">
+    <div class="container head-cta">
+      <span class="head-cta-q">Have ideas for useful tools?</span>
+      <a href="/contribute" class="btn btn-primary">Contribute to the ecosystem</a>
+      <span class="head-cta-cred">(and get some street cred)</span>
+    </div>
+  </div>
 
   <section class="section section-alt">
     <div class="container">
@@ -182,7 +196,7 @@ const tools = [
             <div class="eco-viz" set:html={t.viz} />
             <div class="eco-foot">
               <a class="eco-link" href={t.link} target="_blank" rel="noopener">{t.linkLabel} →</a>
-              {t.badge && <span class="badge badge-info"><span class="bdot"></span>{t.badge}</span>}
+              {t.badge && <span class="badge badge-pending"><span class="bdot"></span>{t.badge}</span>}
             </div>
           </li>
         ))}
@@ -197,6 +211,23 @@ const tools = [
       </div>
     </div>
   </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// add your own</span>
+        <h2>The next tool comes from you</h2>
+        <p class="section-desc">
+          Every tool above started the same way: someone used LemmaScript and
+          noticed a possible gap or improvement. Use it on your own projects, find the tool or improvement you wish existed (big or small!) and either request it or build and submit a PR.
+        </p>
+      </div>
+      <div class="eco-cta">
+        <a href="https://github.com/midspiral/LemmaScript/issues" target="_blank" rel="noopener" class="btn btn-primary">Propose a tool</a>
+        <a href="/contribute" class="btn btn-secondary">How to contribute</a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
@@ -207,7 +238,7 @@ const tools = [
 
   .eco-card {
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-3);
-    aspect-ratio: 1 / 1;
+    min-height: 22rem;
     padding: var(--sp-6);
     background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
     transition: border-color var(--dur-2) var(--ease);
@@ -233,6 +264,18 @@ const tools = [
   }
   .eco-link:hover { color: var(--accent); }
 
+  .eco-cta { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+
+  .cta-band {
+    background: var(--state-verified-bg);
+    border-top: 1px solid var(--accent-dim);
+    border-bottom: 1px solid var(--accent-dim);
+    padding: var(--sp-5) 0;
+  }
+  .head-cta { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; }
+  .head-cta-q { color: var(--text-primary); font-size: var(--fs-body); font-weight: 600; }
+  .head-cta-cred { color: var(--text-muted); font-size: var(--fs-small); font-style: italic; }
+
   .eco-note {
     margin-top: var(--sp-8);
     font-size: var(--fs-small); color: var(--text-muted); line-height: 1.65; max-width: 62ch;
@@ -244,6 +287,6 @@ const tools = [
   }
   @media (max-width: 560px) {
     .eco-grid { grid-template-columns: 1fr; }
-    .eco-card { aspect-ratio: auto; }
+    .eco-card { min-height: 0; }
   }
 </style>

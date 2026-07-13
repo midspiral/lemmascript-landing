@@ -2,4 +2,4 @@ dist/
 node_modules/
 .astro/
 .DS_Store
-parked-pages/*
+parked-pages/

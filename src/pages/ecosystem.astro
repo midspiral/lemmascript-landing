@@ -5,48 +5,55 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 const label = { available: 'Available', preview: 'Tech preview', planned: 'Planned' }
 const badgeClass = { available: 'badge-verified', preview: 'badge-info', planned: 'badge-pending' }
 
-// the three pillars, summarised up top
-const pillars = [
-  { tag: 'for your toolchain', title: 'Plugins', href: '#plugins', desc: "Tools that snap into the lsc workflow and do extra work the core doesn't — like making a function defend its own contract." },
-  { tag: 'for your editor', title: 'Editors & CI', href: '#editors', desc: 'See correctness where you write code, and enforce it on every pull request — VS Code, your CLI, and your pipeline.' },
-  { tag: 'for your agents', title: 'Agent equipment', href: '#skills', desc: 'Skills and kits that teach a coding agent to drive LemmaScript and close its own generate → check → fix loop.' },
-]
-
-const plugins = [
-  { name: 'guard', status: 'available', href: '/plugins/guard', desc: 'Turns a contract-checked module into a drop-in that enforces its own //@ requires at runtime. Call it out-of-contract and you get a loud, debuggable error instead of a wrong answer — so you delete your hand-written guards.' },
-  { name: 'claimcheck', status: 'available', href: null, desc: "Makes sure your contracts say what you meant. A contract can be internally consistent and still guarantee something other than what you intended — ClaimCheck surfaces those gaps so you can trust not just that the code is correct, but that it's correct for the right reasons." },
-  { name: 'More on the way', status: 'planned', href: null, desc: "A growing catalog. Each plugin does extra work the core doesn't, installs the same way, and runs in your own CI." },
-]
-
-const editors = [
-  { name: 'VS Code', status: 'preview', desc: 'Inline correctness status in the gutter — green when the contract holds, red with the exact input that breaks it. Contract autocomplete for //@ requires and //@ ensures, so you write them fast and get them right.' },
-  { name: 'Neovim', status: 'planned', desc: 'An LSP client integration exposing check-on-save and inline diagnostics directly in the buffer.' },
-  { name: 'JetBrains', status: 'planned', desc: 'WebStorm / IntelliJ plugin bringing the same inline correctness feedback to the JetBrains family.' },
-]
-
-const agents = [
-  { name: 'Claude Code', status: 'available', desc: 'Run the check loop as a tool the agent can call — it reads the result and iterates until the code is guaranteed correct.' },
-  { name: 'Cursor / Windsurf', status: 'preview', desc: 'Expose LemmaScript as a command the editor-agent invokes after each edit, closing the generate → check → fix loop.' },
-  { name: 'GitHub Actions', status: 'available', desc: 'A CI action that fails the build on any unmet contract, so correctness is enforced on every pull request.' },
-  { name: 'CLI', status: 'available', desc: 'lemmascript check runs anywhere — local pre-commit hooks, scripts, or any CI system that runs a shell.' },
-]
-
-const skills = [
-  { name: 'LemmaScript skill', status: 'available', desc: 'A drop-in skill for Claude Code. Install it and the agent knows when to add a contract, how to read the result, and how to iterate until the code is correct — without prompting.' },
-  { name: 'Agent skill kits', status: 'preview', desc: "Bundled contract packs an agent can pull in for a domain, so it starts with a shared vocabulary of contracts instead of inventing one from scratch." },
-  { name: 'MCP server', status: 'planned', desc: 'Expose the check loop over MCP, so any agent runtime that speaks the protocol can call it as a first-class tool.' },
-]
-
-const extend = [
-  { name: 'Checking engines', desc: 'Multiple correctness engines ship in the box, with an interface designed to admit more over time.' },
-  { name: 'Contract packs', desc: 'Bundle reusable contract helpers and domain predicates so teams can share a common vocabulary of contracts.' },
-  { name: 'Domain checks', desc: 'Layer specialized checks — concurrency, units, state machines — on top of the core engine.' },
+const items = [
+  {
+    name: 'claimcheck',
+    tag: 'toolchain',
+    status: 'available',
+    desc: 'Makes sure your contracts say what you meant. A contract can be internally consistent and still guarantee something other than what you intended — claimcheck cross-examines the plain-English //@ contract against the formal clauses and surfaces those gaps, so you can trust not just that the code is correct, but that it’s correct for the right reasons.',
+  },
+  {
+    name: 'sepui',
+    tag: 'toolchain',
+    status: 'preview', // [TODO] confirm status
+    desc: '[TODO] one-paragraph description of what sepui does and why it matters.',
+  },
+  {
+    name: 'runtime-guard',
+    tag: 'toolchain',
+    status: 'available',
+    desc: 'Turns a contract-checked module into a drop-in that enforces its own //@ requires at runtime. Call it out-of-contract and you get a loud, debuggable error instead of a wrong answer — so you delete your hand-written guards.',
+  },
+  {
+    name: 'VS Code extension',
+    tag: 'editor',
+    status: 'preview',
+    desc: 'Inline correctness status in the gutter — green when the contract holds, red with the exact input that breaks it. Contract autocomplete for //@ requires and //@ ensures, so you write them fast and get them right.',
+  },
+  {
+    name: 'CI',
+    tag: 'pipeline',
+    status: 'available',
+    desc: 'Enforce correctness on every pull request — a GitHub Action that fails the build on any unmet contract, so nothing merges unless every guarantee holds.',
+  },
+  {
+    name: 'Skills',
+    tag: 'agents',
+    status: 'available',
+    desc: 'Drop-in skills that teach a coding agent to drive LemmaScript — when to add a contract, how to read the result, and how to iterate until the code is correct. Install once; the agent closes its own generate → check → fix loop without prompting.',
+  },
+  {
+    name: 'CLI',
+    tag: 'toolchain',
+    status: 'available',
+    desc: 'lemmascript check runs anywhere a shell does — local pre-commit hooks, scripts, or any CI system. The same loop your agent drives, available at your fingertips.',
+  },
 ]
 ---
 
 <BaseLayout
   title="Ecosystem — LemmaScript"
-  description="Everything that snaps onto the LemmaScript core: plugins like guard and claimcheck, editor and IDE extensions, coding-agent and CI integrations, agent skills and kits, and an extensible engine API."
+  description="Everything that snaps onto the LemmaScript core: claimcheck, sepui, runtime-guard, the VS Code extension, CI enforcement, agent skills, and the CLI."
 >
   <header class="page-head">
     <div class="container">
@@ -54,142 +61,32 @@ const extend = [
       <h1>Everything that snaps onto the <em>core</em>.</h1>
       <p class="lede">
         The <code class="inline">lsc</code> compiler is the free, open core. Around it sits a growing ecosystem —
-        plugins that extend the toolchain, extensions that bring it into your editor and CI, and skills that
-        equip your agents. Built for the engineers writing the code and the agents writing alongside them.
+        tools that extend the toolchain, an extension that brings it into your editor, enforcement for your
+        pipeline, and skills that equip your agents.
       </p>
     </div>
   </header>
 
-  <!-- pillars -->
   <section class="section">
     <div class="container">
-      <div class="pillars">
-        {pillars.map((p) => (
-          <a class="pillar" href={p.href}>
-            <span class="kicker">// {p.tag}</span>
-            <h3>{p.title}</h3>
-            <p>{p.desc}</p>
-            <span class="pillar-more">Jump to section →</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- plugins -->
-  <section id="plugins" class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// plugins</span>
-        <h2>Tools that snap into the workflow</h2>
-        <p class="section-desc">Plugins do extra work the core doesn't. They install into the same <code class="inline">lsc</code> workflow and run in your own CI — your code never leaves your machine.</p>
-      </div>
-      <div class="int-grid">
-        {plugins.map((p) => {
-          const inner = (
-            <>
-              <div class="int-top">
-                <h3>{p.name}</h3>
-                <span class={`badge ${badgeClass[p.status]}`}><span class="bdot"></span>{label[p.status]}</span>
-              </div>
-              <p>{p.desc}</p>
-              {p.href && <span class="int-more">Read the guard page →</span>}
-            </>
-          )
-          return p.href
-            ? <a class="card int-card int-link" href={p.href}>{inner}</a>
-            : <div class="card int-card">{inner}</div>
-        })}
-      </div>
-    </div>
-  </section>
-
-  <!-- editors -->
-  <section id="editors" class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// editors &amp; IDEs</span>
-        <h2>See correctness where you write code</h2>
-        <p class="section-desc">Correctness status, the exact input that breaks it, and contract assistance — inline in your editor.</p>
-      </div>
-      <div class="int-grid">
-        {editors.map((e) => (
-          <div class="card int-card">
-            <div class="int-top">
-              <h3>{e.name}</h3>
-              <span class={`badge ${badgeClass[e.status]}`}><span class="bdot"></span>{label[e.status]}</span>
+      <div class="eco-grid">
+        {items.map((it) => (
+          <div class="card eco-card">
+            <div class="eco-top">
+              <h3>{it.name}</h3>
+              <span class={`badge ${badgeClass[it.status]}`}><span class="bdot"></span>{label[it.status]}</span>
             </div>
-            <p>{e.desc}</p>
+            <span class="eco-tag">// {it.tag}</span>
+            <p>{it.desc}</p>
           </div>
         ))}
       </div>
-    </div>
-  </section>
 
-  <!-- agents & CI -->
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// agents &amp; CI</span>
-        <h2>Close the generate → check → fix loop</h2>
-        <p class="section-desc">LemmaScript is built for autonomous workflows — give an agent the toolchain and let it guarantee its own output.</p>
-      </div>
-      <div class="int-grid">
-        {agents.map((a) => (
-          <div class="card int-card">
-            <div class="int-top">
-              <h3>{a.name}</h3>
-              <span class={`badge ${badgeClass[a.status]}`}><span class="bdot"></span>{label[a.status]}</span>
-            </div>
-            <p>{a.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- agent skills & kits -->
-  <section id="skills" class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// skills &amp; kits</span>
-        <h2>Equip your agents to drive it</h2>
-        <p class="section-desc">Skills and kits that teach a coding agent how and when to use LemmaScript — so it converges on code it can guarantee, not confident-but-wrong code.</p>
-      </div>
-      <div class="int-grid">
-        {skills.map((s) => (
-          <div class="card int-card">
-            <div class="int-top">
-              <h3>{s.name}</h3>
-              <span class={`badge ${badgeClass[s.status]}`}><span class="bdot"></span>{label[s.status]}</span>
-            </div>
-            <p>{s.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- extension api -->
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// extend it</span>
-        <h2>An engine you can build on</h2>
-        <p class="section-desc">The core is extensible by design — checking engines, contract packs, and domain-specific checks.</p>
-      </div>
-      <div class="ext-grid">
-        {extend.map((x) => (
-          <div class="ext">
-            <h3>{x.name}</h3>
-            <p>{x.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div class="callout callout-warn" style="margin-top:var(--sp-8)">
+      <div class="callout callout-warn" style="margin-top:var(--sp-12)">
         <span class="mark">!</span>
         <div><b>Tech preview.</b> The ecosystem is still stabilizing. Status labels above reflect current availability and will move toward <b style="color:var(--state-verified)">Available</b> as the preview matures.</div>
       </div>
+
       <div class="center" style="margin-top:var(--sp-12)">
         <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Ecosystem docs →</a>
       </div>
@@ -198,33 +95,15 @@ const extend = [
 </BaseLayout>
 
 <style>
-  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-6); }
-  .pillar {
-    display: flex; flex-direction: column;
-    padding: var(--sp-6); background: var(--bg-surface);
-    border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
-    transition: border-color var(--dur-2) var(--ease);
+  .eco-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+  .eco-card { display: flex; flex-direction: column; gap: var(--sp-2); }
+  .eco-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+  .eco-card h3 { font-size: var(--fs-h3); }
+  .eco-tag {
+    font-family: var(--font-mono); font-size: var(--fs-caption);
+    letter-spacing: 0.06em; color: var(--text-faint);
   }
-  .pillar:hover { border-color: var(--accent-dim); }
-  .pillar h3 { font-size: var(--fs-h3); margin: var(--sp-2) 0; }
-  .pillar p { font-size: var(--fs-small); color: var(--text-secondary); }
-  .pillar-more { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-top: var(--sp-4); }
-
-  #plugins, #editors, #skills { scroll-margin-top: 80px; }
-
-  .int-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
-  .int-card { display: flex; flex-direction: column; gap: var(--sp-3); }
-  .int-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
-  .int-card h3 { font-size: var(--fs-h3); }
-  .int-card p { font-size: var(--fs-small); }
-  .int-link { transition: border-color var(--dur-2) var(--ease); }
-  .int-link:hover { border-color: var(--accent-dim); }
-  .int-more { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-top: auto; }
-
-  .ext-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
-  .ext { padding: var(--sp-6); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
-  .ext h3 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
-  .ext p { font-size: var(--fs-small); }
+  .eco-card p { font-size: var(--fs-small); color: var(--text-secondary); margin-top: var(--sp-1); }
 
   .inline {
     font-family: var(--font-mono); font-size: 0.9em;
@@ -233,6 +112,6 @@ const extend = [
   }
 
   @media (max-width: 860px) {
-    .pillars, .int-grid, .ext-grid { grid-template-columns: 1fr; }
+    .eco-grid { grid-template-columns: 1fr; }
   }
 </style>

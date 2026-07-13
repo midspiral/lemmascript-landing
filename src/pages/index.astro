@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
-const evidence = [
-  { kind: 'Brownfield', metric: '4 CVEs', name: 'hono-lemmascript', desc: 'Security-critical middleware in a fork of Hono, hardened against four real CVEs — IP restriction, cookies, path traversal.', href: 'https://github.com/midspiral/hono-lemmascript' },
-  { kind: 'Brownfield', metric: '11 functions', name: 'opencode-lemmascript', desc: 'A fork of opencode with its permission system locked down — eleven access-control functions guaranteed to honor their contracts.', href: 'https://github.com/midspiral/opencode-lemmascript' },
-  { kind: 'Greenfield', metric: 'No overbooking', name: 'quota-lemmascript', desc: 'A booking app whose allocation logic is guaranteed incapable of overbooking — no matter the inputs.', href: 'https://github.com/midspiral/quota-lemmascript' },
+const domains = [
+  { tag: 'Web apps', line: 'The business logic under your app — the invariants that must hold on every request.' },
+  { tag: 'Algorithms', line: 'The core computations in your system — the right output for every input.' },
+  { tag: 'Security patches', line: 'A fix that covers the whole class of inputs behind a vulnerability — not just the reported one.' },
+  { tag: 'Agents', line: 'The rules that decide what’s permitted — correct for every configuration.' },
 ]
 ---
 
@@ -38,7 +39,7 @@ const evidence = [
           </div>
         </div>
         <div class="hero-actions">
-          <a href="/try" class="btn btn-primary">Install</a>
+          <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener" class="btn btn-primary">Get started</a>
           <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
         </div>
     </div>
@@ -78,7 +79,7 @@ const evidence = [
         <div class="catch-col">
           <div class="catch-head"><span class="badge badge-verified">Guaranteed</span><span class="catch-label">the agent’s fix</span></div>
           <div class="codeblock catch-ok">
-            <div class="code-bar"><span class="code-file">allocate.ts</span><a class="code-src" href="https://github.com/midspiral/eventab-lemmascript/blob/main/src/allocate.ts#L49" target="_blank" rel="noopener">// real code ↗</a></div>
+            <div class="code-bar"><span class="code-file">allocate.ts</span><a class="code-src" href="https://github.com/midspiral/eventab-lemmascript/blob/9583ce0/src/allocate.ts" target="_blank" rel="noopener">// real code ↗</a></div>
             <pre class="code-body"><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Splits total across weights so every unit is accounted for.</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">total >= 0</span>  <span class="t-cmt">// whole units, e.g. cents</span>
 <span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">weights.length >= 1</span>
@@ -96,6 +97,54 @@ const evidence = [
           </div>
           <p class="catch-note ok">Hands the leftover back out — now every cent is accounted for.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ANYWHERE YOU WRITE TYPESCRIPT ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// wherever you write typescript</span>
+        <h2>If you can write it in TypeScript, you can strengthen it with LemmaScript.</h2>
+        <p class="section-desc">No new language, no runtime cost. Contracts go wherever your code already goes, across every domain where being right actually matters.</p>
+      </div>
+      <div class="gen-grid">
+        {domains.map((d) => (
+          <div class="card gen-card">
+            <span class="gen-tag">{d.tag}</span>
+            <p class="gen-line">{d.line}</p>
+          </div>
+        ))}
+      </div>
+      <div class="gen-ubiquity">
+        <span class="gen-ubiquity-lead">It’s TypeScript — so it runs anywhere TypeScript runs.</span>
+        <ul class="gen-logos">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 5v9h16V9H4Zm2.2-3.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>
+            <span>Browser</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"/></svg>
+            <span>Node</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M1.105 18.02A11.9 11.9 0 0 1 0 12.985q0-.698.078-1.376a12 12 0 0 1 .231-1.34A12 12 0 0 1 4.025 4.02a12 12 0 0 1 5.46-2.771 12 12 0 0 1 3.428-.23c1.452.112 2.825.477 4.077 1.05a12 12 0 0 1 2.78 1.774 12.02 12.02 0 0 1 4.053 7.078A12 12 0 0 1 24 12.985q0 .454-.036.914a12 12 0 0 1-.728 3.305 12 12 0 0 1-2.38 3.875c-1.33 1.357-3.02 1.962-4.43 1.936a4.4 4.4 0 0 1-2.724-1.024c-.99-.853-1.391-1.83-1.53-2.919a5 5 0 0 1 .128-1.518c.105-.38.37-1.116.76-1.437-.455-.197-1.04-.624-1.226-.829-.045-.05-.04-.13 0-.183a.155.155 0 0 1 .177-.053c.392.134.869.267 1.372.35.66.111 1.484.25 2.317.292 2.03.1 4.153-.813 4.812-2.627s.403-3.609-1.96-4.685-3.454-2.356-5.363-3.128c-1.247-.505-2.636-.205-4.06.582-3.838 2.121-7.277 8.822-5.69 15.032a.191.191 0 0 1-.315.19 12 12 0 0 1-1.25-1.634 12 12 0 0 1-.769-1.404M11.57 6.087c.649-.051 1.214.501 1.31 1.236.13.979-.228 1.99-1.41 2.013-1.01.02-1.315-.997-1.248-1.614.066-.616.574-1.575 1.35-1.635"/></svg>
+            <span>Deno</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 22.596c6.628 0 12-4.338 12-9.688 0-3.318-2.057-6.248-5.219-7.986-1.286-.715-2.297-1.357-3.139-1.89C14.058 2.025 13.08 1.404 12 1.404c-1.097 0-2.334.785-3.966 1.821a49.92 49.92 0 0 1-2.816 1.697C2.057 6.66 0 9.59 0 12.908c0 5.35 5.372 9.687 12 9.687v.001ZM10.599 4.715c.334-.759.503-1.58.498-2.409 0-.145.202-.187.23-.029.658 2.783-.902 4.162-2.057 4.624-.124.048-.199-.121-.103-.209a5.763 5.763 0 0 0 1.432-1.977Zm2.058-.102a5.82 5.82 0 0 0-.782-2.306v-.016c-.069-.123.086-.263.185-.172 1.962 2.111 1.307 4.067.556 5.051-.082.103-.23-.003-.189-.126a5.85 5.85 0 0 0 .23-2.431Zm1.776-.561a5.727 5.727 0 0 0-1.612-1.806v-.014c-.112-.085-.024-.274.114-.218 2.595 1.087 2.774 3.18 2.459 4.407a.116.116 0 0 1-.049.071.11.11 0 0 1-.153-.026.122.122 0 0 1-.022-.083 5.891 5.891 0 0 0-.737-2.331Zm-5.087.561c-.617.546-1.282.76-2.063 1-.117 0-.195-.078-.156-.181 1.752-.909 2.376-1.649 2.999-2.778 0 0 .155-.118.188.085 0 .304-.349 1.329-.968 1.874Zm4.945 11.237a2.957 2.957 0 0 1-.937 1.553c-.346.346-.8.565-1.286.62a2.178 2.178 0 0 1-1.327-.62 2.955 2.955 0 0 1-.925-1.553.244.244 0 0 1 .064-.198.234.234 0 0 1 .193-.069h3.965a.226.226 0 0 1 .19.07c.05.053.073.125.063.197Zm-5.458-2.176a1.862 1.862 0 0 1-2.384-.245 1.98 1.98 0 0 1-.233-2.447c.207-.319.503-.566.848-.713a1.84 1.84 0 0 1 1.092-.11c.366.075.703.261.967.531a1.98 1.98 0 0 1 .408 2.114 1.931 1.931 0 0 1-.698.869v.001Zm8.495.005a1.86 1.86 0 0 1-2.381-.253 1.964 1.964 0 0 1-.547-1.366c0-.384.11-.76.32-1.079.207-.319.503-.567.849-.713a1.844 1.844 0 0 1 1.093-.108c.367.076.704.262.968.534a1.98 1.98 0 0 1 .4 2.117 1.932 1.932 0 0 1-.702.868Z"/></svg>
+            <span>Bun</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m8.213.063 8.879 12.136-8.67 11.739h2.476l8.665-11.735-8.89-12.14Zm4.728 0 9.02 11.992-9.018 11.883h2.496L24 12.656v-1.199L15.434.063ZM7.178 2.02.01 11.398l-.01 1.2 7.203 9.644 1.238-1.676-6.396-8.556 6.361-8.313Z"/></svg>
+            <span>Workers</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.0111 0c-.85 0-1.5392.6891-1.5392 1.5392 0 .8501.6891 1.5393 1.5392 1.5393.595 0 1.11-.338 1.3662-.832 2.2208 1.2675 3.847 5.4728 3.847 10.3623 0 2.0715-.2891 4.056-.825 5.7685a.3215.3215 0 0 0 .2107.403.322.322 0 0 0 .4033-.2111c.5558-1.7763.8542-3.8251.8542-5.9604 0-5.1927-1.7717-9.686-4.3206-11.0027.001-.0223.0035-.0443.0035-.0669 0-.85-.6891-1.5392-1.5393-1.5392zm0 .6432a.896.896 0 1 1 0 1.792.896.896 0 1 1 0-1.792zm-5.486 4.3052c-2.067.0074-3.6473.6646-4.3885 1.9485-.7375 1.2774-.5267 2.971.5113 4.7813a.3217.3217 0 0 0 .558-.32C2.271 9.7274 2.089 8.266 2.6938 7.2185c.821-1.422 3.033-1.9552 5.9321-1.4271a.3216.3216 0 0 0 .1153-.6329c-.784-.1428-1.5271-.2125-2.216-.21zm11.0522.0176a.3216.3216 0 0 0-.0084.6432c1.8337.0239 3.1556.5956 3.7502 1.6256.8192 1.419.1798 3.5947-1.7182 5.837a.322.322 0 0 0 .0377.4535.3215.3215 0 0 0 .4532-.0377c2.0535-2.426 2.7708-4.8661 1.7845-6.5744-.7257-1.257-2.26-1.9207-4.299-1.9472zm-2.6984.2924a.3225.3225 0 0 0-.0647.0072c-1.8568.3979-3.8333 1.1755-5.7314 2.2714-4.5699 2.6384-7.5924 6.4948-7.3601 9.3717-.4726.2628-.7928.7664-.7928 1.3455 0 .85.6892 1.5392 1.5393 1.5392.85 0 1.5392-.6891 1.5392-1.5392 0-.8501-.6891-1.5393-1.5392-1.5393-.038 0-.0754.003-.1128.0057-.1002-2.5597 2.7434-6.1412 7.048-8.6265 1.8413-1.063 3.7551-1.8163 5.5445-2.1997a.3217.3217 0 0 0-.07-.636zm-2.8787 6.2364a1.1192 1.1192 0 0 0-.2243.0255c-.6012.1301-.983.7225-.8533 1.3238.1302.6012.7226.9832 1.3238.8533.6012-.1302.9832-.7226.8533-1.3238-.1139-.526-.5816-.8844-1.0995-.8788zM4.532 13.341a.321.321 0 0 0-.2318.0835.3214.3214 0 0 0-.0214.4542c1.2682 1.3936 2.9157 2.701 4.7946 3.7857 4.4146 2.5489 9.1056 3.2849 11.5608 1.8392a1.53 1.53 0 0 0 .8966.2899c.8501 0 1.5392-.6891 1.5392-1.5392 0-.8501-.689-1.5393-1.5392-1.5393-.85 0-1.5392.6892-1.5392 1.5393 0 .276.0737.5344.201.7584-2.2448 1.214-6.631.5002-10.7976-1.9054-1.8228-1.0524-3.418-2.3181-4.6404-3.6614a.3206.3206 0 0 0-.2226-.1049zm-2.0628 4.0172a.896.896 0 1 1 0 1.792.896.896 0 1 1 0-1.792zm19.0616 0a.896.896 0 1 1 0 1.792.891.891 0 0 1-.5864-.2194c-.0025-.004-.0039-.0083-.0066-.0123a.3195.3195 0 0 0-.0957-.0914.896.896 0 0 1 .6887-1.4689zm-14.0045 1.368a.3215.3215 0 0 0-.3207.4296C8.2793 22.154 10.036 24 12.0111 24c1.4406 0 2.7735-.9822 3.8128-2.711a.3215.3215 0 0 0-.11-.4413.3219.3219 0 0 0-.4415.11c-.934 1.5537-2.0812 2.399-3.2613 2.399-1.6407 0-3.2075-1.6465-4.2-4.4179a.3216.3216 0 0 0-.2848-.2126z"/></svg>
+            <span>Electron</span>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -159,36 +208,13 @@ const evidence = [
     </div>
   </section>
 
-  <!-- ===================== EVIDENCE ===================== -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// in the wild</span>
-        <h2>Not a toy. Real code, guaranteed correct.</h2>
-        <p class="section-desc">LemmaScript has been put to work on production-grade software and greenfield builds — each one guaranteed correct, from the TypeScript you already write.</p>
-      </div>
-      <div class="ev-grid">
-        {evidence.map((e) => (
-          <a href={e.href} target="_blank" rel="noopener" class="card ev-card">
-            <span class:list={['ev-kind', { brown: e.kind === 'Brownfield' }]}>{e.kind}</span>
-            <div class="ev-metric">{e.metric}</div>
-            <h3>{e.name}</h3>
-            <p>{e.desc}</p>
-            <span class="ev-link">View repository →</span>
-          </a>
-        ))}
-      </div>
-      <div class="center" style="margin-top:var(--sp-8)"><a href="/case-studies" class="link-arrow">See all case studies →</a></div>
-    </div>
-  </section>
-
   <!-- ===================== GET STARTED ===================== -->
   <section class="section section-alt">
     <div class="container two-col">
       <div>
         <span class="kicker">// get started</span>
-        <h2>Add your first contract in minutes.</h2>
-        <p class="section-desc">Add LemmaScript to a project, write a contract on a function, and you’re done. Greenfield or an existing codebase — adopt it exactly as far as you want.</p>
+        <h2>Start your next project correct by construction.</h2>
+        <p class="section-desc">Begin a new project on LemmaScript from the first commit. Your agent writes the contracts and iterates until the code satisfies them, so everything builds on a core you can trust. Already have a codebase? Add a contract to a single function and grow from there.</p>
         <div class="hero-actions">
           <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-primary">Read the quickstart →</a>
           <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener" class="btn btn-secondary">View on GitHub</a>
@@ -229,16 +255,20 @@ const evidence = [
   .two-col h2 { margin: var(--sp-3) 0; }
   .two-col .hero-actions { justify-content: flex-start; }
 
-  /* ---------- evidence ---------- */
-  .ev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
-  .ev-card { display: flex; flex-direction: column; }
-  .ev-kind { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
-  .ev-kind.brown { color: var(--state-pending); }
-  .ev-metric { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; margin: var(--sp-2) 0; }
-  .ev-card h3 { font-family: var(--font-mono); font-weight: 600; font-size: var(--fs-body); color: var(--accent-bright); margin-bottom: var(--sp-2); }
-  .ev-card p { font-size: var(--fs-small); margin-bottom: var(--sp-4); }
-  .ev-link { margin-top: auto; font-size: var(--fs-small); color: var(--text-muted); }
-  .ev-card:hover .ev-link { color: var(--accent); }
+  /* ---------- anywhere you write typescript ---------- */
+  .gen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); }
+  .gen-card { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .gen-tag { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+  .gen-line { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; }
+  .gen-explore { margin-top: auto; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .gen-card:hover .gen-explore { color: var(--accent); }
+
+  .gen-ubiquity { margin-top: var(--sp-10); display: flex; flex-direction: column; align-items: center; gap: var(--sp-5); text-align: center; }
+  .gen-ubiquity-lead { font-size: var(--fs-small); color: var(--text-muted); }
+  .gen-logos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: var(--sp-5) var(--sp-8); }
+  .gen-logos li { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+  .gen-logos svg { width: 26px; height: 26px; color: var(--text-faint); transition: color var(--dur-1) var(--ease); }
+  .gen-logos li:hover svg { color: var(--accent); }
 
   /* ---------- review specs vs implementation ---------- */
   .review-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: var(--sp-6); align-items: start; }
@@ -276,6 +306,9 @@ const evidence = [
 
   @media (max-width: 900px) {
     .two-col { grid-template-columns: 1fr; gap: var(--sp-12); }
-    .ev-grid { grid-template-columns: 1fr; }
+    .gen-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .gen-grid { grid-template-columns: 1fr; }
   }
 </style>

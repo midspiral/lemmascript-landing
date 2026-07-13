@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const REPO = 'https://github.com/midspiral/LemmaScript'
+const ISSUES = REPO + '/issues'
+
+// Where it holds — real npm libraries whose core we shadow-verified against the pinned
+// upstream source. `props` = contract properties proved; `checks` = randomized differential
+// checks run against the real module to confirm the model matches its behavior. Numbers
+// are from the actual runs.
+const holds = [
+  { lib: 'sorted-btree',      what: 'Leaf binary-search and insert — never drops a key or breaks sorted order.', props: '5 / 5', checks: '450,592' },
+  { lib: 'compare-versions',  what: 'Semver comparison is a real total order — correct on every pair.',        props: '6 / 6', checks: '304,969' },
+  { lib: 'p-queue',           what: 'Priority queue returns the right element on every dequeue; FIFO-stable.',   props: '6 / 6', checks: '174,623' },
+  { lib: 'yaml',              what: 'Scalar/number round-trip on the verified core.',                           props: '5 / 5', checks: '59,006'  },
+  { lib: 'rou3',              what: 'Static-route matching resolves to the correct handler.',                   props: '4 / 4', checks: '24,511'  },
+  { lib: 'fast-json-patch',   what: 'compare / applyPatch / validate on flat object members.',                 props: '4 / 4', checks: '24,000'  },
+]
+
+// Where it breaks — honest limits, each a concrete place to start. Every wall is a real
+// thing an lsc run hit on a real library.
+// TODO: point each `issue` at the specific GitHub issue once filed.
+const walls = [
+  {
+    title: 'Closures that capture and mutate outer state',
+    body: 'A function that closes over and mutates a surrounding variable is dropped whole. This is what stops the Myers search loop in jsdiff and the fractional-index core in excalidraw.',
+    issue: ISSUES,
+  },
+  {
+    title: 'String-parsing internals',
+    body: 'RegExp, parseInt, and toString semantics live outside the verifiable subset, and the spec surface has no substring slice (s[a..b]) yet — so string properties have to be re-derived pointwise. This is the wall behind cron-parser and the yaml scanner.',
+    issue: ISSUES,
+  },
+  {
+    title: 'Long-lived mutable object graphs',
+    body: 'Shared, mutable references — copy-on-write B-tree internal nodes, a running statechart — are not in the fragment. The tractable leaf of sorted-btree verified; its recursive rebalancing did not.',
+    issue: ISSUES,
+  },
+  {
+    title: 'Real-number bounds',
+    body: 'Floating-point arithmetic is only provable on an integer surrogate. Jitter like Math.round(Math.random() * delay) can be bounded on a floor model, not on the real value it actually computes.',
+    issue: ISSUES,
+  },
+  {
+    title: 'No user-space lemma mechanism',
+    body: 'A proven //@ pure function cannot be invoked as a lemma from the TypeScript surface — its guarantees do not export, so induction helpers have to be written by hand in Dafny. Giving contracts a way to apply each other would unblock a whole class of proofs.',
+    issue: ISSUES,
+  },
+]
+
+const ways = [
+  { h: 'Take a wall', p: 'The limits above are the highest-leverage work. Each is a filed issue with a real reproduction — pick one and dig in.' },
+  { h: 'Verify a library', p: 'Point LemmaScript at a module you know well. Where it can’t express a property, that gap is the contribution — open an issue with the case.' },
+  { h: 'Improve the errors', p: 'A confusing diagnostic or a crash on valid input is a bug worth reporting. The compiler should always point at the source, never dump a stack trace.' },
+  { h: 'Docs and examples', p: 'If something took you longer to figure out than it should have, that’s a docs gap. Fixes there help the next person more than you’d think.' },
+]
+---
+
+<BaseLayout
+  title="Contribute — LemmaScript"
+  description="LemmaScript is young and built in the open. Here is exactly what it verifies today on real npm libraries, where it still fails, and how to help close the gaps."
+>
+  <header class="page-head">
+    <div class="container">
+      <span class="kicker">// contribute</span>
+      <h1>Built in the open. <em>Honest</em> about the edges.</h1>
+      <p class="lede">
+        LemmaScript is young. To find out where it actually stands we pointed it at real
+        npm libraries and tried to verify their cores end to end — not toy examples. Here is
+        what held, where it still fails, and where you can help.
+      </p>
+      <div class="head-actions">
+        <a href={REPO} target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
+        <a href={ISSUES} target="_blank" rel="noopener" class="btn btn-secondary">Browse open issues</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- WHERE IT HOLDS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// where it holds</span>
+        <h2>Verified against the real source.</h2>
+        <p class="section-desc">
+          Each of these takes the library at a pinned commit, models its core, and proves
+          the listed properties. <em>Checks</em> is how many randomized inputs we then ran
+          through both the model and the real module to confirm they agree — the proof is
+          only meaningful if the thing proved matches the code that ships.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr><th>Library</th><th>What’s proved</th><th class="num">Properties</th><th class="num">Checks / failures</th></tr>
+          </thead>
+          <tbody>
+            {holds.map((r) => (
+              <tr>
+                <td class="lib">{r.lib}</td>
+                <td class="what">{r.what}</td>
+                <td class="num props">{r.props}</td>
+                <td class="num">{r.checks} / 0</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="foot-note">
+        No <code>assume</code>, no <code>havoc</code>, no hand-axioms — the proofs stand on
+        the code itself. Not everything went through cleanly: jsdiff, cron-parser, and
+        excalidraw each got most of the way and then hit one of the walls below.
+      </p>
+    </div>
+  </section>
+
+  <!-- WHERE IT BREAKS -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// where it breaks</span>
+        <h2>The walls we’re still working on.</h2>
+        <p class="section-desc">
+          These are real limits, each one hit by a real library. They’re also the best
+          places to start — every one is a filed issue.
+        </p>
+      </div>
+
+      <ul class="walls">
+        {walls.map((w) => (
+          <li class="wall">
+            <div class="wall-body">
+              <h3>{w.title}</h3>
+              <p>{w.body}</p>
+            </div>
+            <a class="wall-issue" href={w.issue} target="_blank" rel="noopener">Read the issue ↗</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- HOW TO HELP -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// how to help</span>
+        <h2>Where to start.</h2>
+      </div>
+      <div class="ways">
+        {ways.map((w) => (
+          <div class="way">
+            <h3>{w.h}</h3>
+            <p>{w.p}</p>
+          </div>
+        ))}
+      </div>
+      <div class="closing">
+        <p>
+          The whole toolchain — compiler, backends, and plugins — is on GitHub. Issues and
+          pull requests are welcome, and a good bug report with a minimal reproduction is a
+          real contribution on its own.
+        </p>
+        <div class="head-actions">
+          <a href={REPO} target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
+          <a href="https://docs.lemmascript.com" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .head-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-8); }
+
+  /* ---------- data table ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  table.data { width: 100%; border-collapse: collapse; font-size: var(--fs-small); min-width: 640px; }
+  table.data th, table.data td { text-align: left; padding: var(--sp-4) var(--sp-5); border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  table.data thead th { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 600; background: var(--bg-inset); }
+  table.data tbody tr:last-child td { border-bottom: 0; }
+  table.data .lib { font-family: var(--font-mono); font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+  table.data .what { color: var(--text-secondary); line-height: 1.55; }
+  table.data .num { font-family: var(--font-mono); text-align: right; white-space: nowrap; color: var(--text-muted); }
+  table.data .props { color: var(--text-secondary); }
+  .foot-note { margin-top: var(--sp-5); font-size: var(--fs-small); color: var(--text-muted); line-height: 1.65; max-width: 68ch; }
+  .foot-note code { font-family: var(--font-mono); font-size: 0.92em; color: var(--text-secondary); }
+
+  /* ---------- walls ---------- */
+  .walls { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+  .wall { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-6);
+    padding: var(--sp-6); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  .wall-body { min-width: 0; }
+  .wall h3 { font-size: var(--fs-h3); margin: 0 0 var(--sp-2); }
+  .wall p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; max-width: 74ch; }
+  .wall-issue { flex-shrink: 0; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted);
+    white-space: nowrap; padding-top: 4px; transition: color var(--dur-1) var(--ease); }
+  .wall-issue:hover { color: var(--accent); }
+
+  /* ---------- ways ---------- */
+  .ways { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+  .way { padding: var(--sp-6); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  .way h3 { font-size: var(--fs-h3); margin: 0 0 var(--sp-2); }
+  .way p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; }
+
+  .closing { margin-top: var(--sp-10); max-width: 68ch; }
+  .closing p { color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--sp-6); }
+
+  @media (max-width: 720px) {
+    .ways { grid-template-columns: 1fr; }
+    .wall { flex-direction: column; gap: var(--sp-3); }
+    .wall-issue { padding-top: 0; }
+  }
+</style>

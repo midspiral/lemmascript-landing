@@ -37,6 +37,7 @@ export const repoKinds: Record<string, RepoMeta> = {
   'vscode-lemmascript': { kind: 'Case Study', flavor: 'Brownfield' },
   'guardians-lemmascript': { kind: 'Case Study', flavor: 'Brownfield' },
   'anthropic-sdk-lemmascript': { kind: 'Case Study', flavor: 'Brownfield' },
+  'flue-lemmascript': { kind: 'Case Study', flavor: 'Brownfield' },
 
   // ---- Case Study · Greenfield (new projects built around proofs) ----
   'quota-lemmascript': { kind: 'Case Study', flavor: 'Greenfield' },

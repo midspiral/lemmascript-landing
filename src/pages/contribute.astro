@@ -3,6 +3,49 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
 const REPO = 'https://github.com/midspiral/LemmaScript'
 const ISSUES = REPO + '/issues'
+const GOOD_FIRST = ISSUES + '?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22'
+
+// Three on-ramps, smallest to largest. Mirrors the "first time contributing? / jump
+// right in" funnel: pick the path that matches the time you have.
+const paths = [
+  {
+    h: 'Start small',
+    p: 'A typo, a docs gap, a confusing error message. Open an issue or a pull request straight away — no setup or permission needed.',
+    link: GOOD_FIRST,
+    label: 'Good first issues →',
+    external: true,
+  },
+  {
+    h: 'Bring your own code',
+    p: 'Point LemmaScript at a module you know well. Wherever it can’t express a property you care about, that gap is the contribution — open an issue with the case.',
+    link: ISSUES,
+    label: 'Report what you hit →',
+    external: true,
+  },
+  {
+    h: 'Go deep',
+    p: 'Take on one of the known limits of what the toolchain can express. This is the highest-leverage work in the project. It also requires the most effort.',
+    link: ISSUES,
+    label: 'Browse the hard problems →',
+    external: true,
+  },
+]
+
+// What you can contribute to — the areas of the project, not the size of the task.
+const areas = [
+  { h: 'The language & compiler', p: 'The core toolchain: the contract language, what it can express, and the walls that still stand. Deep work, and the most leverage per line.' },
+  { h: 'The ecosystem', p: 'Tools that snap onto the core — lint rules, editor helpers, CI surfaces, new pieces of the loop. Build the one you wish existed and submit it.' },
+  { h: 'Errors & diagnostics', p: 'Anywhere the toolchain is confusing, unhelpful, or just wrong. If something surprised you or slowed you down, it’s worth an issue.' },
+  { h: 'Docs & skills', p: 'If something took you or your AI agent longer to figure out than it should have, that’s a docs and/or skills gap. Fixes there help the next team move faster.' },
+]
+
+// LLM / agent policy — we're agent-first, so the rules are about ownership and
+// guarantees, not about banning the tools.
+const llmRules = [
+  { h: 'Agent-driven implementation is okay; agent-driven thinking is not', p: 'Agent-implemented contributions are welcome. However, agents tend to overfit to the problem in front of them. The best improvements and fixes come from you zooming out and asking how to make this fix/feature broad enough to cover an entire class of issues rather than just one specific use case.' },
+  { h: 'You alone are the author of record', p: 'Review and understand everything you submit regardless of who or what wrote it. If you can’t explain the change, or answer questions about it, it isn’t ready. Reviewer time is a scarce resource.' },
+  { h: 'Never let an agent weaken a guarantee', p: 'The fastest way to make something pass is to relax a contract. Agents love to get to a green checkmark with this workaround. Triple check that your contribution is strengthening the system as a whole. Never trust an agent\'s word that it got to the result through the proper channels.' },
+]
 
 // Where it holds — real npm libraries whose core we shadow-verified against the pinned
 // upstream source. `props` = contract properties proved; `checks` = randomized differential
@@ -47,46 +90,124 @@ const walls = [
     issue: ISSUES,
   },
 ]
-
-const ways = [
-  { h: 'Take a wall', p: 'The limits above are the highest-leverage work. Each is a filed issue with a real reproduction — pick one and dig in.' },
-  { h: 'Verify a library', p: 'Point LemmaScript at a module you know well. Where it can’t express a property, that gap is the contribution — open an issue with the case.' },
-  { h: 'Improve the errors', p: 'A confusing diagnostic or a crash on valid input is a bug worth reporting. The compiler should always point at the source, never dump a stack trace.' },
-  { h: 'Docs and examples', p: 'If something took you longer to figure out than it should have, that’s a docs gap. Fixes there help the next person more than you’d think.' },
-]
 ---
 
 <BaseLayout
   title="Contribute — LemmaScript"
-  description="LemmaScript is young and built in the open. Here is exactly what it verifies today on real npm libraries, where it still fails, and how to help close the gaps."
+  description="LemmaScript is young and built in the open. Pick your on-ramp — start small, bring your own code, or take a wall — and help shape how correct-by-construction software gets built."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// contribute</span>
-      <h1>Built in the open. <em>Honest</em> about the edges.</h1>
+      <h1>Built in the open.<br> <em>Good, bad, and ugly.</em></h1>
       <p class="lede">
-        LemmaScript is young. To find out where it actually stands we pointed it at real
-        npm libraries and tried to verify their cores end to end — not toy examples. Here is
-        what held, where it still fails, and where you can help.
+        LemmaScript is young, and the ground floor is wide open. The people who show up
+        now will shape how correct-by-construction software gets built — the language,
+        the tools, and what agents can guarantee. Here's where it stands today, and where
+        you come in.
       </p>
       <div class="head-actions">
-        <a href={REPO} target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
-        <a href={ISSUES} target="_blank" rel="noopener" class="btn btn-secondary">Browse open issues</a>
+        <a href={ISSUES} target="_blank" rel="noopener" class="btn btn-primary">Browse open issues</a>
       </div>
     </div>
   </header>
 
-  <!-- WHERE IT HOLDS -->
+  <!-- START HERE -->
   <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// start here</span>
+        <h2>First time contributing?</h2>
+        <p class="section-desc">
+          Welcome and thank you for your interest! Pick the on-ramp that matches the time you have; all
+          three are real contributions.
+        </p>
+      </div>
+
+      <div class="paths">
+        {paths.map((p) => (
+          <div class="path">
+            <h3>{p.h}</h3>
+            <p>{p.p}</p>
+            <a class="link-arrow" href={p.link} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>{p.label}</a>
+          </div>
+        ))}
+      </div>
+
+      <div class="callout callout-info paths-note">
+        <span class="mark">i</span>
+        <div>
+          <b>No gatekeeping.</b> A good bug report with a minimal reproduction is a real
+          contribution on its own; you don't need to write the fix.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT CAN I CONTRIBUTE TO -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// the map</span>
+        <h2>What can I contribute to?</h2>
+      </div>
+      <div class="ways ways-4">
+        {areas.map((w) => (
+          <div class="way">
+            <h3>{w.h}</h3>
+            <p>{w.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- LLMs & AGENTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// agents &amp; LLMs</span>
+        <h2>Using LLMs? Of course.</h2>
+        <p class="section-desc">
+          LemmaScript is built for a future where agents write the majority of the code. We're not going to ask you to leave yours at the door. The ground rules are about ownership and excellence, not the tools you use.
+        </p>
+      </div>
+      <div class="ways ways-3">
+        {llmRules.map((r) => (
+          <div class="way">
+            <h3>{r.h}</h3>
+            <p>{r.p}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="agent-skill">
+        <div class="agent-skill-head">
+          <h3>Or let your agent contribute as it works</h3>
+          <span class="badge badge-pending"><span class="bdot"></span>Coming soon</span>
+        </div>
+        <p>
+          The special case to the rules above: a drop-in skill that turns everyday use into
+          contributions. As your agent works with LemmaScript, it recognizes when it has hit
+          a gap or a rough edge, files the issue on the spot, and — when the fix is within
+          reach — submits the pull request itself. You stay the reviewer; the loop does the rest.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHERE IT HOLDS -->
+  <!-- <section class="section section-alt">
     <div class="container">
       <div class="section-head">
         <span class="kicker">// where it holds</span>
         <h2>Verified against the real source.</h2>
         <p class="section-desc">
-          Each of these takes the library at a pinned commit, models its core, and proves
-          the listed properties. <em>Checks</em> is how many randomized inputs we then ran
-          through both the model and the real module to confirm they agree — the proof is
-          only meaningful if the thing proved matches the code that ships.
+          So you know the ground you're building on: each of these takes the library at a
+          pinned commit, models its core, and proves the listed properties. <em>Checks</em> is
+          how many randomized inputs we then ran through both the model and the real module
+          to confirm they agree — the proof is only meaningful if the thing proved matches
+          the code that ships.
         </p>
       </div>
 
@@ -113,66 +234,75 @@ const ways = [
         excalidraw each got most of the way and then hit one of the walls below.
       </p>
     </div>
-  </section>
+  </section> -->
 
   <!-- WHERE IT BREAKS -->
+    <!-- <section class="section" id="walls">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">// help wanted</span>
+          <h2>The walls we’re still working on.</h2>
+          <p class="section-desc">
+            These are real limits, each one hit by a real library. They’re also the best
+            places to start — every one is a filed issue, and knocking one down unblocks
+            everyone behind you.
+          </p>
+        </div>
+
+        <ul class="walls">
+          {walls.map((w) => (
+            <li class="wall">
+              <div class="wall-body">
+                <h3>{w.title}</h3>
+                <p>{w.body}</p>
+              </div>
+              <a class="wall-issue" href={w.issue} target="_blank" rel="noopener">Read the issue ↗</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section> -->
+
+  <!-- SHOWCASE -->
   <section class="section section-alt">
     <div class="container">
       <div class="section-head">
-        <span class="kicker">// where it breaks</span>
-        <h2>The walls we’re still working on.</h2>
+        <span class="kicker">// showcase</span>
+        <h2>Built something with LemmaScript? Show it off.</h2>
         <p class="section-desc">
-          These are real limits, each one hit by a real library. They’re also the best
-          places to start — every one is a filed issue.
+          The best proof this works is what people build with it. Ship a project with a
+          contract-backed core — an app, a library, a tool — and submit it to the
+          showcase. We feature the best ones on the site, with full credit to you.
         </p>
       </div>
-
-      <ul class="walls">
-        {walls.map((w) => (
-          <li class="wall">
-            <div class="wall-body">
-              <h3>{w.title}</h3>
-              <p>{w.body}</p>
-            </div>
-            <a class="wall-issue" href={w.issue} target="_blank" rel="noopener">Read the issue ↗</a>
-          </li>
-        ))}
-      </ul>
+      <div class="head-actions" style="margin-top: 0;">
+        <a href={ISSUES} target="_blank" rel="noopener" class="btn btn-primary">Submit your project</a>
+        <a href="/changelog" class="btn btn-secondary">See what others built</a>
+      </div>
     </div>
   </section>
 
-  <!-- HOW TO HELP -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">// how to help</span>
-        <h2>Where to start.</h2>
-      </div>
-      <div class="ways">
-        {ways.map((w) => (
-          <div class="way">
-            <h3>{w.h}</h3>
-            <p>{w.p}</p>
-          </div>
-        ))}
-      </div>
-      <div class="closing">
-        <p>
-          The whole toolchain — compiler, backends, and plugins — is on GitHub. Issues and
-          pull requests are welcome, and a good bug report with a minimal reproduction is a
-          real contribution on its own.
-        </p>
-        <div class="head-actions">
-          <a href={REPO} target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
-          <a href="https://docs.lemmascript.org" target="_blank" rel="noopener" class="btn btn-secondary">Read the docs</a>
-        </div>
-      </div>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
   .head-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-8); }
+
+  /* ---------- start-here paths ---------- */
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+  .path {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2);
+    padding: var(--sp-6);
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
+    transition: border-color var(--dur-2) var(--ease);
+  }
+  .path:hover { border-color: var(--accent-dim); }
+  .path h3 { font-size: var(--fs-h3); margin: 0; }
+  .path p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .path .link-arrow { margin-top: auto; padding-top: var(--sp-3); }
+
+  .paths-note { margin-top: var(--sp-6); }
+  .paths-note a { color: var(--accent); font-weight: 600; }
+  .paths-note a:hover { color: var(--accent-bright); }
 
   /* ---------- data table ---------- */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
@@ -198,15 +328,40 @@ const ways = [
     white-space: nowrap; padding-top: 4px; transition: color var(--dur-1) var(--ease); }
   .wall-issue:hover { color: var(--accent); }
 
-  /* ---------- ways ---------- */
+  /* ---------- areas ---------- */
   .ways { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
-  .way { padding: var(--sp-6); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+  .ways-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .agent-skill {
+    margin-top: var(--sp-4);
+    padding: var(--sp-6);
+    background: var(--state-verified-bg);
+    border: 1px solid var(--accent-dim);
+    border-radius: var(--r-lg);
+  }
+  .agent-skill-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+  .agent-skill h3 { font-size: var(--fs-h3); margin: 0; }
+  .agent-skill p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.65; margin: 0; max-width: 80ch; }
+  .ways-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1000px) {
+    .ways-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 860px) {
+    .ways-3 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .ways-4 { grid-template-columns: 1fr; }
+  }
+  .way { padding: var(--sp-6); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); background: var(--bg-surface); }
   .way h3 { font-size: var(--fs-h3); margin: 0 0 var(--sp-2); }
   .way p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; }
 
-  .closing { margin-top: var(--sp-10); max-width: 68ch; }
+  .closing { max-width: 68ch; }
   .closing p { color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--sp-6); }
 
+  @media (max-width: 860px) {
+    .paths { grid-template-columns: 1fr; }
+  }
   @media (max-width: 720px) {
     .ways { grid-template-columns: 1fr; }
     .wall { flex-direction: column; gap: var(--sp-3); }

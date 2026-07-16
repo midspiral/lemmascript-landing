@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 const REPO = 'https://github.com/midspiral/LemmaScript'
 const ISSUES = REPO + '/issues'
 const GOOD_FIRST = ISSUES + '?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22'
+const SHOWCASE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSd5bT9U27Gn4gfJChWki865T7I9VjoAwMopHxkvtmjTlNyk5w/viewform'
 
 // Three on-ramps, smallest to largest. Mirrors the "first time contributing? / jump
 // right in" funnel: pick the path that matches the time you have.
@@ -276,7 +277,7 @@ const walls = [
         </p>
       </div>
       <div class="head-actions" style="margin-top: 0;">
-        <a href={ISSUES} target="_blank" rel="noopener" class="btn btn-primary">Submit your project</a>
+        <a href={SHOWCASE_FORM} target="_blank" rel="noopener" class="btn btn-primary">Submit your project</a>
         <!-- <a href="/changelog" class="btn btn-secondary">See what others built</a> -->
       </div>
     </div>

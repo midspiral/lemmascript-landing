@@ -29,8 +29,7 @@ const cols = [
         <span class="footer-mark">LS</span>
         <span class="footer-name">Lemma<span>Script</span></span>
       </a>
-      <p class="footer-tag">The correctness layer for AI-generated software.</p>
-      <p class="footer-mono">// built by Midspiral</p>
+      <p class="footer-mono">// built by the Midspiral team</p>
     </div>
 
     <div class="footer-cols">
@@ -49,7 +48,7 @@ const cols = [
 
   <div class="footer-base">
     <span>&copy; {year} Midspiral</span>
-    <span class="footer-mono">v0.1 · Tech Preview</span>
+    <a class="footer-license" href="https://github.com/midspiral/LemmaScript/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
   </div>
 </footer>
 
@@ -99,6 +98,8 @@ const cols = [
     color: var(--text-muted); font-size: var(--fs-small);
   }
   .footer-base .footer-mono { margin-top: 0; }
+  .footer-license { color: var(--text-muted); transition: color var(--dur-1) var(--ease); }
+  .footer-license:hover { color: var(--accent); }
 
   @media (max-width: 720px) {
     .footer-inner { grid-template-columns: 1fr; gap: var(--sp-8); }

@@ -43,6 +43,13 @@
 .link-arrow:hover { color: var(--accent-bright); }
 .center { text-align: center; }
 
+/* inline code chip in prose */
+.inline {
+  font-family: var(--font-mono); font-size: 0.9em;
+  color: var(--accent-bright); background: var(--state-verified-bg);
+  padding: 1px 5px; border-radius: var(--r-sm);
+}
+
 /* ---------- page header (inner pages) ---------- */
 .page-head { padding-block: var(--sp-16) var(--sp-12); border-bottom: 1px solid var(--border-subtle); }
 .page-head h1 { font-size: var(--fs-display-l); font-weight: 800; letter-spacing: -0.03em; line-height: var(--lh-tight); margin: var(--sp-4) 0; max-width: 18ch; }

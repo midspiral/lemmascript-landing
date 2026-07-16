@@ -4,66 +4,133 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
 <BaseLayout
   title="Install — LemmaScript"
-  description="Add LemmaScript to any TypeScript project in a minute: install the package, write a contract on a function, and run the checker."
+  description="Two ways to install LemmaScript: the npm package plus the agent skills, or the source kit with everything bundled."
 >
   <header class="page-head">
     <div class="container">
       <span class="kicker">// install</span>
-      <h1>Get set up in <em>a minute</em>.</h1>
+      <h1>Two ways <em>in</em>.</h1>
       <p class="lede">
-        Add LemmaScript to any TypeScript project — greenfield or existing. No new language, no runtime cost.
+        Install the package and add the agent skills — or clone the source kit with
+        everything bundled. Use the package if you're <b>using</b> LemmaScript; take the
+        kit if you're <b>changing</b> it.
       </p>
     </div>
   </header>
 
+  <!-- OPTION A: THE PACKAGE -->
   <section class="section">
-    <div class="container install-wrap">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// option a</span>
+        <h2>The package.</h2>
+        <p class="section-desc">
+          The standard setup: the <code class="inline">lsc</code> toolchain from npm, plus
+          the skills that teach your agent to drive it.
+        </p>
+      </div>
+
       <ol class="steps">
         <li class="step">
-          <div class="step-head"><span class="step-n">1</span><h3>Add the package</h3></div>
-          <p>Install LemmaScript as a dev dependency. It never ships to production.</p>
+          <div class="step-head"><span class="step-n">1</span><h3>Check the prerequisites</h3></div>
+          <p>Node ≥ 18, Dafny ≥ 4.x (the engine that does the checking), and git.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
-            <pre class="code-body"><span class="t-anno">$</span> npm install -D lemmascript</pre>
+            <pre class="code-body"><span class="t-anno">$</span> node -v          <span class="t-cmt"># ≥ 18</span>
+<span class="t-anno">$</span> dafny --version  <span class="t-cmt"># ≥ 4.x</span></pre>
           </div>
         </li>
 
         <li class="step">
-          <div class="step-head"><span class="step-n">2</span><h3>Write a contract</h3></div>
-          <p>Add a <code class="inline">//@</code> contract to any function you care about. The implementation stays exactly as it is.</p>
+          <div class="step-head"><span class="step-n">2</span><h3>Install the package</h3></div>
+          <p>One global install puts <code class="inline">lsc</code> — and companions like <code class="inline">lsc claimcheck</code> — on your PATH.</p>
           <div class="codeblock">
-            <div class="code-bar"><span class="code-file">charge.ts</span></div>
-            <pre class="code-body"><span class="ln">1</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-contract">contract</span> <span class="t-prose">Never lets the charge exceed the available balance.</span>
-<span class="ln">2</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">balance &gt;= 0</span>
-<span class="ln">3</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-requires">requires</span> <span class="t-annokw">amount &gt;= 0</span>
-<span class="ln">4</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amount &lt;= balance ==&gt; <span class="t-result">\result</span> === balance - amount</span>
-<span class="ln">5</span><span class="t-cmt">//</span><span class="t-at">@</span> <span class="t-dir-ensures">ensures</span>  <span class="t-annokw">amount &gt; balance ==&gt; <span class="t-result">\result</span> === 0</span>
-<span class="ln">6</span><span class="t-kw">function</span> <span class="t-fn">charge</span>(balance: <span class="t-kw">number</span>, amount: <span class="t-kw">number</span>): <span class="t-kw">number</span> &#123;
-<span class="ln">7</span>  <span class="t-kw">return</span> amount &gt; balance ? <span class="t-num">0</span> : balance - amount;
-<span class="ln">8</span>&#125;</pre>
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> npm install -g lemmascript</pre>
           </div>
         </li>
 
         <li class="step">
-          <div class="step-head"><span class="step-n">3</span><h3>Check it</h3></div>
-          <p>Run the checker — locally, in a pre-commit hook, or in CI. It passes only when every contract holds.</p>
+          <div class="step-head"><span class="step-n">3</span><h3>Add the skills</h3></div>
+          <p>Mount the skills repo at your project's skills directory. Your agent picks them up and drives the whole loop itself — contracts, checks, iteration.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
-            <pre class="code-body"><span class="t-anno">$</span> npx lemmascript check src/
+            <pre class="code-body"><span class="t-anno">$</span> git submodule add https://github.com/midspiral/lemmascript-skills .claude/skills</pre>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-head"><span class="step-n">4</span><h3>Check something</h3></div>
+          <p>Point it at a file — or at your whole project — and watch the contracts hold.</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> lsc check --backend=dafny src/
 
 <span class="t-kw">✓</span> charge   correct
 <span class="t-cmt">1 / 1 correct · 0.4s</span></pre>
           </div>
         </li>
       </ol>
+    </div>
+  </section>
 
-      <div class="install-side">
-        <div class="card install-next">
-          <span class="kicker">// next</span>
-          <h3>Go deeper</h3>
-          <p>Full reference, the contract language, and the backends that power it.</p>
+  <!-- OPTION B: FROM SOURCE -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">// option b</span>
+        <h2>From source: <code class="inline-h2">lemmascript-kit</code></h2>
+        <p class="section-desc">
+          Working on the toolchain itself, or want the tools and skills pinned together?
+          The kit bundles the toolchain source and the skills as git submodules — one
+          clone, one setup script, skills already in place.
+        </p>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="step-head"><span class="step-n">1</span><h3>Clone the kit</h3></div>
+          <p>It uses submodules, so clone recursively, then bootstrap.</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> git clone --recurse-submodules https://github.com/midspiral/lemmascript-kit.git
+<span class="t-anno">$</span> cd lemmascript-kit
+<span class="t-anno">$</span> ./setup.sh</pre>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-head"><span class="step-n">2</span><h3>Run from source</h3></div>
+          <p>The same commands, straight out of the source tree. The skills write the CLI as <code class="inline">npx lsc</code> — in the kit, substitute this form (or <code class="inline">npm link</code> the package).</p>
+          <div class="codeblock">
+            <div class="code-bar"><span class="code-file">terminal</span></div>
+            <pre class="code-body"><span class="t-anno">$</span> npx tsx LemmaScript/tools/src/lsc.ts check --backend=dafny path/to/file.ts</pre>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-info kit-note">
+        <span class="mark">i</span>
+        <div>
+          <b>Skills included.</b> The kit already mounts the skills at
+          <code class="inline">.claude/skills/</code> — no separate step. Updating either
+          piece is normal git discipline: bump the submodule, review the diff.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT -->
+  <section class="section">
+    <div class="container">
+      <div class="closing">
+        <p>
+          From here: the full reference, the contract language, and everything that snaps
+          onto the core.
+        </p>
+        <div class="head-actions">
           <a href="https://docs.lemmascript.org" target="_blank" rel="noopener" class="btn btn-primary">Read the docs →</a>
-          <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener" class="btn btn-secondary">View on GitHub</a>
+          <a href="/ecosystem" class="btn btn-secondary">Explore the ecosystem</a>
         </div>
       </div>
     </div>
@@ -71,24 +138,20 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 </BaseLayout>
 
 <style>
-  .install-wrap { display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--sp-16); align-items: start; }
-  .steps { list-style: none; display: grid; gap: var(--sp-12); }
+  .steps { list-style: none; display: grid; gap: var(--sp-12); max-width: 760px; }
   .step-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
   .step-n { width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--r-full); display: grid; place-items: center;
     background: var(--state-verified-bg); border: 1px solid var(--accent-dim); color: var(--accent);
     font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600; }
   .step-head h3 { font-size: var(--fs-h3); }
-  .step > p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-4); max-width: 52ch; }
-  .inline { font-family: var(--font-mono); color: var(--accent-bright); font-size: 0.9em; }
+  .step > p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-4); max-width: 60ch; }
 
-  .install-next { position: sticky; top: 96px; box-shadow: var(--elev-glow); display: grid; gap: var(--sp-3); }
-  .install-next h3 { font-size: var(--fs-h3); margin-top: var(--sp-2); }
-  .install-next p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-2); }
-  .install-next .btn { width: 100%; justify-content: center; }
-  .install-next .link-arrow { margin-top: var(--sp-2); }
+  .inline-h2 { font-family: var(--font-mono); font-size: 0.95em; }
+  .lede b { color: var(--text-primary); }
 
-  @media (max-width: 860px) {
-    .install-wrap { grid-template-columns: 1fr; gap: var(--sp-12); }
-    .install-next { position: static; }
-  }
+  .kit-note { margin-top: var(--sp-8); max-width: 760px; }
+
+  .closing { max-width: 68ch; }
+  .closing p { color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--sp-6); }
+  .head-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
 </style>

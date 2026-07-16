@@ -96,12 +96,15 @@ const traits = [
 
 <script is:inline>
   (function () {
+    // Buttondown newsletter username — the slug in https://buttondown.com/<username>.
+    const BUTTONDOWN_USERNAME = 'midspiral'
     const form = document.getElementById('em-form')
     const note = document.getElementById('em-note')
     if (!form) return
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault()
       const email = document.getElementById('em-email')
+      const button = form.querySelector('button[type="submit"]')
       const val = (email.value || '').trim()
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
         note.textContent = 'Please enter a valid email address.'
@@ -109,10 +112,25 @@ const traits = [
         email.focus()
         return
       }
-      // TODO: wire to a real waitlist endpoint (Formspree / API / etc.).
-      form.innerHTML = '<div class="em-success">✓ You’re on the list. We’ll be in touch.</div>'
-      note.textContent = 'Thanks — keep an eye on your inbox.'
-      note.style.color = 'var(--accent)'
+      button.disabled = true
+      button.textContent = 'Joining…'
+      try {
+        const body = new URLSearchParams({ email: val, tag: 'emira-waitlist' })
+        await fetch(`https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body,
+        })
+        form.innerHTML = '<div class="em-success">✓ You’re on the list. We’ll be in touch.</div>'
+        note.textContent = 'Thanks — check your inbox to confirm your address.'
+        note.style.color = 'var(--accent)'
+      } catch (err) {
+        button.disabled = false
+        button.textContent = 'Join the waitlist →'
+        note.textContent = 'Something went wrong — please try again in a moment.'
+        note.style.color = 'var(--state-counter)'
+      }
     })
   })()
 </script>

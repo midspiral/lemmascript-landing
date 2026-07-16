@@ -21,9 +21,46 @@ interface Props {
   image?: string
 }
 
-const { title, description = 'LemmaScript — Formal verification for TypeScript, without leaving TypeScript.', image } = Astro.props
+const {
+  title,
+  description = 'LemmaScript is TypeScript with syntax for contracts. Agents write code that is correct by construction; engineers review it at a glance. Zero runtime cost, works on existing code.',
+  image = '/og.png',
+} = Astro.props
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
+// Markdown mirror of this page (llms.txt convention): / -> /index.md, /install -> /install.md
+const markdownURL = new URL(
+  Astro.url.pathname === '/' ? '/index.md' : Astro.url.pathname.replace(/\/$/, '') + '.md',
+  Astro.site,
+)
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: 'Midspiral',
+      url: 'https://midspiral.com',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'LemmaScript',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'macOS, Linux, Windows',
+      url: 'https://lemmascript.org',
+      description:
+        'TypeScript with syntax for contracts — code that is correct by construction, written by agents and reviewable by engineers.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      softwareHelp: { '@type': 'CreativeWork', url: 'https://docs.lemmascript.org' },
+      sameAs: [
+        'https://github.com/midspiral/LemmaScript',
+        'https://www.npmjs.com/package/lemmascript',
+      ],
+      author: { '@type': 'Organization', name: 'Midspiral', url: 'https://midspiral.com' },
+    },
+  ],
+}
 ---
 
 <!DOCTYPE html>
@@ -43,17 +80,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="text/markdown" href={markdownURL} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="LemmaScript, formal verification, TypeScript, Lean 4, Dafny, proof, Midspiral, correctness" />
+    <meta name="keywords" content="LemmaScript, TypeScript contracts, correct by construction, code correctness, AI coding agents, Midspiral" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LemmaScript" />
     <meta property="og:url" content={canonicalURL} />
-    {image && <meta property="og:image" content={new URL(image, Astro.site).href} />}
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL(image, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {image && <meta name="twitter:image" content={new URL(image, Astro.site).href} />}
+    <meta name="twitter:image" content={new URL(image, Astro.site).href} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <div class="atmosphere" aria-hidden="true"></div>

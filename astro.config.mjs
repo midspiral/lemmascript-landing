@@ -15,5 +15,12 @@ export default defineConfig({
       wrap: true,
     },
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // lastmod lets crawlers (and AI agents) track change dates per page.
+      serialize(item) {
+        return { ...item, lastmod: new Date().toISOString() }
+      },
+    }),
+  ],
 })

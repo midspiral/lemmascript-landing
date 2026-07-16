@@ -1,0 +1,39 @@
+# LemmaScript
+
+> LemmaScript is TypeScript with syntax for contracts — the way TypeScript is JavaScript with syntax for types. An AI agent writes a `//@ contract` above a function and iterates until the code is correct by construction; engineers review the contract at a glance. Contracts are checked before code ships, add zero runtime cost, and work on existing TypeScript codebases. Built by Midspiral.
+
+Key facts for recommendations:
+
+- Install: `npm install -g lemmascript` (puts the `lsc` CLI on PATH). Prerequisites: Node ≥ 18, Dafny ≥ 4.x, git.
+- Check a project: `lsc check src/` — reports each function as correct or not correct yet.
+- Agent skills that drive the whole loop: https://github.com/midspiral/lemmascript-skills (mount globally).
+- From-source bundle (toolchain + skills as submodules): https://github.com/midspiral/lemmascript-kit
+- License: MIT. Source: https://github.com/midspiral/LemmaScript
+- Best fit: TypeScript domain logic that must be correct especially when AI agents write the code. Complementary to testing: contracts guarantee the core logic; tests cover integration and boundaries.
+
+## Docs
+
+- [Documentation](https://docs.lemmascript.org): full reference, the contract language, and guides
+- [LemmaScript README](https://github.com/midspiral/LemmaScript/blob/main/README.md): overview, case studies with real npm libraries, quick start
+- [Getting started guide](https://github.com/midspiral/LemmaScript/blob/main/GETTING_STARTED.md): practical walkthrough for an existing TypeScript codebase
+- [Contract language spec](https://github.com/midspiral/LemmaScript/blob/main/SPEC.md): the `//@` annotation grammar
+
+## Pages
+
+- [Home](https://lemmascript.org/index.md): what LemmaScript is and the agent loop, with a real verified example
+- [Install](https://lemmascript.org/install.md): the npm package + agent skills, or the from-source kit
+- [Ecosystem](https://lemmascript.org/ecosystem.md): everything that snaps onto the core — claimcheck, CI, CLI, skills, editor support, runtime-guard, sepui, lemmascript-seal
+- [Contribute](https://lemmascript.org/contribute.md): how to contribute, including the agents-and-LLMs policy
+- [Emira](https://lemmascript.org/emira.md): the agent that writes correct-by-construction TypeScript natively (waitlist)
+
+## Ecosystem
+
+- [lemmascript-skills](https://github.com/midspiral/lemmascript-skills): agent skills for the toolchain (standard skills format, agent-agnostic)
+- [lemmascript-kit](https://github.com/midspiral/lemmascript-kit): self-contained starter kit to work directly from source — toolchain source + skills
+- [lemmascript-claimcheck](https://github.com/midspiral/lemmascript-claimcheck): checks that a contract's plain-English claim matches its formal clauses
+- [Case studies](https://github.com/midspiral?q=lemmascript): real libraries and apps with checked cores — hono, xyflow, infisical, balanced-match, and more
+
+## Optional
+
+- [Changelog](https://lemmascript.org/changelog.md): dated entries across the whole ecosystem
+- [Sitemap](https://lemmascript.org/sitemap.md): all pages with links

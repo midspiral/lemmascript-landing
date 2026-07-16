@@ -12,21 +12,21 @@ const paths = [
   {
     h: 'Start small',
     p: 'A typo, a docs gap, a confusing error message. Open an issue or a pull request straight away — no setup or permission needed.',
-    link: GOOD_FIRST,
+    // link: GOOD_FIRST,
     label: 'Good first issues →',
     external: true,
   },
   {
     h: 'Bring your own code',
     p: 'Point LemmaScript at a module you know well. Wherever it can’t express a property you care about, that gap is the contribution — open an issue with the case.',
-    link: ISSUES,
+    // link: ISSUES,
     label: 'Report what you hit →',
     external: true,
   },
   {
     h: 'Go deep',
     p: 'Take on one of the known limits of what the toolchain can express. This is the highest-leverage work in the project. It also requires the most effort.',
-    link: ISSUES,
+    // link: ISSUES,
     label: 'Browse the hard problems →',
     external: true,
   },
@@ -130,7 +130,7 @@ const walls = [
           <div class="path">
             <h3>{p.h}</h3>
             <p>{p.p}</p>
-            <a class="link-arrow" href={p.link} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>{p.label}</a>
+            {/* <a class="link-arrow" href={p.link} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>{p.label}</a> */}
           </div>
         ))}
       </div>

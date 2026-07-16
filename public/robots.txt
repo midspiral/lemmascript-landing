@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://ProofSketch.com/sitemap.xml 
+Sitemap: https://lemmascript.org/sitemap-index.xml 

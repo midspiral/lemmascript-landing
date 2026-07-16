@@ -20,7 +20,7 @@ A GitHub Action that fails the build on any unmet contract — enforced on every
 
 ## CLI
 
-The whole toolchain from your terminal. Every step of the loop is a command, so you or your agent can run any of it anywhere a shell runs. How to use: https://github.com/midspiral/LemmaScript/blob/main/GETTING_STARTED.md
+The whole toolchain from your terminal. Every step of the loop is a command, so you or your agent can run any of it anywhere a shell runs. How to use: https://github.com/midspiral/LemmaScript#usage
 
 ## Skills
 
@@ -30,6 +30,10 @@ Drop-in skills that teach agents when and how to use LemmaScript. Use them with 
 
 Makes contracts a first-class part of your editor: \`//@\` clauses get real syntax highlighting, so they read as language, not comments. Deeper editor support coming soon. How to use: https://github.com/midspiral/lemmascript-vscode#readme
 
+## lemmascript-seal
+
+An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees. How to use: https://github.com/midspiral/lemmascript-seal#readme
+
 ## runtime-guard *(coming soon)*
 
 Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.
@@ -37,10 +41,6 @@ Keeps the guarantees alive in the running app: a call that breaks a contract fai
 ## sepui *(coming soon)*
 
 Keeps business logic out of your UI. Flags any component deciding or computing on domain data and prints the exact chain, so the rules live only in the core.
-
-## lemmascript-seal
-
-An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees. How to use: https://github.com/midspiral/lemmascript-seal#readme
 
 ## Contribute a tool
 

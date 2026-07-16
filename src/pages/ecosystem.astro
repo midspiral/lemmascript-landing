@@ -113,17 +113,17 @@ const tools = [
     linkLabel: 'How to use claimcheck',
   },
   {
-    name: 'CI [TODO: fix link / add doc]',
+    name: 'CI',
     desc: 'A GitHub Action that fails the build on any unmet contract — enforced on every pull request, no matter who (or what) opened it.',
     viz: viz.ci,
-    link: `${GH}/LemmaScript#readme`,
+    link: `${GH}/LemmaScript#continuous-integration`,
     linkLabel: 'How to use the CI action',
   },
   {
     name: 'CLI',
     desc: 'The whole toolchain from your terminal. Every step of the loop is a command, so you or your agent can run any of it anywhere a shell runs.',
     viz: viz.cli,
-    link: `${GH}/LemmaScript/blob/main/GETTING_STARTED.md`,
+    link: `${GH}/LemmaScript#usage`,
     linkLabel: 'How to use the CLI',
   },
   {
@@ -141,6 +141,13 @@ const tools = [
     linkLabel: 'How to use the extension',
   },
   {
+    name: 'lemmascript-seal',
+    desc: 'An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees.',
+    viz: viz.seal,
+    link: `${GH}/lemmascript-seal#readme`,
+    linkLabel: 'How to use lemmascript-seal',
+  },
+  {
     name: 'runtime-guard',
     desc: 'Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.',
     viz: viz.guard,
@@ -151,13 +158,6 @@ const tools = [
     desc: 'Keeps business logic out of your UI. Flags any component deciding or computing on domain data and prints the exact chain, so the rules live only in the core.',
     viz: viz.sepui,
     badge: 'Coming soon',
-  },
-  {
-    name: 'lemmascript-seal',
-    desc: 'An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees.',
-    viz: viz.seal,
-    link: `${GH}/lemmascript-seal#readme`,
-    linkLabel: 'How to use lemmascript-seal',
   },
 ]
 ---

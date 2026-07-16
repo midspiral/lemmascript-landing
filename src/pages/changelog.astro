@@ -80,8 +80,7 @@ const rangeEnd = formatDate(coreEntries[0].date)
       <span class="kicker">// changelog</span>
       <h1>What we've <em>shipped</em>.</h1>
       <p class="lede">
-        {coreCount} notable changes in LemmaScript itself, {rangeStart} – {rangeEnd}.
-        Widen the scope in the sidebar to include its {ecosystemRepoCount} ecosystem repos.
+        Last updated: {rangeEnd}
       </p>
     </div>
   </header>
@@ -185,10 +184,7 @@ const rangeEnd = formatDate(coreEntries[0].date)
           <h2 class="cl-date">{formatDate(group.date)}</h2>
           <div class="cl-list">
             {group.items.map((entry) => (
-              <a
-                href={entry.href}
-                target="_blank"
-                rel="noopener"
+              <div
                 class="card cl-entry"
                 data-cat={entry.category}
                 data-repo={entry.repo}
@@ -201,8 +197,8 @@ const rangeEnd = formatDate(coreEntries[0].date)
                   <span class="cl-repo">{entry.repo}</span>
                 </div>
                 <p>{codeParts(entry.summary).map((p) => (p.code ? <code>{p.text}</code> : p.text))}</p>
-                <span class="cl-link">View on GitHub →</span>
-              </a>
+                <a class="cl-link" href={entry.href} target="_blank" rel="noopener">View on GitHub →</a>
+              </div>
             ))}
           </div>
         </div>

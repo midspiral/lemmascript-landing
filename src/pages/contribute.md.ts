@@ -18,7 +18,7 @@ Pick the on-ramp that matches the time you have; all three are real contribution
 - **Bring your own code** — point LemmaScript at a module you know well. Wherever it can't express a property you care about, that gap is the contribution — [open an issue](https://github.com/midspiral/LemmaScript/issues) with the case.
 - **Go deep** — take on one of the known limits of what the toolchain can express. Highest leverage, most effort.
 
-No gatekeeping: a good bug report with a minimal reproduction is a real contribution on its own.
+No gatekeeping: a good bug report with a minimal reproduction is a real contribution on its own; you don't need to write the fix.
 
 ## What can I contribute to?
 

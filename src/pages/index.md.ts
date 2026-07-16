@@ -3,10 +3,12 @@ import { mdResponse, frontmatter } from '../lib/markdownMirror'
 
 const body =
   frontmatter(
-    'LemmaScript — TypeScript with syntax for contracts',
+    'LemmaScript — agent-first contracts for TypeScript',
     'Agents write code that is correct by construction; engineers review it at a glance. Zero runtime cost, works on existing code.',
   ) +
   `# LemmaScript is TypeScript with syntax for contracts
+
+Built for agents.
 
 The way TypeScript is JavaScript with syntax for types, LemmaScript is TypeScript with syntax for contracts. An AI agent writes a \`//@ contract\` above a function and iterates until the code is correct by construction. Engineers review the contract — a few declarative lines — instead of the implementation.
 
@@ -28,13 +30,17 @@ export function pruneWindow(log: number[], now: number, W: number): number[] {
   if (log.length === 0) {
     return [];
   }
-  // ... implementation the agent iterated until it satisfied the contract
+  const rest = pruneWindow(log.slice(1), now, W);
+  if (log[0] > now - W) {
+    return [log[0], ...rest];
+  }
+  return rest;
 }
 \`\`\`
 
-## The loop, in action
+## Caught in the act
 
-While splitting $10 three ways, an agent's first attempt floored each share and called it done — \`allocate(10, [1,1,1]) → [3,3,3]\`: that's 9, not 10; a cent vanished. The contract said the parts must sum to the total, so the agent corrected the code before surfacing it — the fixed version hands the leftover back out, and every cent is accounted for. Only correct code ships.
+The agent wrote buggy TypeScript. LemmaScript's contract caught it. The agent fixed it before surfacing the code. While splitting $10 three ways, the agent's first attempt floored each share and called it done — \`allocate(10, [1,1,1]) → [3,3,3]\`: that's 9, not 10; a cent vanished. The contract said the parts must sum to the whole, so the implementation was rejected; the agent took the rejection feedback and shipped the fix — the leftover gets handed back out, and every cent is accounted for. Only correct code ships.
 
 ## You review the spec; the agent writes the rest
 

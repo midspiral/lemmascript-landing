@@ -11,9 +11,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <span class="kicker">// install</span>
       <h1>Two ways <em>in</em>.</h1>
       <p class="lede">
-        Install the package and add the agent skills — or clone the source kit with
-        everything bundled. Use the package if you're <b>using</b> LemmaScript; take the
-        kit if you're <b>changing</b> it.
+        Use the package if you're <b>using</b> LemmaScript. <br>
+        Use the kit if you're <b>changing</b> LemmaScript.
       </p>
     </div>
   </header>
@@ -22,8 +21,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="kicker">// option a</span>
-        <h2>The package.</h2>
+        <span class="kicker">// recommended for getting started quickly</span>
+        <h2>npm package</h2>
         <p class="section-desc">
           The standard setup: the <code class="inline">lsc</code> toolchain from npm, plus
           the skills that teach your agent to drive it.
@@ -33,7 +32,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <ol class="steps">
         <li class="step">
           <div class="step-head"><span class="step-n">1</span><h3>Check the prerequisites</h3></div>
-          <p>Node ≥ 18, Dafny ≥ 4.x (the engine that does the checking), and git.</p>
+          <p>Node ≥ 18, <a href="https://dafny.org/latest/Installation" target="_blank" rel="noopener">Dafny ≥ 4.x</a> (the engine that does the checking), and git.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
             <pre class="code-body"><span class="t-anno">$</span> node -v          <span class="t-cmt"># ≥ 18</span>
@@ -43,7 +42,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
         <li class="step">
           <div class="step-head"><span class="step-n">2</span><h3>Install the package</h3></div>
-          <p>One global install puts <code class="inline">lsc</code> — and companions like <code class="inline">lsc claimcheck</code> — on your PATH.</p>
+          <p>One global install puts <code class="inline">lsc</code> and companions like <code class="inline">lsc claimcheck</code> — on your PATH.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
             <pre class="code-body"><span class="t-anno">$</span> npm install -g lemmascript</pre>
@@ -52,22 +51,19 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
         <li class="step">
           <div class="step-head"><span class="step-n">3</span><h3>Add the skills</h3></div>
-          <p>Mount the skills repo at your project's skills directory. Your agent picks them up and drives the whole loop itself — contracts, checks, iteration.</p>
+          <p>Mount the skills repo at your agent's skills directory (e.g. <code class="inline">.claude/skills</code> for Claude Code). Your agent picks them up and drives the whole loop itself.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
-            <pre class="code-body"><span class="t-anno">$</span> git submodule add https://github.com/midspiral/lemmascript-skills .claude/skills</pre>
+            <pre class="code-body"><span class="t-anno">$</span> git clone https://github.com/midspiral/lemmascript-skills &lt;your/skills/dir&gt;</pre>
           </div>
         </li>
 
         <li class="step">
           <div class="step-head"><span class="step-n">4</span><h3>Check something</h3></div>
-          <p>Point it at a file — or at your whole project — and watch the contracts hold.</p>
+          <p>Point it at a file or at your whole project.</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
-            <pre class="code-body"><span class="t-anno">$</span> lsc check --backend=dafny src/
-
-<span class="t-kw">✓</span> charge   correct
-<span class="t-cmt">1 / 1 correct · 0.4s</span></pre>
+            <pre class="code-body"><span class="t-anno">$</span> lsc check --backend=dafny path/to/file.ts </pre>
           </div>
         </li>
       </ol>
@@ -78,11 +74,11 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   <section class="section section-alt">
     <div class="container">
       <div class="section-head">
-        <span class="kicker">// option b</span>
+        <span class="kicker">// recommended for working on the toolchain itself</span>
         <h2>From source: <code class="inline-h2">lemmascript-kit</code></h2>
         <p class="section-desc">
           Working on the toolchain itself, or want the tools and skills pinned together?
-          The kit bundles the toolchain source and the skills as git submodules — one
+          The kit bundles the toolchain source and the skills as git submodules. One
           clone, one setup script, skills already in place.
         </p>
       </div>
@@ -104,7 +100,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
           <p>The same commands, straight out of the source tree. The skills write the CLI as <code class="inline">npx lsc</code> — in the kit, substitute this form (or <code class="inline">npm link</code> the package).</p>
           <div class="codeblock">
             <div class="code-bar"><span class="code-file">terminal</span></div>
-            <pre class="code-body"><span class="t-anno">$</span> npx tsx LemmaScript/tools/src/lsc.ts check --backend=dafny path/to/file.ts</pre>
+            <pre class="code-body"><span class="t-anno">$</span> npx tsx ../LemmaScript/tools/src/lsc.ts check --backend=dafny path/to/file.ts</pre>
           </div>
         </li>
       </ol>

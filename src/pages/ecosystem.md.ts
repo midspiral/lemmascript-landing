@@ -8,7 +8,7 @@ const body =
   ) +
   `# A growing agent-native ecosystem
 
-LemmaScript works well on its own, but it works better with support from these tools. The compiler is the free, open core; around it, eight pieces.
+LemmaScript works well on its own, but it works better with support from our tools. Eight pieces snap onto the core:
 
 ## claimcheck
 

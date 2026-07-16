@@ -14,7 +14,7 @@ Two ways in. Use the package if you're **using** LemmaScript; take the kit if yo
 
 The standard setup: the \`lsc\` toolchain from npm, plus the skills that teach your agent to drive it.
 
-1. **Check the prerequisites** — Node ≥ 18, Dafny ≥ 4.x (the engine that does the checking), and git.
+1. **Check the prerequisites** — Node ≥ 18, [Dafny ≥ 4.x](https://dafny.org/latest/Installation) (the engine that does the checking), and git.
 
    \`\`\`sh
    node -v          # ≥ 18
@@ -27,16 +27,16 @@ The standard setup: the \`lsc\` toolchain from npm, plus the skills that teach y
    npm install -g lemmascript
    \`\`\`
 
-3. **Add the skills** — mount the skills repo at your project's skills directory. Your agent picks them up and drives the whole loop itself — contracts, checks, iteration.
+3. **Add the skills** — mount the skills repo at your agent's skills directory (e.g. \`.claude/skills\` for Claude Code). Your agent picks them up and drives the whole loop itself.
 
    \`\`\`sh
-   git submodule add https://github.com/midspiral/lemmascript-skills .claude/skills
+   git clone https://github.com/midspiral/lemmascript-skills <your/skills/dir>
    \`\`\`
 
 4. **Check something** — point it at a file or your whole project.
 
    \`\`\`sh
-   lsc check --backend=dafny src/
+   lsc check --backend=dafny path/to/file.ts
    \`\`\`
 
 ## Option B — from source: lemmascript-kit

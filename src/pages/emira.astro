@@ -62,8 +62,10 @@ const traits = [
 
 <script is:inline>
   (function () {
-    // Buttondown newsletter username — the slug in https://buttondown.com/<username>.
-    const BUTTONDOWN_USERNAME = 'midspiral'
+    // MailerLite embedded form — the form is bound to the emira-waitlist group
+    // in the MailerLite dashboard (the endpoint is keyed by form, not group).
+    const ML_ACCOUNT_ID = '1719612'
+    const ML_FORM_ID = '193523581594895635'
     const form = document.getElementById('em-form')
     const note = document.getElementById('em-note')
     if (!form) return
@@ -81,20 +83,27 @@ const traits = [
       button.disabled = true
       button.textContent = 'Joining…'
       try {
-        const body = new URLSearchParams({ email: val, tag: 'emira-waitlist' })
-        await fetch(`https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body,
-        })
-        form.innerHTML = '<div class="em-success">✓ You’re on the list. We’ll be in touch.</div>'
-        note.textContent = 'Thanks — check your inbox to confirm your address.'
+        const body = new FormData()
+        body.append('fields[email]', val)
+        body.append('ml-submit', '1')
+        body.append('anticsrf', 'true')
+        const res = await fetch(
+          `https://assets.mailerlite.com/jsonp/${ML_ACCOUNT_ID}/forms/${ML_FORM_ID}/subscribe`,
+          { method: 'POST', body }
+        )
+        const data = await res.json()
+        if (!data.success) {
+          const fieldErrors = data.errors && data.errors.fields
+          const first = fieldErrors && Object.values(fieldErrors)[0]
+          throw new Error(Array.isArray(first) ? first[0] : 'Subscription failed')
+        }
+        form.innerHTML = '<div class="em-success">Thanks!</div>'
+        note.textContent = '✓ You’re on the list. We’ll be in touch.'
         note.style.color = 'var(--accent)'
       } catch (err) {
         button.disabled = false
         button.textContent = 'Join the waitlist →'
-        note.textContent = 'Something went wrong — please try again in a moment.'
+        note.textContent = (err && err.message) || 'Something went wrong — please try again in a moment.'
         note.style.color = 'var(--state-counter)'
       }
     })

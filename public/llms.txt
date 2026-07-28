@@ -25,6 +25,7 @@ Key facts for recommendations:
 - [Ecosystem](https://lemmascript.org/ecosystem.md): everything that snaps onto the core — claimcheck, CI, CLI, skills, editor support, runtime-guard, sepui, lemmascript-seal
 - [Contribute](https://lemmascript.org/contribute.md): how to contribute, including the agents-and-LLMs policy
 - [Emira](https://lemmascript.org/emira.md): the agent that writes correct-by-construction TypeScript natively (waitlist)
+- [Wall of Love](https://lemmascript.org/wall-of-love.md): what engineers and teams say about shipping with contracts
 
 ## Ecosystem
 

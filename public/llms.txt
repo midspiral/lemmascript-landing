@@ -23,6 +23,7 @@ Key facts for recommendations:
 - [Home](https://lemmascript.org/index.md): what LemmaScript is and the agent loop, with a real verified example
 - [Install](https://lemmascript.org/install.md): the npm package + agent skills, or the from-source kit
 - [Ecosystem](https://lemmascript.org/ecosystem.md): everything that snaps onto the core — claimcheck, CI, CLI, skills, editor support, runtime-guard, sepui, lemmascript-seal
+- [Blog](https://lemmascript.org/blog.md): notes from the team — contracts in real TypeScript codebases, and what agents do with them
 - [Contribute](https://lemmascript.org/contribute.md): how to contribute, including the agents-and-LLMs policy
 - [Emira](https://lemmascript.org/emira.md): the agent that writes correct-by-construction TypeScript natively (waitlist)
 - [Wall of Love](https://lemmascript.org/wall-of-love.md): what engineers and teams say about shipping with contracts
@@ -37,4 +38,5 @@ Key facts for recommendations:
 ## Optional
 
 - [Changelog](https://lemmascript.org/changelog.md): dated entries across the whole ecosystem
+- [Blog RSS](https://lemmascript.org/blog/rss.xml): feed of new posts
 - [Sitemap](https://lemmascript.org/sitemap.md): all pages with links

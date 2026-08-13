@@ -19,12 +19,19 @@ interface Props {
   title: string
   description?: string
   image?: string
+  /* Set on blog posts: switches the card to an article and adds BlogPosting data. */
+  article?: {
+    publishedDate: string
+    authors: string[]
+    tags?: string[]
+  }
 }
 
 const {
   title,
   description = 'LemmaScript is TypeScript with syntax for contracts. Agents write code that is correct by construction; engineers review it at a glance. Zero runtime cost, works on existing code.',
   image = '/og.png',
+  article,
 } = Astro.props
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
@@ -59,6 +66,22 @@ const jsonLd = {
       ],
       author: { '@type': 'Organization', name: 'Midspiral', url: 'https://midspiral.com' },
     },
+    ...(article
+      ? [
+          {
+            '@type': 'BlogPosting',
+            headline: title,
+            description,
+            url: canonicalURL.href,
+            datePublished: article.publishedDate,
+            image: new URL(image, Astro.site).href,
+            keywords: article.tags?.join(', '),
+            author: article.authors.map((name) => ({ '@type': 'Person', name })),
+            publisher: { '@type': 'Organization', name: 'Midspiral', url: 'https://midspiral.com' },
+            mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
+          },
+        ]
+      : []),
   ],
 }
 ---
@@ -85,7 +108,11 @@ const jsonLd = {
     <meta name="keywords" content="LemmaScript, TypeScript contracts, correct by construction, code correctness, AI coding agents, Midspiral" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.publishedDate} />}
+    {article?.authors.map((a) => <meta property="article:author" content={a} />)}
+    {article?.tags?.map((t) => <meta property="article:tag" content={t} />)}
+    <link rel="alternate" type="application/rss+xml" title="LemmaScript Blog" href={new URL('/blog/rss.xml', Astro.site)} />
     <meta property="og:site_name" content="LemmaScript" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={new URL(image, Astro.site).href} />

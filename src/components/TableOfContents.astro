@@ -1,0 +1,62 @@
+---
+import type { MarkdownHeading } from 'astro'
+
+interface Props {
+  headings: MarkdownHeading[]
+}
+
+const { headings } = Astro.props
+
+// h1 is the post title (rendered from frontmatter), so the rail starts at h2.
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
+---
+
+{items.length > 0 && (
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">On this page</div>
+    <ul class="toc-list">
+      {items.map((h) => (
+        <li class={`toc-item toc-item-${h.depth}`}>
+          <a href={`#${h.slug}`} class="toc-link">{h.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script is:inline>
+  // Highlight whichever section the reader is currently in. Cheap scroll
+  // handler rather than IntersectionObserver: headings can be taller than the
+  // viewport, and "last heading passed" is the behaviour we actually want.
+  ;(function () {
+    const links = Array.from(document.querySelectorAll('.toc-link'))
+    if (!links.length) return
+
+    const targets = links
+      .map((l) => document.getElementById(decodeURIComponent(l.getAttribute('href').slice(1))))
+      .filter(Boolean)
+    if (!targets.length) return
+
+    let ticking = false
+    const update = () => {
+      ticking = false
+      const y = window.scrollY + 120
+      let active = 0
+      for (let i = 0; i < targets.length; i++) {
+        if (targets[i].getBoundingClientRect().top + window.scrollY <= y) active = i
+      }
+      links.forEach((l, i) => l.classList.toggle('active', i === active))
+    }
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(update)
+      },
+      { passive: true },
+    )
+    update()
+  })()
+</script>

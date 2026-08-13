@@ -1,0 +1,258 @@
+/* ============================================================
+   LEMMASCRIPT — BLOG
+   Index list, post layout, table of contents, prose.
+   Consumes tokens.css only; no new colors are invented here.
+   ============================================================ */
+
+/* ---------- index list ---------- */
+.blog-list { list-style: none; padding: 0; margin: 0; }
+
+.blog-link {
+  display: grid;
+  grid-template-columns: 11ch 1fr;
+  gap: var(--sp-6);
+  align-items: baseline;
+  padding: var(--sp-6) var(--sp-4);
+  margin-inline: calc(var(--sp-4) * -1);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color var(--dur-2) var(--ease);
+}
+.blog-link:hover { background: var(--state-verified-bg); }
+.blog-link:hover .blog-row-title { color: var(--accent); }
+
+.blog-row-date {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.blog-row-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+  transition: color var(--dur-1) var(--ease);
+}
+.blog-row-desc {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  max-width: 68ch;
+}
+.blog-row-tags { margin-top: var(--sp-3); display: flex; flex-wrap: wrap; gap: var(--sp-4); }
+
+/* Tags render as mono comment text ("// internals") — never pills/chips. */
+.blog-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--text-faint);
+}
+
+.blog-empty { color: var(--text-secondary); padding-block: var(--sp-12); }
+
+.blog-feed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-faint);
+  text-decoration: none;
+}
+.blog-feed:hover { color: var(--accent); }
+
+/* ---------- post layout ---------- */
+.post-layout {
+  max-width: 68ch;
+  margin-inline: auto;
+  padding-block: var(--sp-12) var(--sp-24);
+}
+
+.post-back {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-faint);
+  text-decoration: none;
+  display: inline-block;
+  padding-top: var(--sp-12);
+}
+.post-back:hover { color: var(--accent); }
+
+.post-head { padding-bottom: var(--sp-8); }
+.post-head h1 {
+  font-size: var(--fs-h1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: var(--lh-tight);
+  margin: var(--sp-4) 0 var(--sp-5);
+}
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-faint);
+}
+.post-meta .sep { color: var(--border-strong); }
+
+/* ---------- prose ---------- */
+.prose { font-size: var(--fs-body-lg); line-height: 1.75; }
+.prose > * + * { margin-top: var(--sp-6); }
+.prose p { color: var(--text-secondary); }
+.prose strong { color: var(--text-primary); font-weight: 600; }
+.prose em { color: var(--text-primary); }
+
+.prose h2 {
+  font-size: var(--fs-h2);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: var(--sp-16);
+}
+.prose h3 {
+  font-size: var(--fs-h3);
+  color: var(--text-primary);
+  margin-top: var(--sp-10);
+}
+.prose h2 + *, .prose h3 + * { margin-top: var(--sp-4); }
+
+/* anchor affordance on hover — the heading itself stays clean */
+.prose h2, .prose h3 { position: relative; scroll-margin-top: 96px; }
+.prose h2 > a.anchor, .prose h3 > a.anchor {
+  position: absolute; left: -1.1em; opacity: 0;
+  color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-weight: 400;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.prose h2:hover > a.anchor, .prose h3:hover > a.anchor { opacity: 1; }
+
+.prose a { color: var(--accent); }
+.prose a:hover { color: var(--accent-bright); }
+
+.prose ul, .prose ol { padding-left: var(--sp-6); color: var(--text-secondary); }
+.prose li + li { margin-top: var(--sp-2); }
+.prose li::marker { color: var(--text-faint); }
+
+.prose hr { border: 0; border-top: 1px solid var(--border-subtle); margin-block: var(--sp-12); }
+
+.prose img { max-width: 100%; height: auto; border-radius: var(--r-lg); border: 1px solid var(--border-subtle); }
+
+/* Emphasis is a background tint — never a left rule. */
+.prose blockquote {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5) var(--sp-6);
+  color: var(--text-secondary);
+}
+.prose blockquote > * + * { margin-top: var(--sp-3); }
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+  display: block;
+  overflow-x: auto;
+}
+.prose th, .prose td {
+  text-align: left;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.prose th {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.prose td { color: var(--text-secondary); }
+
+/* inline code */
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--accent);
+  background: var(--state-verified-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
+
+/* fenced blocks — same shell as the hand-built .codeblock on the landing page */
+.prose pre {
+  background: var(--bg-inset) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-2);
+  padding: var(--sp-5);
+  overflow-x: auto;
+  font-size: var(--fs-small);
+  line-height: 1.75;
+}
+.prose pre > code { font-family: var(--font-mono); background: none; border: 0; padding: 0; }
+
+/* Shiki ships both themes; dark is the site default, light is opt-in. */
+html:not([data-theme='light']) .astro-code,
+html:not([data-theme='light']) .astro-code span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* ---------- prev / next ---------- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  margin-top: var(--sp-16);
+}
+.post-nav-item {
+  display: block;
+  padding: var(--sp-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  background: var(--bg-surface);
+  text-decoration: none;
+  transition: border-color var(--dur-2) var(--ease);
+}
+.post-nav-item:hover { border-color: var(--accent-dim); }
+.post-nav-item.is-next { text-align: right; grid-column: 2; }
+.post-nav-dir {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-faint);
+  margin-bottom: var(--sp-2);
+}
+.post-nav-title { color: var(--text-primary); font-size: var(--fs-small); font-weight: 600; }
+.post-nav-item:hover .post-nav-title { color: var(--accent); }
+
+/* ---------- post footer CTA ---------- */
+.post-cta {
+  margin-top: var(--sp-12);
+  padding: var(--sp-8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  background: var(--state-verified-bg);
+}
+.post-cta h2 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
+.post-cta p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-5); max-width: 52ch; }
+.post-cta-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .blog-link { grid-template-columns: 1fr; gap: var(--sp-2); }
+  .prose { font-size: var(--fs-body); }
+  .post-nav { grid-template-columns: 1fr; }
+  .post-nav-item.is-next { grid-column: 1; text-align: left; }
+}

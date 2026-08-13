@@ -11,7 +11,9 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: {
-      theme: 'github-light',
+      // Both themes ship in one pass; blog.css picks the dark one unless the
+      // visitor has opted into the light theme.
+      themes: { light: 'github-light', dark: 'github-dark' },
       wrap: true,
     },
   },

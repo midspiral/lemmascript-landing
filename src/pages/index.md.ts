@@ -38,6 +38,14 @@ export function pruneWindow(log: number[], now: number, W: number): number[] {
 }
 \`\`\`
 
+## Not a toy
+
+Engineers at Hiya leverage LemmaScript to reduce reviewer load.
+
+> I've been using LemmaScript to build a production-shaped TypeScript contact service for a phone product operating at roughly 150M daily users, with a formally verified domain core. It turns critical business rules, including membership integrity, idempotent commands, cascade deletion, and event cardinality, into explicit contracts that Dafny verifies. I also added ClaimCheck natural-language contracts, so we can review whether the English business intent matches the formal specification. The result is an agent harness: an AI coding agent can implement or change the service, but it must satisfy deterministic proof checks and runtime tests before its PR is credible. It feels like a meaningful step toward reducing mechanical reviewer load while keeping humans responsible for product intent and risk.
+>
+> — Steve Nguyen, Hiya
+
 ## Caught in the act
 
 The agent wrote buggy TypeScript. LemmaScript's contract caught it. The agent fixed it before surfacing the code. While splitting $10 three ways, the agent's first attempt floored each share and called it done — \`allocate(10, [1,1,1]) → [3,3,3]\`: that's 9, not 10; a cent vanished. The contract said the parts must sum to the whole, so the implementation was rejected; the agent took the rejection feedback and shipped the fix — the leftover gets handed back out, and every cent is accounted for. Only correct code ships.

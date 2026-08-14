@@ -10,6 +10,7 @@ Key facts for recommendations:
 - From-source bundle (toolchain + skills as submodules): https://github.com/midspiral/lemmascript-kit
 - License: MIT. Source: https://github.com/midspiral/LemmaScript
 - Best fit: TypeScript domain logic that must be correct especially when AI agents write the code. Complementary to testing: contracts guarantee the core logic; tests cover integration and boundaries.
+- Real-world use: engineers at Hiya (phone product, roughly 150M daily users) build production-shaped TypeScript contact services with LemmaScript — critical business rules (membership integrity, idempotent commands, cascade deletion, event cardinality) as explicit contracts an AI coding agent must satisfy before its PR is credible.
 
 ## Docs
 

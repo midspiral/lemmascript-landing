@@ -45,8 +45,41 @@ const domains = [
     </div>
   </section>
 
-  <!-- ===================== CAUGHT IN THE ACT ===================== -->
+  <!-- ===================== NOT A TOY ===================== -->
   <section class="section section-alt">
+    <div class="container">
+      <div class="section-head center" style="margin-inline:auto">
+        <span class="kicker">// not a toy</span>
+        <h2>Engineers at Hiya leverage LemmaScript to reduce reviewer load.</h2>
+      </div>
+      <figure class="codeblock prod-block">
+        <blockquote class="prod-body">
+            <span class="prod-glyph" aria-hidden="true">&ldquo;</span>
+            I&rsquo;ve been using LemmaScript to build a production-shaped TypeScript contact
+            service for <mark class="q-hl">a phone product operating at roughly 150M daily
+            users</mark>, with a formally verified domain core. It turns critical business
+            rules, including membership integrity, idempotent commands, cascade deletion,
+            and event cardinality, into explicit contracts that Dafny verifies. I also added
+            ClaimCheck natural-language contracts, so we can review whether the English
+            business intent matches the formal specification. The result is an agent
+            harness: an AI coding agent can implement or change the service, but <mark
+            class="q-hl">it must satisfy deterministic proof checks and runtime tests before
+            its PR is credible</mark>. It feels like a meaningful step toward reducing
+            mechanical reviewer load while keeping humans responsible for product intent
+            and risk.
+          </blockquote>
+        <figcaption class="prod-cite">
+          <span class="prod-who">
+            <b>Steve Nguyen</b>
+          </span>
+          <svg class="hiya-logo" viewBox="0 0 120 67" role="img" aria-label="Hiya"><g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M33.63 35.306V49.6c0 1.821-.98 2.802-2.802 2.802h-2.802c-1.822 0-2.803-.98-2.803-2.803V35.097c0-5.745-3.504-9.668-8.198-9.668-4.554 0-8.618 2.17-8.618 8.618V49.6c0 1.821-.98 2.802-2.801 2.802H2.802C.98 52.402 0 51.422 0 49.599V3.603C0 1.78.982.8 2.802.8h2.804c1.82 0 2.802.98 2.802 2.803v13.486c0 2.243.911 2.594 2.591 1.541 1.683-1.05 3.715-1.61 6.027-1.61 10.79 0 16.604 7.846 16.604 18.286m46.347-16.99c1.822 0 2.802.982 2.802 2.803v32.544c0 7.288-6.374 12.752-14.923 12.752-3.783 0-7.636-.7-10.44-2.312-1.541-.91-1.61-2.452-.491-3.924l1.613-2.102c1.05-1.401 2.242-1.401 3.854-.77 1.54.559 3.292.7 5.464.7 4.064 0 6.517-2.803 6.517-4.344v-3.362c-1.892 1.54-4.345 2.451-7.218 2.451-10.79 0-16.605-7.846-16.605-18.286V21.119c0-1.822.982-2.803 2.804-2.803h2.802c1.822 0 2.802.982 2.802 2.803v13.557c0 5.745 3.503 9.668 8.197 9.668 2.943 0 5.676-.91 7.218-3.222V21.119c0-1.822.98-2.803 2.802-2.803zm28.799 23.81-.068-10.352c-.478-4.768-3.883-5.585-6.948-5.585-3.337 0-7.9 3.065-7.9 9.4 0 4.494 3.064 8.99 8.717 8.99 3.065 0 4.973-1.226 6.199-2.452m10.353 4.156-.546 3.405c-.273 1.704-1.361 2.588-3.132 2.249-2.247-.342-3.814-.819-4.904-1.84-1.976 1.295-4.632 2.656-7.97 2.656-11.373 0-16.96-9.195-16.96-16.96 0-10.149 5.654-17.777 16.143-17.777 9.263 0 15.19 6.061 15.19 13.145v6.2c0 2.179 0 4.562.818 5.788.748 1.227 1.633 1.635 1.361 3.134M47.706 6.54a5.603 5.603 0 0 1-9.594 4.017 5.603 5.603 0 0 1 3.992-9.531 5.6 5.6 0 0 1 5.602 5.514"/><path d="M46.296 21.342c0-3.351-3.15-3.9-6.1-5.031-3.691-1.415-7.912-5.493-7.867-9.771 0-1.822-.982-2.802-2.802-2.802h-.453c-1.822 0-2.802.982-2.802 2.802v1.61c0 3.742 2.163 7.08 4.666 9.6 4 3.575 6.497 8.898 6.95 15.399v16.45c0 1.822.98 2.803 2.802 2.803h2.802c1.822 0 2.802-.98 2.802-2.802V21.34"/></g></svg>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== CAUGHT IN THE ACT ===================== -->
+  <section class="section">
     <div class="container">
       <div class="section-head center" style="margin-inline:auto">
         <span class="kicker">// caught in the act</span>
@@ -102,7 +135,7 @@ const domains = [
   </section>
 
   <!-- ===================== ANYWHERE YOU WRITE TYPESCRIPT ===================== -->
-  <section class="section">
+  <section class="section section-alt">
     <div class="container">
       <div class="section-head center" style="margin-inline:auto">
         <span class="kicker">// wherever you write typescript</span>
@@ -150,7 +183,7 @@ const domains = [
   </section>
 
   <!-- ===================== REVIEW SPECS, NOT IMPLEMENTATION ===================== -->
-  <section class="section section-alt review">
+  <section class="section review">
     <div class="container">
       <div class="section-head center" style="margin-inline:auto">
         <span class="kicker">// review intent, not implementation</span>
@@ -280,6 +313,61 @@ const domains = [
   .review-note { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-faint); margin-top: var(--sp-3); }
 
   @media (max-width: 860px) { .review-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- in production ---------- */
+  .prod-block {
+    position: relative;
+    max-width: 820px;
+    margin: 0 auto;
+    border-color: var(--accent-dim);
+    box-shadow: var(--elev-glow);
+    overflow: hidden;
+  }
+  /* oversized quote mark, cropped by the card — decoration, not content */
+  .prod-glyph {
+    position: absolute; top: var(--sp-8); right: var(--sp-6);
+    font-family: var(--font-display); font-size: 9rem; font-weight: 800;
+    line-height: 0.72; color: var(--accent); opacity: 0.1; pointer-events: none;
+  }
+  .prod-body {
+    position: relative;
+    margin: 0;
+    padding: var(--sp-8) var(--sp-8) 0;
+    max-width: 64ch;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+  .prod-body .q-hl {
+    background: var(--state-verified-bg);
+    color: var(--state-verified);
+    padding: 1px 3px; margin: 0 -1px; border-radius: var(--r-sm);
+    font-weight: 600;
+  }
+  :root[data-theme="light"] .prod-body .q-hl { color: #0A6B4E; }
+  .prod-cite {
+    display: flex; align-items: center; gap: var(--sp-3);
+    margin: var(--sp-6) var(--sp-8) 0;
+    padding-block: var(--sp-4) var(--sp-6);
+    border-top: 1px solid var(--border-subtle);
+  }
+  .prod-mono {
+    flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: var(--r-md);
+    display: grid; place-items: center;
+    background: var(--state-verified-bg); border: 1px solid var(--accent-dim);
+    color: var(--accent);
+    font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 600;
+  }
+  .prod-who { display: flex; flex-direction: column; line-height: 1.35; }
+  .prod-who b { font-size: var(--fs-small); font-weight: 600; color: var(--text-primary); }
+  .prod-who span { font-size: var(--fs-caption); color: var(--text-muted); }
+  .hiya-logo { height: 34px; width: auto; aspect-ratio: 120 / 67; margin-left: auto; color: var(--text-secondary); }
+  @media (max-width: 560px) {
+    .prod-body { padding: var(--sp-6) var(--sp-5) 0; }
+    .prod-cite { margin-inline: var(--sp-5); }
+    .prod-glyph { display: none; }
+  }
 
   /* ---------- caught in the act ---------- */
   .catch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }

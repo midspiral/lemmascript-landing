@@ -39,5 +39,6 @@ Key facts for recommendations:
 ## Optional
 
 - [Changelog](https://lemmascript.org/changelog.md): dated entries across the whole ecosystem
+- [Brand use](https://midspiral.com/brand/): policy on using the LemmaScript and Midspiral names — the MIT license covers the code, not the names
 - [Blog RSS](https://lemmascript.org/blog/rss.xml): feed of new posts
 - [Sitemap](https://lemmascript.org/sitemap.md): all pages with links

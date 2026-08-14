@@ -26,7 +26,6 @@ Every page is also available as clean markdown at the same URL with \`.md\` appe
 - [Contribute](https://lemmascript.org/contribute) — [markdown](https://lemmascript.org/contribute.md)
 - [Emira](https://lemmascript.org/emira) — [markdown](https://lemmascript.org/emira.md)
 - [Wall of Love](https://lemmascript.org/wall-of-love) — [markdown](https://lemmascript.org/wall-of-love.md)
-
 ## Blog posts
 
 ${postLines.length ? postLines.join('\n') : '_No posts published yet._'}

@@ -49,7 +49,10 @@ const cols = [
 
   <div class="footer-base">
     <span>&copy; {year} Midspiral</span>
-    <a class="footer-license" href="https://github.com/midspiral/LemmaScript/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+    <span class="footer-policy">
+      <a class="footer-license" href="https://github.com/midspiral/LemmaScript/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+      <a class="footer-license" href="https://midspiral.com/brand/" target="_blank" rel="noopener">Brand use</a>
+    </span>
   </div>
 </footer>
 
@@ -99,6 +102,7 @@ const cols = [
     color: var(--text-muted); font-size: var(--fs-small);
   }
   .footer-base .footer-mono { margin-top: 0; }
+  .footer-policy { display: flex; gap: var(--sp-5); }
   .footer-license { color: var(--text-muted); transition: color var(--dur-1) var(--ease); }
   .footer-license:hover { color: var(--accent); }
 

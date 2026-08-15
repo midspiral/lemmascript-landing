@@ -4,6 +4,14 @@
    Consumes tokens.css only; no new colors are invented here.
    ============================================================ */
 
+/* ---------- canvas ----------
+   Blog pages drop the site's atmosphere gradients (top glow + vignette) for a
+   flat canvas: a paper-strength wash of the brand green in light, the usual
+   ink in dark. The grain layer stays — it is texture, not a gradient. */
+body { background-color: var(--bg-longform); }
+.atmosphere { background: none; }
+.atmosphere::before { display: none; }
+
 /* ---------- index list ---------- */
 .blog-list { list-style: none; padding: 0; margin: 0; }
 
@@ -209,6 +217,14 @@ html:not([data-theme='light']) .astro-code span {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+/* Light theme gets its color inline from Shiki, but the font variants stay custom
+   properties — without this the bold on `//@ requires` / `ensures` never lands. */
+html[data-theme='light'] .astro-code span {
+  font-style: var(--shiki-light-font-style, normal);
+  font-weight: var(--shiki-light-font-weight, inherit);
+  text-decoration: var(--shiki-light-text-decoration, none);
+}
+
 /* ---------- prev / next ---------- */
 .post-nav {
   display: grid;
@@ -236,18 +252,6 @@ html:not([data-theme='light']) .astro-code span {
 }
 .post-nav-title { color: var(--text-primary); font-size: var(--fs-small); font-weight: 600; }
 .post-nav-item:hover .post-nav-title { color: var(--accent); }
-
-/* ---------- post footer CTA ---------- */
-.post-cta {
-  margin-top: var(--sp-12);
-  padding: var(--sp-8);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg);
-  background: var(--state-verified-bg);
-}
-.post-cta h2 { font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
-.post-cta p { color: var(--text-secondary); font-size: var(--fs-small); margin-bottom: var(--sp-5); max-width: 52ch; }
-.post-cta-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
 
 /* ---------- responsive ---------- */
 @media (max-width: 640px) {

@@ -9,6 +9,8 @@
   --bg-surface:    #11161F;
   --bg-overlay:    #161C27;
   --bg-inset:      #0D1219;
+  /* Long-form canvas: flat, no atmosphere gradient (see blog.css). */
+  --bg-longform:   var(--bg-base);
 
   /* — Borders — */
   --border-subtle: #1C242F;
@@ -91,6 +93,8 @@
   --bg-surface:    #FFFFFF;
   --bg-overlay:    #FFFFFF;
   --bg-inset:      #EEF1F5;
+  /* Long-form canvas: the brand green washed out to paper strength. */
+  --bg-longform:   #FBFEFD;
 
   /* — Borders — */
   --border-subtle: #E3E7ED;

@@ -18,7 +18,7 @@ The way TypeScript is JavaScript with syntax for types, LemmaScript is TypeScrip
 
 ## A real example
 
-From a production rate limiter ([source](https://github.com/midspiral/hono-rate-limiter-with-lemmascript/blob/main/src/core.verified.ts#L38-L57)):
+From a production rate limiter ([source](https://github.com/midspiral/hono-rate-limiter-with-lemmascript/blob/main/src/core.verified.ts#L44-L58)):
 
 \`\`\`typescript
 //@ contract Keeps only the requests still inside the sliding time window.
@@ -27,6 +27,7 @@ export function pruneWindow(log: number[], now: number, W: number): number[] {
   //@ decreases log.length
   //@ ensures \\result.length <= log.length
   //@ ensures forall(k, 0 <= k && k < \\result.length ==> now - W < \\result[k] && \\result[k] <= now)
+  //@ ensures \\result.length === CountIn(log, now, W)
   if (log.length === 0) {
     return [];
   }
@@ -48,7 +49,7 @@ Engineers at Hiya leverage LemmaScript to reduce reviewer load.
 
 ## Caught in the act
 
-The agent wrote buggy TypeScript. LemmaScript's contract caught it. The agent fixed it before surfacing the code. While splitting $10 three ways, the agent's first attempt floored each share and called it done — \`allocate(10, [1,1,1]) → [3,3,3]\`: that's 9, not 10; a cent vanished. The contract said the parts must sum to the whole, so the implementation was rejected; the agent took the rejection feedback and shipped the fix — the leftover gets handed back out, and every cent is accounted for. Only correct code ships.
+The agent wrote buggy TypeScript. LemmaScript's contract caught it. The agent fixed it before surfacing the code. While splitting 10 cents three ways, the agent's first attempt floored each share and called it done — \`allocateNaive(10, [1,1,1]) → [3,3,3]\`: that's 9, not 10; a cent vanished. The contract said the parts must sum to the whole, so the implementation was rejected; the agent took the rejection feedback and shipped the fix — the leftover gets handed back out, and every cent is accounted for. Only correct code ships.
 
 ## You review the spec; the agent writes the rest
 

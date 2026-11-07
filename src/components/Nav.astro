@@ -2,7 +2,7 @@
 const links = [
   { href: '/ecosystem', label: 'Ecosystem' },
   { href: 'https://docs.lemmascript.org', label: 'Docs', external: true },
-  { href: '/blog', label: 'Blog' },
+  { href: 'https://midspiral.com/blog', label: 'Blog', external: true },
   // { href: '/changelog', label: 'Changelog' }, // parked
   { href: '/contribute', label: 'Contribute' },
 ]
@@ -34,7 +34,6 @@ const starLabel =
       {links.map((l) => (
         <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
       ))}
-      <a href="/emira" class="nav-emira">Emira<span class="nav-soon">soon</span></a>
     </div>
 
     <div class="nav-actions">
@@ -61,7 +60,6 @@ const starLabel =
     {links.map((l) => (
       <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
     ))}
-    <a href="/emira" class="nav-m-emira">Emira <span class="nav-soon">soon</span></a>
     <div class="nav-mobile-foot">
       <a href="https://github.com/midspiral/LemmaScript" target="_blank" rel="noopener">GitHub<span class="nav-m-stars" data-gh-stars hidden={!starLabel}>· <span class="nav-gh-count">{starLabel}</span> ★</span></a>
       <a href="/install" class="nav-cta">Install →</a>
@@ -192,10 +190,6 @@ const starLabel =
   .nav-discord svg { width: 15px; height: 15px; display: block; }
   .nav-cta { font-size: var(--fs-small); font-weight: 600; color: var(--accent); transition: color var(--dur-1) var(--ease); }
   .nav-cta:hover { color: var(--accent-bright); }
-  .nav-emira { font-size: var(--fs-small); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-  .nav-emira:hover { color: var(--accent); }
-  .nav-soon { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--accent); border: 1px solid var(--accent-dim); border-radius: var(--r-sm); padding: 1px 4px; }
 
   /* ---- mobile toggle + panel ---- */
   .nav-toggle { display: none; margin-left: var(--sp-3); width: 38px; height: 38px; flex-shrink: 0;

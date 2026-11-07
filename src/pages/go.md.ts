@@ -7,7 +7,7 @@ const body =
   frontmatter('Start using LemmaScript', 'Paste this into your coding agent. It does the rest.') +
   `# Start using LemmaScript
 
-LemmaScript is TypeScript with syntax for contracts — the way TypeScript is JavaScript with syntax for types. Your agent writes a `//@ contract` above a function and iterates until the code is proven to meet it. Zero runtime cost; works on the TypeScript you already have.
+LemmaScript is TypeScript with syntax for contracts — the way TypeScript is JavaScript with syntax for types. Your agent writes a \`//@ contract\` above a function and iterates until the code is proven to meet it. Zero runtime cost; works on the TypeScript you already have.
 
 Paste the block below into your coding agent (Claude Code, Cursor, Codex, …). If you *are* the agent reading this: follow it.
 

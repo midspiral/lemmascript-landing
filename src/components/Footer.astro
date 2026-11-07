@@ -7,14 +7,13 @@ const cols = [
     links: [
       { href: '/ecosystem', label: 'Ecosystem' },
       { href: '/install', label: 'Install' },
-      { href: '/emira', label: 'Emira', soon: true },
       { href: 'https://docs.lemmascript.org', label: 'Documentation', external: true },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { href: '/blog', label: 'Blog' },
+      { href: 'https://midspiral.com/blog', label: 'Blog', external: true },
       // { href: '/changelog', label: 'Changelog' }, // parked
       { href: '/contribute', label: 'Contribute' },
       { href: 'https://github.com/midspiral/LemmaScript', label: 'GitHub', external: true },
@@ -39,7 +38,7 @@ const cols = [
           <h4>{col.title}</h4>
           <div class:list={['footer-links', { 'footer-links2': col.cols2 }]}>
             {col.links.map((l) => (
-              <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}{l.soon && <span class="footer-soon">soon</span>}</a>
+              <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
             ))}
           </div>
         </div>
@@ -90,8 +89,6 @@ const cols = [
   }
   .footer-col a { display: block; font-size: var(--fs-small); color: var(--text-secondary); padding-block: var(--sp-1); }
   .footer-col a:hover { color: var(--accent); }
-  .footer-soon { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent); border: 1px solid var(--accent-dim); border-radius: var(--r-sm); padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
 
   .footer-base {
     max-width: var(--container);

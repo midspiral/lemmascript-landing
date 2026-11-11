@@ -34,9 +34,9 @@ Makes contracts a first-class part of your editor: \`//@\` clauses get real synt
 
 An append-only ledger of your guarantees. Freezes every contract so edits can never weaken or remove existing guarantees. How to use: https://github.com/midspiral/lemmascript-seal#readme
 
-## runtime-guard *(coming soon)*
+## runtime-guard
 
-Keeps the guarantees alive in the running app: a call that breaks a contract fails loudly and points at the problem, instead of returning a wrong answer. Your UI can also ask "is this call allowed?" before making it.
+Keeps the guarantees alive in the running app: \`lsc guard\` generates wrappers that check \`//@ requires\` at runtime and reject calls with unmet preconditions. Your UI can also ask "is this call allowed?" before making it. How to use: https://github.com/midspiral/lemmascript-guard#readme
 
 ## sepui *(coming soon)*
 
